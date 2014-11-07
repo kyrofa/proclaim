@@ -7,14 +7,14 @@ require "bespoke/version"
 Gem::Specification.new do |s|
   s.name        = "bespoke"
   s.version     = Bespoke::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Bespoke."
-  s.description = "TODO: Description of Bespoke."
-  s.license     = "MIT"
+  s.authors     = ["Kyle Fazzari"]
+  s.email       = ["bespoke@status.e4ward.com"]
+  s.homepage    = "https://source.rainveiltech.com/krf/bespoke"
+  s.summary     = "Basic blogging engine."
+  s.description = "Basic blogging engine."
+  s.license     = "GPLv3"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 4.1.7"
