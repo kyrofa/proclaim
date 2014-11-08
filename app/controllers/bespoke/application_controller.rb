@@ -1,4 +1,2 @@
-module Bespoke
-  class ApplicationController < ActionController::Base
-  end
+class Bespoke::ApplicationController < ApplicationController
 end
