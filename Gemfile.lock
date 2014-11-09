@@ -33,9 +33,17 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    annotate (2.6.5)
+      activerecord (>= 2.3.0)
+      rake (>= 0.8.7)
     arel (5.0.1.20140414130214)
     builder (3.2.2)
     erubis (2.7.0)
+    factory_girl (4.5.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.5.0)
+      factory_girl (~> 4.5.0)
+      railties (>= 3.0.0)
     hike (1.2.3)
     i18n (0.6.11)
     json (1.8.1)
@@ -83,5 +91,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate
   bespoke!
+  factory_girl_rails
   sqlite3

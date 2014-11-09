@@ -1,3 +1,3 @@
 Bespoke.setup do |config|
-	config.author_class = "test"
+	config.author_table_name = :users
 end
