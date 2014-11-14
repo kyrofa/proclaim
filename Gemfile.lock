@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     bespoke (0.0.1)
+      closure_tree
       rails (~> 4.1.7)
 
 GEM
@@ -38,6 +39,9 @@ GEM
       rake (>= 0.8.7)
     arel (5.0.1.20140414130214)
     builder (3.2.2)
+    closure_tree (5.1.1)
+      activerecord (>= 3.2.0)
+      with_advisory_lock (>= 3.0.0)
     erubis (2.7.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
@@ -86,6 +90,9 @@ GEM
     tilt (1.4.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    with_advisory_lock (3.0.0)
+      activerecord (>= 3.2)
+      thread_safe
 
 PLATFORMS
   ruby

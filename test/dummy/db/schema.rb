@@ -15,8 +15,10 @@ ActiveRecord::Schema.define(version: 20141109155532) do
 
   create_table "bespoke_posts", force: true do |t|
     t.integer  "author_id"
-    t.string   "title"
-    t.text     "body"
+    t.string   "title",            default: "",    null: false
+    t.text     "body",             default: "",    null: false
+    t.boolean  "published",        default: false, null: false
+    t.datetime "publication_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
