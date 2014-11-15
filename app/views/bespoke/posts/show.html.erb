@@ -1,19 +1,12 @@
-<p id="notice"><%= notice %></p>
+<h1><%= @post.title %></h1>
+<p><em>By <%= @post.author %></em></p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @post.title %>
-</p>
-
-<p>
-  <strong>Body:</strong>
-  <%= @post.body %>
-</p>
-
-<p>
-  <strong>Author:</strong>
-  <%= @post.author %>
-</p>
+<div>
+	<%= @post.body %>
+</div>
 
 <%= link_to 'Edit', edit_post_path(@post) %> |
 <%= link_to 'Back', posts_path %>
+
+<h2>Comments</h2>
+<%= render @post.comments %>

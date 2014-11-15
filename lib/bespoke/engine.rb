@@ -1,3 +1,6 @@
+require 'rails'
+require 'closure_tree'
+
 module Bespoke
 	class Engine < ::Rails::Engine
 		isolate_namespace Bespoke

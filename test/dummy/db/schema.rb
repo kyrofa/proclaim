@@ -11,7 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141109155532) do
+ActiveRecord::Schema.define(version: 20141115022230) do
+
+  create_table "bespoke_comment_hierarchies", id: false, force: true do |t|
+    t.integer "ancestor_id",   null: false
+    t.integer "descendant_id", null: false
+    t.integer "generations",   null: false
+  end
+
+  add_index "bespoke_comment_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "comment_anc_desc_udx", unique: true
+  add_index "bespoke_comment_hierarchies", ["descendant_id"], name: "comment_desc_idx"
+
+  create_table "bespoke_comments", force: true do |t|
+    t.integer  "post_id"
+    t.integer  "parent_id"
+    t.string   "author"
+    t.string   "title"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "bespoke_comments", ["post_id"], name: "index_bespoke_comments_on_post_id"
 
   create_table "bespoke_posts", force: true do |t|
     t.integer  "author_id"

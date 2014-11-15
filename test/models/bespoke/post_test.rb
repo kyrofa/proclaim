@@ -2,12 +2,14 @@
 #
 # Table name: bespoke_posts
 #
-#  id         :integer          not null, primary key
-#  author_id  :integer
-#  title      :string(255)
-#  body       :text
-#  created_at :datetime
-#  updated_at :datetime
+#  id               :integer          not null, primary key
+#  author_id        :integer
+#  title            :string(255)      default(""), not null
+#  body             :text             default(""), not null
+#  published        :boolean          default(FALSE), not null
+#  publication_date :datetime
+#  created_at       :datetime
+#  updated_at       :datetime
 #
 
 require 'test_helper'
