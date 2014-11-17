@@ -25,12 +25,9 @@ module Bespoke
 
 		# POST /posts
 		def create
-			Rails::logger.debug ":::::::::: #{current_author} ::::::::::"
 			params = post_params
 			params[:author] = current_author
 			@post = Post.new(params)
-
-			Rails::logger.debug "::::::: #{@post.title} | #{@post.author_id} :::"
 
 			if @post.save
 				redirect_to @post, notice: 'Post was successfully created.'

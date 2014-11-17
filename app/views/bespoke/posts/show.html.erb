@@ -1,3 +1,11 @@
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		new CommentForm($)
+	});
+</script>
+
+
 <h1><%= @post.title %></h1>
 <p><em>By <%= @post.author %></em></p>
 
@@ -9,4 +17,9 @@
 <%= link_to 'Back', posts_path %>
 
 <h2>Comments</h2>
-<%= render @post.comments %>
+
+<div id="comments">
+	<%= render @post.comments %>
+</div>
+
+<%= render partial: "bespoke/comments/form", locals: { post: @post } %>

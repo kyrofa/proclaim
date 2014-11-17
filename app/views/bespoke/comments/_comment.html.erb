@@ -4,4 +4,11 @@
 	<div>
 		<%= comment.body %>
 	</div>
+
+	<%= link_to "Reply", class: "reply" %>
+
+	<div class = "reply_form" style = "display: none;">
+		<%= render partial: "bespoke/comments/form", locals: {post: comment.post,
+		                                                      parent: comment} %>
+	</div>
 </div>
