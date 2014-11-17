@@ -3,6 +3,6 @@ FactoryGirl.define do
 		sequence(:title) {|n| "title#{n}"}
 		sequence(:body) {|n| "body#{n}"}
 		published false
-		author {|a| a.association(:author)}
+		association :author, factory: :user
 	end
 end

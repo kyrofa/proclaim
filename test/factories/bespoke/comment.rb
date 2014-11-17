@@ -3,6 +3,6 @@ FactoryGirl.define do
 		sequence(:author) {|n| "author#{n}"}
 		sequence(:title) {|n| "title#{n}"}
 		sequence(:body) {|n| "body#{n}"}
-		#post
+		post
 	end
 end

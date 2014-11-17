@@ -4,24 +4,19 @@ module Bespoke
 	class PostsControllerTest < ActionController::TestCase
 		setup do
 			@routes = Engine.routes
-			#@post = FactoryGirl.create(:post)
+			@post = FactoryGirl.create(:post)
 		end
 
 		test "should get index even if not logged in" do
 			get :index
 			assert_response :success
+			assert_not_nil assigns(:posts)
 		end
 
-#    test "should get index" do
-#      get :index, use_route: :bespoke
-#      assert_response :success
-#      assert_not_nil assigns(:posts)
-#    end
-
-#    test "should get new" do
-#      get :new, use_route: :bespoke
-#      assert_response :success
-#    end
+		test "should get new" do
+			get :new, use_route: :bespoke
+			assert_response :success
+		end
 
 #    test "should create post" do
 #      assert_difference('Post.count') do
