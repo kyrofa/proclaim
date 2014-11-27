@@ -13,10 +13,10 @@ module Bespoke
 			assert_not_nil assigns(:posts)
 		end
 
-		test "should get new" do
-			get :new, use_route: :bespoke
-			assert_response :success
-		end
+#		test "should get new" do
+#			get :new, use_route: :bespoke
+#			assert_response :success
+#		end
 
 #    test "should create post" do
 #      assert_difference('Post.count') do

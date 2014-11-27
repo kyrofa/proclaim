@@ -33,5 +33,16 @@ module Bespoke
 
 			refute comment.save, "Comment should require a body!"
 		end
+
+		test "ensure post is required" do
+			comment = FactoryGirl.build(:comment, post_id: nil)
+
+			refute comment.save, "Comment should require a post_id!"
+
+			# Post with 12345 shouldn't exist
+			comment = FactoryGirl.build(:comment, post_id: 12345)
+
+			refute comment.save, "Comment should require a valid post!"
+		end
 	end
 end

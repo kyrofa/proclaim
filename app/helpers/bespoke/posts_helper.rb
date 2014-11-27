@@ -1,4 +1,4 @@
 module Bespoke
-  module PostsHelper
-  end
+	module PostsHelper
+	end
 end

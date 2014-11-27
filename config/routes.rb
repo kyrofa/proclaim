@@ -1,7 +1,6 @@
 Bespoke::Engine.routes.draw do
-	resources :posts do
-		post 'comments/new(/:parent_id)' => 'comments#create', as: :comments
-	end
+	resources :posts
+	resources :comments, only: [:create, :destroy]
 
 	root 'posts#index'
 end

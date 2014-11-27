@@ -13,3 +13,12 @@
  *= require_tree .
  *= require_self
  */
+
+div.loading
+{
+	width: 100%;
+	height: 32px;
+	background-image: image_url("ajax_loader.gif");
+	background-repeat: no-repeat;
+	background-position: center;
+}

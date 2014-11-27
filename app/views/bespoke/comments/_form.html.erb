@@ -1,20 +1,26 @@
 <%
 	parent ||= nil
-	formArray = [post]
+	mainClass = nil
+	namespace = nil
 
 	if parent
-		formArray << parent.children.build
+		formObject = parent.children.build
+		namespace = "reply_to_#{parent.id}"
 	else
-		formArray << post.comments.build
+		formObject = post.comments.build
+		mainClass = "main_comment_form"
 	end
 %>
 
-<%= form_for formArray, remote: true do |f| %>
+<%= form_for formObject, namespace: namespace, remote: true, html: {class: "comment_form #{mainClass}"}, data: {target: target} do |f| %>
 	<%= f.label :author %><br />
 	<%= f.text_field :author %><br />
 	<%= f.label :title %><br />
 	<%= f.text_field :title %><br />
 	<%= f.label :body %><br />
 	<%= f.text_area :body %><br />
-	<%= f.submit %>
+	<%= f.hidden_field :post_id %>
+	<%= f.hidden_field :parent_id %>
+	<%= f.submit "Comment" %>
+	<%= f.button "Cancel", class: "cancel_comment" %>
 <% end %>

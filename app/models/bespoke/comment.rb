@@ -14,11 +14,11 @@
 
 module Bespoke
 	class Comment < ActiveRecord::Base
-		acts_as_tree order: 'created_at DESC', dependent: :destroy
-		belongs_to :post, inverse_of: :comments, dependent: :destroy
-		before_save :maintainPost
+		acts_as_tree order: 'created_at ASC', dependent: :destroy
+		belongs_to :post, inverse_of: :comments
+		before_validation :maintainPost
 
-		validates_presence_of :title, :body, :author
+		validates_presence_of :title, :body, :author, :post
 
 		private
 

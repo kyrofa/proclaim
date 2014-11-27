@@ -1,4 +1,4 @@
 module Bespoke
-  module CommentsHelper
-  end
+	module CommentsHelper
+	end
 end

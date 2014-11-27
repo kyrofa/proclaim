@@ -5,10 +5,19 @@
 		<%= comment.body %>
 	</div>
 
-	<%= link_to "Reply", class: "reply" %>
+	<%
+		deleteMessage = "Are you sure you want to delete this comment?"
+		unless comment.children.empty?
+			deleteMessage += " Note that this will remove all replies to this "\
+			                 "comment as well."
+		end
+	%>
 
-	<div class = "reply_form" style = "display: none;">
-		<%= render partial: "bespoke/comments/form", locals: {post: comment.post,
-		                                                      parent: comment} %>
-	</div>
+	<%= link_to "Reply", "#", class: "reply",
+	            data: {
+	            	form: "#{render(partial: "bespoke/comments/form", locals: {post: comment.post, parent: comment, target: target})}",
+	            	target: target
+	            } %>
+
+	<%= link_to "Delete", comment, method: :delete, remote: true, class: "delete", data: { confirm: deleteMessage } %>
 </div>
