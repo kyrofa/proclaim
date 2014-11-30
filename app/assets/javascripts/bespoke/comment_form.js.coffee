@@ -129,8 +129,6 @@ class CommentForm
 			form.each (index, element) ->
 				element.reset()
 		else
-			console.log("Removing...")
-
 			if (hideInsteadOfRemove)
 				form.hide()
 			else

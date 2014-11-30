@@ -1,5 +1,6 @@
 require 'rails'
 require 'closure_tree'
+require 'pundit'
 
 module Bespoke
 	class Engine < ::Rails::Engine

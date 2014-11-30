@@ -3,10 +3,12 @@ require_dependency "bespoke/application_controller"
 module Bespoke
 	class CommentsController < ApplicationController
 		before_action :authenticate_author, only: [:destroy]
+		after_action :verify_authorized
 
 		def create
 			sleep 3
 			@comment = Comment.new(comment_params)
+			authorize @comment
 
 			respond_to do |format|
 				if @comment.save

@@ -19,8 +19,10 @@ Gem::Specification.new do |s|
 
 	s.add_dependency "rails", "~> 4.1.7"
 	s.add_dependency "closure_tree"
+	s.add_dependency "pundit" # For simple authorization
 
 	s.add_development_dependency "sqlite3"
 	s.add_development_dependency "factory_girl_rails"
+	s.add_development_dependency "mocha"
 	s.add_development_dependency "annotate"
 end

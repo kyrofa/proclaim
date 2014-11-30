@@ -3,6 +3,7 @@ PATH
   specs:
     bespoke (0.0.1)
       closure_tree
+      pundit
       rails (~> 4.1.7)
 
 GEM
@@ -53,9 +54,14 @@ GEM
     json (1.8.1)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    metaclass (0.0.4)
     mime-types (2.4.3)
     minitest (5.4.2)
+    mocha (1.1.0)
+      metaclass (~> 0.0.1)
     multi_json (1.10.1)
+    pundit (0.3.0)
+      activesupport (>= 3.0.0)
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -101,4 +107,5 @@ DEPENDENCIES
   annotate
   bespoke!
   factory_girl_rails
+  mocha
   sqlite3
