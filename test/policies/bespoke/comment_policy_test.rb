@@ -1,6 +1,22 @@
 require 'test_helper'
 
 class CommentPolicyTest < ActiveSupport::TestCase
+	test "comment scope" do
+		user = FactoryGirl.create(:user)
+		comment1 = FactoryGirl.create(:comment)
+		comment2 = FactoryGirl.create(:comment)
+
+		# Verify that a user can view both comments
+		comments = Pundit.policy_scope(user, Bespoke::Comment)
+		assert_includes comments, comment1
+		assert_includes comments, comment2
+
+		# Verify that even without a user, both comments can still be viewed
+		comments = Pundit.policy_scope(nil, Bespoke::Comment)
+		assert_includes comments, comment1
+		assert_includes comments, comment2
+	end
+
 	test "comment creation" do
 		user = FactoryGirl.create(:user)
 		comment = FactoryGirl.build(:comment)
@@ -14,18 +30,12 @@ class CommentPolicyTest < ActiveSupport::TestCase
 		assert policy.create?
 	end
 
-  def test_scope
-  end
+	test "comment show" do
+	end
 
-  def test_create
-  end
+	test "comment update" do
+	end
 
-  def test_show
-  end
-
-  def test_update
-  end
-
-  def test_destroy
-  end
+	test "comment destroy" do
+	end
 end
