@@ -5,6 +5,10 @@ require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require "rails/test_help"
 require "factory_girl_rails"
 require "mocha/mini_test"
+require 'capybara/rails'
+require 'capybara/poltergeist'
+Capybara.javascript_driver = :poltergeist
+#Capybara.app = Bespoke::Engine
 
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -23,7 +27,17 @@ end
 #	include Bespoke::Engine.routes.url_helpers
 #end
 
+class ActionDispatch::IntegrationTest
+  # Make the Capybara DSL available in all integration tests
+  include Capybara::DSL
+end
+
 def sign_in(user)
-	@controller.stubs(:current_user).returns(user)
-	@controller.stubs(:authenticate_user).returns(true)
+	ApplicationController.any_instance.stubs(:current_user).returns(user)
+	ApplicationController.any_instance.stubs(:authenticate_user).returns(true)
+
+	if @controller
+		@controller.stubs(:current_user).returns(user)
+		@controller.stubs(:authenticate_user).returns(true)
+	end
 end

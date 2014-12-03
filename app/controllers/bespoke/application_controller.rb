@@ -27,4 +27,8 @@ class Bespoke::ApplicationController < ApplicationController
 			      " ensure that `Bespoke.current_author_method` is valid."
 		end
 	end
+
+	def pundit_user
+		current_author
+	end
 end
