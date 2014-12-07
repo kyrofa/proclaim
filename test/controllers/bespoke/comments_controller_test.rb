@@ -22,10 +22,11 @@ module Bespoke
 					title: newComment.title,
 					post_id: newComment.post_id
 				}
-				json = JSON.parse(@response.body)
-				assert_not_nil json["id"]
-				assert_not_nil json["html"]
 			end
+
+			json = JSON.parse(@response.body)
+			assert_not_nil json["id"]
+			assert_not_nil json["html"]
 		end
 
 		test "should create comment if not logged in" do
@@ -57,6 +58,10 @@ module Bespoke
 				title: newComment.title,
 				post_id: newComment.post_id
 			}
+
+			json = JSON.parse(@response.body)
+			assert_not_nil json["id"]
+			assert_not_nil json["html"]
 		end
 
 		test "should not update comment if not logged in" do

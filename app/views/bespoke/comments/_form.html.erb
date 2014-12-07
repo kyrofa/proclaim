@@ -12,7 +12,7 @@
 	end
 %>
 
-<%= form_for formObject, namespace: namespace, remote: true, html: {class: "comment_form #{mainClass}"}, data: {target: target} do |f| %>
+<%= form_for formObject, namespace: namespace, remote: true, format: :json, html: {class: "comment_form #{mainClass}"}, data: {target: target} do |f| %>
 	<%= f.label :author %><br />
 	<%= f.text_field :author %><br />
 	<%= f.label :title %><br />

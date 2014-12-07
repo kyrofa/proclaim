@@ -45,6 +45,7 @@ module Bespoke
 		test "should not get new if not logged in" do
 			get :new
 			assert_response :redirect
+			assert_match /not authorized/, flash[:error]
 		end
 
 		test "should create post if logged in" do
@@ -62,6 +63,7 @@ module Bespoke
 			end
 
 			assert_redirected_to post_path(assigns(:post))
+			assert_match  /successfully created/, flash[:notice]
 		end
 
 		test "should not create post if not logged in" do
@@ -76,6 +78,7 @@ module Bespoke
 			end
 
 			assert_response :redirect
+			assert_match /not authorized/, flash[:error]
 		end
 
 		test "should show post if logged in" do
@@ -136,6 +139,7 @@ module Bespoke
 
 			get :edit, id: newPost
 			assert_response :redirect
+			assert_match /not authorized/, flash[:error]
 		end
 
 		test "should update post if logged in" do
@@ -151,6 +155,7 @@ module Bespoke
 			}
 
 			assert_redirected_to post_path(assigns(:post))
+			assert_match /successfully updated/, flash[:notice]
 		end
 
 		test "should not update post if not logged in" do
@@ -163,6 +168,7 @@ module Bespoke
 			}
 
 			assert_response :redirect
+			assert_match /not authorized/, flash[:error]
 		end
 
 		test "should destroy post if logged in" do
@@ -176,6 +182,7 @@ module Bespoke
 			end
 
 			assert_redirected_to posts_path
+			assert_match /successfully destroyed/, flash[:notice]
 		end
 
 		test "should not destroy post if not logged in" do
@@ -186,6 +193,7 @@ module Bespoke
 			end
 
 			assert_response :redirect
+			assert_match /not authorized/, flash[:error]
 		end
   end
 end

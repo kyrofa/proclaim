@@ -1,4 +1,7 @@
 require 'rails'
+require 'coffee-rails'
+require 'sass-rails'
+require 'jquery-rails'
 require 'closure_tree'
 require 'pundit'
 

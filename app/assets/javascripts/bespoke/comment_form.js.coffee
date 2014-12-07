@@ -40,28 +40,19 @@ class CommentForm
 
 	# Disable the form until the new comment has been processed
 	handleCommentStarted: (event, xhr, settings) =>
-		console.log("Started!")
-		console.log($(event.target))
 		form = $(event.target)
 		form.find(":input").prop("disabled", true);
 		form.before('<div class = "loading" style = "width: 100px;"></div>')
 
 	handleCommentFinished: (event, xhr, status) =>
-		console.log("Finished!")
-		console.log($(event.target))
 		form = $(event.target)
 		target = $(form.data("target"))
 		form.find(":input").prop("disabled", false);
-
-		console.log("Finished...")
-		console.log(form)
-		console.log(form.siblings('div.loading'))
 		form.siblings('div.loading').remove()
 
 		@removeForm form
 
 	handleCommentSuccess: (event, data, status, xhr) =>
-		console.log("Success!")
 		target = $($(event.target).data("target"))
 		if target.length == 1
 			if data.html.length > 0

@@ -18,6 +18,9 @@ Gem::Specification.new do |s|
 	s.test_files = Dir["test/**/*"]
 
 	s.add_dependency "rails", "~> 4.1.7"
+	s.add_dependency "coffee-rails", "~> 4.0.0"
+	s.add_dependency "sass-rails", "> 4.0.3"
+	s.add_dependency "jquery-rails"
 	s.add_dependency "closure_tree"
 	s.add_dependency "pundit" # For simple authorization
 
@@ -26,5 +29,6 @@ Gem::Specification.new do |s|
 	s.add_development_dependency "mocha"
 	s.add_development_dependency "annotate"
 	s.add_development_dependency "capybara"
-	s.add_development_dependency "poltergeist"
+	s.add_development_dependency "selenium-webdriver"
+	s.add_development_dependency "database_cleaner"
 end

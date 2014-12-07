@@ -6,8 +6,9 @@ require "rails/test_help"
 require "factory_girl_rails"
 require "mocha/mini_test"
 require 'capybara/rails'
-require 'capybara/poltergeist'
-Capybara.javascript_driver = :poltergeist
+require 'database_cleaner'
+require 'coffee_script'
+require 'sass'
 #Capybara.app = Bespoke::Engine
 
 Rails.backtrace_cleaner.remove_silencers!
