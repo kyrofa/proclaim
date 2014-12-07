@@ -1,10 +1,12 @@
 <script type="text/javascript">
 	$(document).ready(function()
 	{
-		new CommentForm('div.comment_container',
+		new CommentForm('div.discussion',
+		                'div.comment',
 		                'form.comment_form',
 		                'button.cancel_comment',
 		                'a.reply',
+		                'a.edit',
 		                'a.delete')
 	});
 </script>
@@ -26,4 +28,10 @@
 	<%= comments_tree_for @post.comments.hash_tree %>
 </div>
 
-<%= render partial: "bespoke/comments/form", locals: { post: @post, target: "#comments" } %>
+<% commentTemplate = @post.comments.build %>
+<%= render partial: "bespoke/comments/form",
+           locals: {
+              comment: commentTemplate,
+              target: "#comments",
+              main: true
+           } %>

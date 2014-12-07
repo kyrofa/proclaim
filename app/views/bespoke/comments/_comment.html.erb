@@ -1,4 +1,4 @@
-<div id = "comment_<%= comment.id %>">
+<div id = "comment_<%= comment.id %>" class = "comment">
 	<h3><%= comment.title %></h3>
 	<p><em>By <%= comment.author %></em></p>
 	<div>
@@ -11,13 +11,24 @@
 			deleteMessage += " Note that this will remove all replies to this "\
 			                 "comment as well."
 		end
+
+		replyComment = comment.children.build
 	%>
 
 	<%= link_to "Reply", "#", class: "reply",
 	            data: {
-	            	form: "#{render(partial: "bespoke/comments/form", locals: {post: comment.post, parent: comment, target: target})}",
+	            	form: "#{render(partial: "bespoke/comments/form", locals: {comment: replyComment, target: target})}",
 	            	target: target
 	            } %>
 
-	<%= link_to "Delete", comment, method: :delete, remote: true, class: "delete", data: { confirm: deleteMessage } %>
+	<% if policy(comment).destroy? %>
+		<%= link_to "Edit", "#", class: "edit",
+	            data: {
+	            	form: "#{render(partial: "bespoke/comments/form", locals: {comment: comment})}"
+	            } %>
+	<% end %>
+
+	<% if policy(comment).destroy? %>
+		<%= link_to "Delete", comment, method: :delete, remote: true, class: "delete", data: { confirm: deleteMessage } %>
+	<% end %>
 </div>

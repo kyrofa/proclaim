@@ -1,18 +1,20 @@
 <%
-	parent ||= nil
-	mainClass = nil
+	target ||= nil
+	main ||= false
+
+	formClass = "comment_form"
 	namespace = nil
 
-	if parent
-		formObject = parent.children.build
-		namespace = "reply_to_#{parent.id}"
-	else
-		formObject = post.comments.build
-		mainClass = "main_comment_form"
+	if comment.parent and comment.new_record?
+		namespace = "reply_to_#{comment.parent.id}"
+	end
+
+	if main
+		formClass += " main_comment_form"
 	end
 %>
 
-<%= form_for formObject, namespace: namespace, remote: true, format: :json, html: {class: "comment_form #{mainClass}"}, data: {target: target} do |f| %>
+<%= form_for comment, namespace: namespace, remote: true, format: :json, html: {class: formClass}, data: {target: target} do |f| %>
 	<%= f.label :author %><br />
 	<%= f.text_field :author %><br />
 	<%= f.label :title %><br />

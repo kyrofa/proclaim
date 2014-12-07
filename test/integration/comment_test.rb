@@ -56,6 +56,130 @@ class CommentTest < ActionDispatch::IntegrationTest
 		assert page.has_css?('h3', text: 'Reply Title')
 	end
 
+	test "should not have option to edit if not logged in" do
+		post = FactoryGirl.create(:post,
+		                          published: true,
+		                          publication_date: Date.today)
+		comment = FactoryGirl.create(:comment,
+		                             post: post)
+
+		visit bespoke.post_path(post)
+
+		assert page.has_no_css?("#comment_#{comment.id} .edit"),
+		       "A guest should not be given the option to edit a comment!"
+	end
+
+	test "edit root comment" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		post = FactoryGirl.create(:post,
+		                          published: true,
+		                          publication_date: Date.today)
+		comment = FactoryGirl.create(:comment,
+		                             post: post,
+		                             title: "Comment Title")
+
+		visit bespoke.post_path(post)
+
+		find("#comment_#{comment.id} .edit").click
+		assert page.has_no_css?('h3', text: 'Comment Title'),
+		       "The comment should have been completely replaced by the edit form!"
+
+		within("#edit_comment_#{comment.id}") do
+			fill_in 'Author', with: "Edit Author"
+			fill_in 'Title', with: "Edit Title"
+			fill_in 'Body', with: "Edit Body"
+		end
+		find("#edit_comment_#{comment.id} input[type=submit]").click
+		assert page.has_css?('h3', text: 'Edit Title')
+		assert page.has_no_css?('h3', text: 'Comment Title'),
+		       "The old comment should be gone!"
+	end
+
+	test "edit parent comment" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		post = FactoryGirl.create(:post,
+		                          published: true,
+		                          publication_date: Date.today)
+		parent = FactoryGirl.create(:comment,
+		                             post: post,
+		                             title: "Parent Title")
+		child = FactoryGirl.create(:comment,
+		                             post: post,
+		                             parent: parent,
+		                             title: "Child Title")
+
+		visit bespoke.post_path(post)
+
+		find("#comment_#{parent.id} .edit").click
+		assert page.has_no_css?('h3', text: 'Parent Title'),
+		       "The parent comment should have been completely replaced by the edit form!"
+		assert page.has_css?('h3', text: 'Child Title'),
+		       "The child comment should still be on the page!"
+
+		within("#edit_comment_#{parent.id}") do
+			fill_in 'Author', with: "Edit Author"
+			fill_in 'Title', with: "Edit Title"
+			fill_in 'Body', with: "Edit Body"
+		end
+		find("#edit_comment_#{parent.id} input[type=submit]").click
+		assert page.has_css?('h3', text: 'Edit Title')
+		assert page.has_css?('h3', text: 'Child Title')
+		assert page.has_no_css?('h3', text: 'Parent Title'),
+		       "The old parent comment should be gone!"
+	end
+
+	test "edit child comment" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		post = FactoryGirl.create(:post,
+		                          published: true,
+		                          publication_date: Date.today)
+		parent = FactoryGirl.create(:comment,
+		                             post: post,
+		                             title: "Parent Title")
+		child = FactoryGirl.create(:comment,
+		                             post: post,
+		                             parent: parent,
+		                             title: "Child Title")
+
+		visit bespoke.post_path(post)
+
+		find("#comment_#{child.id} .edit").click
+		assert page.has_no_css?('h3', text: 'Child Title'),
+		       "The child comment should have been completely replaced by the edit form!"
+		assert page.has_css?('h3', text: 'Parent Title'),
+		       "The parent comment should still be on the page!"
+
+		within("#edit_comment_#{child.id}") do
+			fill_in 'Author', with: "Edit Author"
+			fill_in 'Title', with: "Edit Title"
+			fill_in 'Body', with: "Edit Body"
+		end
+		find("#edit_comment_#{child.id} input[type=submit]").click
+		assert page.has_css?('h3', text: 'Edit Title')
+		assert page.has_css?('h3', text: 'Parent Title')
+		assert page.has_no_css?('h3', text: 'Child Title'),
+		       "The old child comment should be gone!"
+	end
+
+	test "should not have option to delete if not logged in" do
+		post = FactoryGirl.create(:post,
+		                          published: true,
+		                          publication_date: Date.today)
+		comment = FactoryGirl.create(:comment,
+		                             post: post)
+
+		visit bespoke.post_path(post)
+
+		assert page.has_no_css?("#comment_#{comment.id} .delete"),
+		       "A guest should not be given the option to delete a comment!"
+	end
+
 	test "delete root comment" do
 		user = FactoryGirl.create(:user)
 		sign_in user
@@ -72,7 +196,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 		assert_difference('Bespoke::Comment.count', -1) do
 			find("#comment_#{comment.id} .delete").click
 			page.accept_alert
-			assert page.has_no_css?('h3', text: 'Comment Title')
+			assert page.has_no_css? 'h3', text: 'Comment Title'
 		end
 	end
 
@@ -96,8 +220,8 @@ class CommentTest < ActionDispatch::IntegrationTest
 		assert_difference('Bespoke::Comment.count', -2) do
 			find("#comment_#{parent.id} .delete").click
 			page.accept_alert
-			assert page.has_no_css?('h3', text: 'Parent Title')
-			assert page.has_no_css?('h3', text: 'Child Title')
+			assert page.has_no_css? 'h3', text: 'Parent Title'
+			assert page.has_no_css? 'h3', text: 'Child Title'
 		end
 	end
 
@@ -120,7 +244,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 		assert_difference('Bespoke::Comment.count', -1) do
 			find("#comment_#{child.id} .delete").click
 			page.accept_alert
-			assert page.has_no_css?('h3', text: 'Child Title')
+			assert page.has_no_css? 'h3', text: 'Child Title'
 		end
 	end
 end

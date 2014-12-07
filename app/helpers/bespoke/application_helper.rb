@@ -18,7 +18,7 @@ module Bespoke
 				                          id: "comment_#{comment.id}_replies",
 				                          class: "replies")
 
-				content_tag(:div, commentHtml + repliesHtml, class: "comment_container")
+				content_tag(:div, commentHtml + repliesHtml, class: "discussion")
 			end.join.html_safe
 		end
 	end

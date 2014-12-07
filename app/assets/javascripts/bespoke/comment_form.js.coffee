@@ -1,11 +1,13 @@
 class CommentForm
-	constructor: (@commentContainerClass, @commentFormClass,
-	              @cancelCommentButtonClass, @replyLinkClass,
+	constructor: (@discussionClass, @commentClass, @commentFormClass,
+	              @cancelCommentButtonClass, @replyLinkClass, @updateLinkClass,
 	              @deleteLinkClass) ->
-		if (@commentContainerClass.length > 0) and
+		if (@discussionClass.length > 0) and
+		   (@commentClass.length > 0) and
 		   (@commentFormClass.length > 0) and
 		   (@cancelCommentButtonClass.length > 0) and
 		   (@replyLinkClass.length > 0) and
+		   (@updateLinkClass.length > 0) and
 		   (@deleteLinkClass.length > 0)
 			@cleanBindings()
 			@addBindings()
@@ -13,7 +15,8 @@ class CommentForm
 			console.error("Invalid length for comment classes!")
 
 	addBindings: ->
-		$(document).on "click", @replyLinkClass, @showCommentForm
+		$(document).on "click", @replyLinkClass, @showNewCommentForm
+		$(document).on "click", @updateLinkClass, @showUpdateCommentForm
 		$(document).on "click", @cancelCommentButtonClass, @cancelComment
 
 		$(document).on "ajax:beforeSend", @commentFormClass, @handleCommentStarted
@@ -27,6 +30,7 @@ class CommentForm
 
 	cleanBindings: ->
 		$(document).off "click", @replyLinkClass
+		$(document).off "click", @updateLinkClass
 		$(document).off "click", @cancelCommentButtonClass
 
 		$(document).off "ajax:beforeSend", @commentFormClass
@@ -53,17 +57,24 @@ class CommentForm
 		@removeForm form
 
 	handleCommentSuccess: (event, data, status, xhr) =>
-		target = $($(event.target).data("target"))
-		if target.length == 1
-			if data.html.length > 0
-				target.append(data.html)
+		if data.html.length == 0
+			console.error("Invalid comment HTML!")
+			return
 
-				# Hide form, but don't remove so events can still be emitted
-				@removeForm $(event.target), true
-			else
-				console.error("Invalid comment HTML!")
+		form = $(event.target)
+
+		if form.hasClass("edit_comment")
+			form.closest(@discussionClass).replaceWith(data.html)
 		else
-			console.error("Invalid comment target!")
+			target = $(form.data("target"))
+			if target.length == 1
+				target.append(data.html)
+			else
+				console.error("Invalid comment target!")
+				return
+
+		# Hide form, but don't remove so events can still be emitted
+			@removeForm form, true
 
 	handleCommentFailure: (event, xhr, status, error) =>
 		console.log("Failure!")
@@ -78,7 +89,7 @@ class CommentForm
 		$(event.target).before(errorMessage)
 
 	handleDeleteCommentSuccess: (event, data, status, xhr) =>
-		commentContainer = $(event.target).closest(@commentContainerClass)
+		commentContainer = $(event.target).closest(@discussionClass)
 		if commentContainer.length == 1
 			commentContainer.fadeOut ->
 				commentContainer.remove()
@@ -88,7 +99,7 @@ class CommentForm
 	handleDeleteCommentFailure: (event, xhr, status, error) =>
 		console.error("Unable to delete comment!")
 
-	showCommentForm: (event) =>
+	showNewCommentForm: (event) =>
 		event.preventDefault()
 
 		target = $($(event.target).data("target"))
@@ -104,11 +115,32 @@ class CommentForm
 				return
 
 			target.append(form)
+			target.children(@commentFormClass).addClass("new_comment")
+
+
+	showUpdateCommentForm: (event) =>
+		event.preventDefault()
+
+		target = $(event.target)
+
+		form = target.data("form")
+		if form.length == 0
+			console.error("Invalid comment form data!")
+			return
+
+		discussion = target.closest(@discussionClass)
+		target.closest(@commentClass).hide()
+		discussion.prepend(form)
+		discussion.children(@commentFormClass).addClass("edit_comment")
 
 	cancelComment: (event) =>
 		event.preventDefault()
 
-		@removeForm $(event.target).closest(@commentFormClass)
+		form = $(event.target).closest(@commentFormClass)
+		if form.hasClass("edit_comment")
+			form.siblings(@commentClass).show()
+
+		@removeForm form
 
 	removeForm: (form, hideInsteadOfRemove = false) ->
 		if form.length == 0

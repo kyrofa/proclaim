@@ -16,7 +16,7 @@ module Bespoke
 	class Comment < ActiveRecord::Base
 		acts_as_tree order: 'created_at ASC', dependent: :destroy
 		belongs_to :post, inverse_of: :comments
-		before_validation :maintainPost
+		after_initialize :maintainPost
 
 		validates_presence_of :title, :body, :author, :post
 
