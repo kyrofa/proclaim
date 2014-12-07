@@ -115,7 +115,11 @@ class CommentForm
 				return
 
 			target.append(form)
-			target.children(@commentFormClass).addClass("new_comment")
+			form = target.children(@commentFormClass)
+			form.addClass("new_comment")
+
+			form.children(@cancelCommentButtonClass).focus();
+			form.children("input:text:visible:first").focus();
 
 
 	showUpdateCommentForm: (event) =>
@@ -131,7 +135,10 @@ class CommentForm
 		discussion = target.closest(@discussionClass)
 		target.closest(@commentClass).hide()
 		discussion.prepend(form)
-		discussion.children(@commentFormClass).addClass("edit_comment")
+		form = discussion.children(@commentFormClass)
+		form.addClass("edit_comment")
+		form.children(@cancelCommentButtonClass).focus();
+		form.children("input:text:visible:first").focus();
 
 	cancelComment: (event) =>
 		event.preventDefault()
