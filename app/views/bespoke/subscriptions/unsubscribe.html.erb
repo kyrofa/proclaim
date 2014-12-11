@@ -1,0 +1,7 @@
+<p>
+	Are you sure you'd like to unsubscribe from this notification item? Note that
+	if you've subscribed elsewhere (e.g. other comments), you'll still receive
+	notifications for them unless you unsubscribe from them as well.
+</p>
+
+<%= link_to "Yes, unsubscribe", unsubscribe_path(@subscription.token), method: :delete %>

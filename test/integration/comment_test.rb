@@ -19,9 +19,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "leave root comment" do
-		post = FactoryGirl.create(:post,
-		                          published: true,
-		                          publication_date: Date.today)
+		post = FactoryGirl.create(:published_post)
 
 		visit bespoke.post_path(post)
 
@@ -36,14 +34,9 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "leave reply" do
-		post = FactoryGirl.create(:post,
-		                          published: true,
-		                          publication_date: Date.today)
-		comment = FactoryGirl.create(:comment,
-		                             post: post,
-		                             title: "Comment Title")
+		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(post)
+		visit bespoke.post_path(comment.post)
 
 		# Test leaving a reply
 		click_link "Reply"
@@ -57,13 +50,9 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not have option to edit if not logged in" do
-		post = FactoryGirl.create(:post,
-		                          published: true,
-		                          publication_date: Date.today)
-		comment = FactoryGirl.create(:comment,
-		                             post: post)
+		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(post)
+		visit bespoke.post_path(comment.post)
 
 		assert page.has_no_css?("#comment_#{comment.id} .edit"),
 		       "A guest should not be given the option to edit a comment!"
@@ -73,14 +62,10 @@ class CommentTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		post = FactoryGirl.create(:post,
-		                          published: true,
-		                          publication_date: Date.today)
-		comment = FactoryGirl.create(:comment,
-		                             post: post,
+		comment = FactoryGirl.create(:published_comment,
 		                             title: "Comment Title")
 
-		visit bespoke.post_path(post)
+		visit bespoke.post_path(comment.post)
 
 		find("#comment_#{comment.id} .edit").click
 		assert page.has_no_css?('h3', text: 'Comment Title'),
@@ -101,18 +86,14 @@ class CommentTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		post = FactoryGirl.create(:post,
-		                          published: true,
-		                          publication_date: Date.today)
-		parent = FactoryGirl.create(:comment,
-		                             post: post,
+		parent = FactoryGirl.create(:published_comment,
 		                             title: "Parent Title")
-		child = FactoryGirl.create(:comment,
-		                             post: post,
-		                             parent: parent,
-		                             title: "Child Title")
+		child = FactoryGirl.create(:published_comment,
+		                           post: parent.post,
+		                           parent: parent,
+		                           title: "Child Title")
 
-		visit bespoke.post_path(post)
+		visit bespoke.post_path(parent.post)
 
 		find("#comment_#{parent.id} .edit").click
 		assert page.has_no_css?('h3', text: 'Parent Title'),
@@ -136,18 +117,14 @@ class CommentTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		post = FactoryGirl.create(:post,
-		                          published: true,
-		                          publication_date: Date.today)
-		parent = FactoryGirl.create(:comment,
-		                             post: post,
+		parent = FactoryGirl.create(:published_comment,
 		                             title: "Parent Title")
-		child = FactoryGirl.create(:comment,
-		                             post: post,
-		                             parent: parent,
-		                             title: "Child Title")
+		child = FactoryGirl.create(:published_comment,
+		                           post: parent.post,
+		                           parent: parent,
+		                           title: "Child Title")
 
-		visit bespoke.post_path(post)
+		visit bespoke.post_path(parent.post)
 
 		find("#comment_#{child.id} .edit").click
 		assert page.has_no_css?('h3', text: 'Child Title'),
@@ -168,13 +145,9 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not have option to delete if not logged in" do
-		post = FactoryGirl.create(:post,
-		                          published: true,
-		                          publication_date: Date.today)
-		comment = FactoryGirl.create(:comment,
-		                             post: post)
+		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(post)
+		visit bespoke.post_path(comment.post)
 
 		assert page.has_no_css?("#comment_#{comment.id} .delete"),
 		       "A guest should not be given the option to delete a comment!"
@@ -184,14 +157,10 @@ class CommentTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		post = FactoryGirl.create(:post,
-		                          published: true,
-		                          publication_date: Date.today)
-		comment = FactoryGirl.create(:comment,
-		                             post: post,
+		comment = FactoryGirl.create(:published_comment,
 		                             title: "Comment Title")
 
-		visit bespoke.post_path(post)
+		visit bespoke.post_path(comment.post)
 
 		assert_difference('Bespoke::Comment.count', -1) do
 			find("#comment_#{comment.id} .delete").click
@@ -204,18 +173,14 @@ class CommentTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		post = FactoryGirl.create(:post,
-		                          published: true,
-		                          publication_date: Date.today)
-		parent = FactoryGirl.create(:comment,
-		                             post: post,
+		parent = FactoryGirl.create(:published_comment,
 		                             title: "Parent Title")
-		child = FactoryGirl.create(:comment,
-		                             post: post,
-		                             parent: parent,
-		                             title: "Child Title")
+		child = FactoryGirl.create(:published_comment,
+		                           post: parent.post,
+		                           parent: parent,
+		                           title: "Child Title")
 
-		visit bespoke.post_path(post)
+		visit bespoke.post_path(parent.post)
 
 		assert_difference('Bespoke::Comment.count', -2) do
 			find("#comment_#{parent.id} .delete").click
@@ -229,22 +194,42 @@ class CommentTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		post = FactoryGirl.create(:post,
-		                          published: true,
-		                          publication_date: Date.today)
-		parent = FactoryGirl.create(:comment,
-		                             post: post)
-		child = FactoryGirl.create(:comment,
-		                             post: post,
-		                             parent: parent,
-		                             title: "Child Title")
+		parent = FactoryGirl.create(:published_comment,
+		                             title: "Parent Title")
+		child = FactoryGirl.create(:published_comment,
+		                           post: parent.post,
+		                           parent: parent,
+		                           title: "Child Title")
 
-		visit bespoke.post_path(post)
+		visit bespoke.post_path(parent.post)
 
 		assert_difference('Bespoke::Comment.count', -1) do
 			find("#comment_#{child.id} .delete").click
 			page.accept_alert
+			assert page.has_css? 'h3', text: 'Parent Title'
 			assert page.has_no_css? 'h3', text: 'Child Title'
 		end
+	end
+
+	test "cancel button should remove errors" do
+		post = FactoryGirl.create(:published_post)
+
+		visit bespoke.post_path(post)
+
+		within('#new_comment') do
+			fill_in 'Author', with: "Comment Author"
+			fill_in 'Title', with: "Comment Title"
+			# Make a mistake-- leave out the body
+		end
+		find('#new_comment input[type=submit]').click
+
+		# Errors should be on the page
+		assert page.has_css?('div.error')
+
+		# Now click cancel
+		find('#new_comment button.cancel_comment').click
+
+		# Now errors should be cleared
+		assert page.has_no_css?('div.error')
 	end
 end

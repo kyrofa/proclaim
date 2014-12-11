@@ -1,4 +1,4 @@
-class CommentForm
+class CommentsHandler
 	constructor: (@discussionClass, @commentClass, @commentFormClass,
 	              @cancelCommentButtonClass, @replyLinkClass, @updateLinkClass,
 	              @deleteLinkClass) ->
@@ -54,7 +54,7 @@ class CommentForm
 		form.find(":input").prop("disabled", false);
 		form.siblings('div.loading').remove()
 
-		@removeForm form
+		#@removeForm form
 
 	handleCommentSuccess: (event, data, status, xhr) =>
 		if data.html.length == 0
@@ -154,6 +154,8 @@ class CommentForm
 			console.error("Invalid comment form length for removal!")
 			return
 
+		form.siblings("div.error").remove() # If any
+
 		# Don't remove the main comment form-- just clear it
 		if form.hasClass("main_comment_form")
 			form.each (index, element) ->
@@ -165,4 +167,4 @@ class CommentForm
 				form.remove()
 
 # Make available to other scripts
-@CommentForm = CommentForm
+@CommentsHandler = CommentsHandler

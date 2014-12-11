@@ -1,21 +1,22 @@
 <script type="text/javascript">
 	$(document).ready(function()
 	{
-		new CommentForm('div.discussion',
-		                'div.comment',
-		                'form.comment_form',
-		                'button.cancel_comment',
-		                'a.reply',
-		                'a.edit',
-		                'a.delete')
+		console.log("Creating...")
+		new CommentsHandler('div.discussion',
+		                    'div.comment',
+		                    'form.comment_form',
+		                    'button.cancel_comment',
+		                    'a.reply',
+		                    'a.edit',
+		                    'a.delete')
 	});
 </script>
 
 
 <h1><%= @post.title %></h1>
-<p><em>By <%= @post.author %></em></p>
+<p><em><%= @post.author.send(Bespoke.author_name_method) %></em></p>
 
-<div>
+<div class = "post">
 	<%= @post.body %>
 </div>
 

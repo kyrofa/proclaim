@@ -1,0 +1,10 @@
+<%= @post.title %>
+==============================
+By <%= @post.author %>
+
+<%= @post.body %>
+
+You're receiving this email because you requested to be notified if a new post
+was made on the blog located here: <%= root_url %>. If you no longer wish to
+receive these emails, you may unsubscribe here:
+<%= unsubscribe_url(@subscription.token) %>.

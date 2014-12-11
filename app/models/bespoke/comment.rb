@@ -17,6 +17,7 @@ module Bespoke
 		acts_as_tree order: 'created_at ASC', dependent: :destroy
 		belongs_to :post, inverse_of: :comments
 		after_initialize :maintainPost
+		after_create :notifyPostSubscribers
 
 		validates_presence_of :title, :body, :author, :post
 
@@ -26,6 +27,10 @@ module Bespoke
 			if parent
 				self.post = parent.post
 			end
+		end
+
+		def notifyPostSubscribers
+			post.notifyPostSubscribers(self)
 		end
 	end
 end
