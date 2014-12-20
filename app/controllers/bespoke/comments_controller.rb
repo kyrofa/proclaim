@@ -8,13 +8,47 @@ module Bespoke
 
 		def create
 			@comment = Comment.new(comment_params)
-			authorize @comment
 
-			respond_to do |format|
-				if @comment.save
-					format.json { render_comment_json(@comment) }
-				else
-					format.json { render json: @comment.errors.full_messages, status: :unprocessable_entity }
+			begin
+				authorize @comment
+
+				subscription = nil
+				params = subscription_params
+				if params and params[:subscribe]
+					subscription = @comment.post.subscriptions.build(email: params[:email])
+				end
+
+				respond_to do |format|
+					errorMessages = Array.new
+					if subscription and not subscription.valid?
+						errorMessages += subscription.errors.full_messages
+					end
+
+					if not @comment.valid?
+						errorMessages += @comment.errors.full_messages
+					end
+
+					if errorMessages.empty?
+						if (subscription.nil? or (subscription and subscription.save)) and @comment.save
+							format.json { render_comment_json(@comment) }
+						else
+							errorMessages += @comment.errors.full_messages
+
+							if subscription
+								errorMessages += subscription.errors.full_messages
+							end
+						end
+					end
+
+					unless errorMessages.empty?
+						format.json { render json: errorMessages, status: :unprocessable_entity }
+					end
+				end
+			rescue Pundit::NotAuthorizedError
+				respond_to do |format|
+					# Don't leak that the post actually exists. Turn the
+					# "unauthorized" into a "not found"
+					format.json { render json: true, status: :not_found }
 				end
 			end
 		end
@@ -76,6 +110,13 @@ module Bespoke
 			                                :author,
 			                                :post_id,
 			                                :parent_id)
+		end
+
+		def subscription_params
+			if params[:subscription]
+				params.require(:subscription).permit(:subscribe,
+			                                        :email)
+			end
 		end
 	end
 end

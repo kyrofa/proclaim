@@ -1,7 +1,13 @@
 module Bespoke
 	class CommentPolicy < ApplicationPolicy
 		def create?
-			true # Anyone can create a comment
+			# Users can comment on whatever they want, but guests can only comment
+			# on published posts
+			if @user
+				true
+			else
+				@record.post.published?
+			end
 		end
 
 		def update?

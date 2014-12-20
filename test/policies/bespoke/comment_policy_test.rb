@@ -19,15 +19,28 @@ class CommentPolicyTest < ActiveSupport::TestCase
 
 	test "comment creation" do
 		user = FactoryGirl.create(:user)
-		comment = FactoryGirl.build(:comment)
+		publishedComment = FactoryGirl.build(:published_comment)
+		unpublishedComment = FactoryGirl.build(:comment)
 
-		# Verify that a user can create a comment
-		policy = Bespoke::CommentPolicy.new(user, comment)
-		assert policy.create?, "A user should be able to create comments!"
+		# Verify that a user can create a comment on a published post
+		policy = Bespoke::CommentPolicy.new(user, publishedComment)
+		assert policy.create?,
+		       "A user should be able to create comments on published posts!"
 
-		# Verify that even without a user, a comment can still be created
-		policy = Bespoke::CommentPolicy.new(nil, comment)
-		assert policy.create?, "A guest should be able to create comments!"
+		# Verify that a user can create a comment on an unpublished post
+		policy = Bespoke::CommentPolicy.new(user, unpublishedComment)
+		assert policy.create?,
+		       "A user should be able to create comments on unpublished posts!"
+
+		# Verify that a guest can create a comment on a published post
+		policy = Bespoke::CommentPolicy.new(nil, publishedComment)
+		assert policy.create?,
+		       "A guest should be able to create comments on published posts!"
+
+		# Verify that a guest cannot create a comment on an unpublished post
+		policy = Bespoke::CommentPolicy.new(nil, unpublishedComment)
+		refute policy.create?,
+		       "A guest should not be able to create comments on unpublished posts!"
 	end
 
 	test "comment update" do

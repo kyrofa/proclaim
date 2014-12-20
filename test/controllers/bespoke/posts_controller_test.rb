@@ -13,8 +13,8 @@ module Bespoke
 			user = FactoryGirl.create(:user)
 			sign_in user
 
-			post1 = FactoryGirl.create(:post, published: false)
-			post2 = FactoryGirl.create(:post, published: true, publication_date: Time.now)
+			post1 = FactoryGirl.create(:post)
+			post2 = FactoryGirl.create(:published_post)
 
 			get :index
 			assert_response :success
@@ -24,8 +24,8 @@ module Bespoke
 		end
 
 		test "should get index even if not logged in" do
-			post1 = FactoryGirl.create(:post, published: false)
-			post2 = FactoryGirl.create(:post, published: true, publication_date: Time.now)
+			post1 = FactoryGirl.create(:post)
+			post2 = FactoryGirl.create(:published_post)
 
 			get :index
 			assert_response :success
@@ -86,33 +86,30 @@ module Bespoke
 			sign_in user
 
 			# Should show published post
-			newPost = FactoryGirl.create(:post, published: true, publication_date: Time.now)
+			newPost = FactoryGirl.create(:published_post)
 
 			get :show, id: newPost
 			assert_response :success
-			assert_not_nil assigns(:post)
 			assert_equal assigns(:post), newPost
 
 			# Should also show unpublished post
-			newPost = FactoryGirl.create(:post, published: false)
+			newPost = FactoryGirl.create(:post)
 
 			get :show, id: newPost
 			assert_response :success
-			assert_not_nil assigns(:post)
 			assert_equal assigns(:post), newPost
 		end
 
 		test "should show post if not logged in" do
 			# Should show published post
-			newPost = FactoryGirl.create(:post, published: true, publication_date: Time.now)
+			newPost = FactoryGirl.create(:published_post)
 
 			get :show, id: newPost
 			assert_response :success
-			assert_not_nil assigns(:post)
 			assert_equal assigns(:post), newPost
 
 			# Should not show unpublished post
-			newPost = FactoryGirl.create(:post, published: false)
+			newPost = FactoryGirl.create(:post)
 
 			# Controller should hide the "permission denied" in a "not-found"
 			assert_raises ActiveRecord::RecordNotFound do
@@ -124,17 +121,14 @@ module Bespoke
 			user = FactoryGirl.create(:user)
 			sign_in user
 
-			# Should show published post
 			newPost = FactoryGirl.create(:post)
 
 			get :edit, id: newPost
 			assert_response :success
-			assert_not_nil assigns(:post)
 			assert_equal assigns(:post), newPost
 		end
 
 		test "should not get edit if not logged in" do
-			# Should show published post
 			newPost = FactoryGirl.create(:post)
 
 			get :edit, id: newPost

@@ -58,5 +58,29 @@ module Bespoke
 
 			assert post.save, "Post should save successfully if published with a publication date!"
 		end
+
+		test "verify excerpt" do
+			excerptLengthBackup = Bespoke.excerpt_length
+
+			post = FactoryGirl.create(:post, body: "foo bar baz qux")
+
+			Bespoke.excerpt_length = 10
+			assert_equal "foo bar", post.excerpt
+
+			Bespoke.excerpt_length = 11
+			assert_equal "foo bar baz", post.excerpt
+
+			Bespoke.excerpt_length = 12
+			assert_equal "foo bar baz", post.excerpt
+
+			Bespoke.excerpt_length = 15
+			assert_equal "foo bar baz qux", post.excerpt
+
+			Bespoke.excerpt_length = 20
+			assert_equal "foo bar baz qux", post.excerpt
+
+			Bespoke.excerpt_length = excerptLengthBackup
+		end
+
 	end
 end

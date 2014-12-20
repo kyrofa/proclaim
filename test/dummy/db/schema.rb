@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141117214323) do
+ActiveRecord::Schema.define(version: 20141210234057) do
 
   create_table "bespoke_comment_hierarchies", id: false, force: true do |t|
     t.integer "ancestor_id",   null: false
@@ -45,6 +45,16 @@ ActiveRecord::Schema.define(version: 20141117214323) do
   end
 
   add_index "bespoke_posts", ["author_id"], name: "index_bespoke_posts_on_author_id"
+
+  create_table "bespoke_subscriptions", force: true do |t|
+    t.integer  "post_id"
+    t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "bespoke_subscriptions", ["post_id", "email"], name: "index_bespoke_subscriptions_on_post_id_and_email", unique: true
+  add_index "bespoke_subscriptions", ["post_id"], name: "index_bespoke_subscriptions_on_post_id"
 
   create_table "users", force: true do |t|
     t.string   "first_name"

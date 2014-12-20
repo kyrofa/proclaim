@@ -4,5 +4,9 @@ FactoryGirl.define do
 		sequence(:title) {|n| "title#{n}"}
 		sequence(:body) {|n| "body#{n}"}
 		post
+
+		factory :published_comment do
+			association :post, factory: :published_post
+		end
 	end
 end

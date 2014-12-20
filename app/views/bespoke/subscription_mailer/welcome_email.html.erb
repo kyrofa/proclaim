@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+	</head>
+	<body>
+		<% if @subscription.post %>
+			<h1>You'll be notified!</h1>
+
+			<p>
+				You signed up to be notified of any new comments on
+				<%= link_to "this post", @subscription.post %>.
+			</p>
+		<% else %>
+			<h1>Thanks for subscribing!</h1>
+
+			<p>
+				You'll now begin receiving a notification each time a new post
+				is made.
+			</p>
+		<% end %>
+
+		<p>
+			If you no longer wish to receive this notification, simply
+			<%= link_to "unsubscribe", unsubscribe_url(@subscription.token) %>.
+		</p>
+	</body>
+</html>

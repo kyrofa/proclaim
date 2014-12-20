@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+	</head>
+	<body>
+		<h1><%= @comment.title %></h1>
+		<p>By <%= @comment.author %></p>
+
+		<%= @comment.body %>
+
+		<p>
+			You're receiving this email because you requested to be notified if
+			a new comment was made on <%= link_to "this post", @comment.post %>.
+			If you no longer wish to receive these emails, simply
+			<%= link_to "unsubscribe", unsubscribe_url(@subscription.token) %>.
+		</p>
+	</body>
+</html>

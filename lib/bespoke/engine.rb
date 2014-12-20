@@ -16,5 +16,9 @@ module Bespoke
 				end
 			end
 		end
+
+		config.generators do |g|
+			g.fixture_replacement :factory_girl, :dir => 'test/factories'
+		end
 	end
 end
