@@ -1,4 +1,6 @@
-<%= link_to 'New Post', new_post_path %>
+<% if policy(Bespoke::Post).new? %>
+	<%= link_to 'New Post', new_post_path %>
+<% end %>
 
 <% @posts.each do |post| %>
 	<h1><%= link_to post.title, post %></h1>
@@ -12,8 +14,12 @@
 	</div>
 	<div class = "post_information">
 		<div style = "float: right;">
-			<%= link_to 'Edit', edit_post_path(post) %>
-			<%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+			<% if policy(post).edit? %>
+				<%= link_to 'Edit', edit_post_path(post) %>
+			<% end %>
+			<% if policy(post).destroy? %>
+				<%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+			<% end %>
 		</div>
 		<%= post.author.send(Bespoke.author_name_method) %>
 	</div>

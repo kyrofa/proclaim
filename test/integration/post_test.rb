@@ -6,6 +6,59 @@ class PostTest < ActionDispatch::IntegrationTest
 		ApplicationController.any_instance.stubs(:authenticate_user).returns(false)
 	end
 
+	test "index should give option to create new post if logged in" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		visit bespoke.posts_path
+
+		assert page.has_css? "a", text: "New Post"
+	end
+
+	test "index should not give option to create new post if not logged in" do
+		visit bespoke.posts_path
+
+		assert page.has_no_css? "a", text: "New Post"
+	end
+
+	test "index should give option to edit post if logged in" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		post = FactoryGirl.create(:published_post)
+
+		visit bespoke.posts_path
+
+		assert page.has_css? "a", text: "Edit"
+	end
+
+	test "index should not give option to edit post if not logged in" do
+		post = FactoryGirl.create(:published_post)
+
+		visit bespoke.posts_path
+
+		assert page.has_no_css? "a", text: "Edit"
+	end
+
+	test "index should give option to delete post if logged in" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		post = FactoryGirl.create(:published_post)
+
+		visit bespoke.posts_path
+
+		assert page.has_css? "a", text: "Delete"
+	end
+
+	test "index should not give option to delete post if not logged in" do
+		post = FactoryGirl.create(:published_post)
+
+		visit bespoke.posts_path
+
+		assert page.has_no_css? "a", text: "Delete"
+	end
+
 	test "index should show post titles" do
 		post1 = FactoryGirl.create(:published_post)
 		post2 = FactoryGirl.create(:published_post)
