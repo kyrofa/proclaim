@@ -6,10 +6,10 @@ class CreateBespokePosts < ActiveRecord::Migration
 			t.string :title, null: false, default: ""
 			t.text :body, null: false, default: ""
 
-			t.boolean :published, null: false, default: false
-			t.datetime :publication_date
+			t.string :state, null: false, default: "draft", index: true
 
-			t.timestamps
+			t.datetime :published_at
+			t.timestamps null: false
 		end
 	end
 end

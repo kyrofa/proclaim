@@ -31,4 +31,14 @@ class Bespoke::ApplicationController < ApplicationController
 	def pundit_user
 		current_author
 	end
+
+	def image_id_and_name_from_url(url)
+		match = url.match(/([^\/]*?)\/([^\/]*)\z/)
+
+		return match[1], match[2]
+	end
+
+	def cache_name_from_url(url)
+		url.match(/[^\/]*?\/[^\/]*\z/)
+	end
 end

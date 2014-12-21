@@ -4,9 +4,9 @@
 #
 #  id         :integer          not null, primary key
 #  post_id    :integer
-#  email      :string(255)
-#  created_at :datetime
-#  updated_at :datetime
+#  email      :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 
 require 'test_helper'

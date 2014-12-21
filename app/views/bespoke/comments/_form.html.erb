@@ -17,14 +17,15 @@
 <%= form_for comment, namespace: namespace, remote: true, format: :json, html: {class: formClass}, data: {target: target} do |f| %>
 	<%= f.label :author %><br />
 	<%= f.text_field :author %><br />
-	<%= f.label :title %><br />
-	<%= f.text_field :title %><br />
 	<%= f.label :body %><br />
 	<%= f.text_area :body %><br />
 	<%= label_tag "subscription[subscribe]", "Notify me of other comments on this post" %><br />
-	<%= check_box_tag "subscription[subscribe]" %><br />
-	<%= label_tag "subscription[email]", "Email" %><br />
-	<%= text_field_tag "subscription[email]" %><br />
+	<%= check_box_tag "subscription[subscribe]", nil, false, class: "subscription_subscribe" %><br />
+
+	<div class = "subscription_email" style = "display: none;">
+		<%= label_tag "subscription[email]", "Email" %><br />
+		<%= text_field_tag "subscription[email]" %>
+	</div>
 
 	<%= f.hidden_field :post_id %>
 	<%= f.hidden_field :parent_id %>

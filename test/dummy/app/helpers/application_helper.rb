@@ -19,10 +19,6 @@ module ApplicationHelper
 			concat(content_tag(:div,
 			                   message,
 			                   class: "alert #{bootstrapClassFor(messageType)} fade in") do
-				concat content_tag(:button,
-				                   'x',
-				                   class: "close",
-				                   data: { dismiss: 'alert' })
 				concat message
 			end)
 		end

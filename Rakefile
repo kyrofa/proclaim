@@ -50,6 +50,16 @@ namespace :test do
   Rails::TestTask.new(:integration) do |t|
     t.pattern = 'test/integration/**/*_test.rb'
   end
+
+  namespace :integration do
+    Rails::TestTask.new(:js) do |t|
+      t.pattern = 'test/integration/with_javascript/**/*_test.rb'
+    end
+
+    Rails::TestTask.new(:no_js) do |t|
+      t.pattern = 'test/integration/without_javascript/**/*_test.rb'
+    end
+  end
 end
 
 task default: :test

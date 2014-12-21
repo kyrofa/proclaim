@@ -109,7 +109,6 @@ module Bespoke
 				post :create, format: :json, comment: {
 					author: comment.author,
 					body: comment.body,
-					title: comment.title,
 					post_id: comment.post_id,
 					parent_id: comment.parent_id
 				}
@@ -122,7 +121,6 @@ module Bespoke
 
 				newComment = parent.children.first
 				assert_equal comment.author, newComment.author
-				assert_equal comment.title, newComment.title
 				assert_equal comment.body, newComment.body
 			end
 
@@ -138,7 +136,6 @@ module Bespoke
 				post :create, format: :json, comment: {
 					author: comment.author,
 					body: comment.body,
-					title: comment.title,
 					post_id: comment.post_id
 				}
 			end
@@ -150,7 +147,6 @@ module Bespoke
 			patch :update, format: :json, id: comment, comment: {
 				author: comment.author,
 				body: comment.body,
-				title: comment.title,
 				post_id: comment.post_id
 			}
 
@@ -163,7 +159,6 @@ module Bespoke
 			patch :update, format: :json, id: comment, comment: {
 				author: comment.author,
 				body: comment.body,
-				title: comment.title,
 				post_id: comment.post_id
 			}
 

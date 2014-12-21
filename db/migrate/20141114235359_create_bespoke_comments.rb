@@ -5,11 +5,11 @@ class CreateBespokeComments < ActiveRecord::Migration
 			t.integer :parent_id
 
 			t.string :author
-
-			t.string :title
 			t.text :body
 
-			t.timestamps
+			t.timestamps null: false
 		end
+
+		add_foreign_key :bespoke_comments, :posts
 	end
 end

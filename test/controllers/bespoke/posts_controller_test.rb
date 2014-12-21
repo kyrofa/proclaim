@@ -9,6 +9,12 @@ module Bespoke
 			@controller.stubs(:authenticate_user).returns(false)
 		end
 
+		teardown do
+			image = Image.new
+			FileUtils.rm_rf(File.join(Rails.public_path, image.image.cache_dir))
+			FileUtils.rm_rf(File.join(Rails.public_path, image.image.store_dir))
+		end
+
 		test "should get index if logged in" do
 			user = FactoryGirl.create(:user)
 			sign_in user
@@ -63,7 +69,60 @@ module Bespoke
 			end
 
 			assert_redirected_to post_path(assigns(:post))
+			assert_match /successfully created/, flash[:notice]
+			refute assigns(:post).published?
+		end
+
+		test "should create published post if logged in" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			newPost = FactoryGirl.build(:post)
+
+			assert_difference('Post.count') do
+				post :create, post: {
+					author_id: newPost.author_id,
+					body: newPost.body,
+					title: newPost.title
+				}, publish: "true"
+			end
+
+			assert_redirected_to post_path(assigns(:post))
 			assert_match  /successfully created/, flash[:notice]
+			assert assigns(:post).published?
+		end
+
+		test "should upload images when creating post" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			newPost = FactoryGirl.build(:post)
+			image = FactoryGirl.build(:image, post: newPost)
+
+			newPost.body = "<img src=\"#{image.image.url}\"></img>"
+
+			post :create, post: {
+				author_id: newPost.author_id,
+				body: newPost.body,
+				title: newPost.title
+			}
+
+			post = Post.first # This works since there's only one
+			assert_equal 1, post.images.count, "The post should have an image"
+
+			image = post.images.first
+
+			save_path = File.join(Rails.public_path, image.image.store_dir)
+			saved_file_path = File.join(save_path, image.image_identifier)
+			assert File.exist?(saved_file_path), "File should be saved: #{saved_file_path}"
+
+			document = Nokogiri::HTML.fragment(post.body)
+			image_tags = document.css("img")
+			assert_equal 1, image_tags.count
+
+			# Note that, now that the image is saved, this URL is different than
+			# the one submitted to :create
+			assert_equal image.image.url, image_tags.first.attributes["src"].value
 		end
 
 		test "should not create post if not logged in" do
@@ -150,6 +209,57 @@ module Bespoke
 
 			assert_redirected_to post_path(assigns(:post))
 			assert_match /successfully updated/, flash[:notice]
+			refute assigns(:post).published?
+		end
+
+		test "should publish post if logged in" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			newPost = FactoryGirl.create(:post)
+
+			patch :update, id: newPost, post: {
+				author_id: newPost.author_id,
+				body: newPost.body,
+				title: newPost.title
+			}, publish: "true"
+
+			assert_redirected_to post_path(assigns(:post))
+			assert_match /successfully updated/, flash[:notice]
+			assert assigns(:post).published?, "Post should now be published!"
+		end
+
+		test "should upload images when updating a post" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			newPost = FactoryGirl.create(:post)
+			image = FactoryGirl.build(:image, post: newPost)
+
+			newPost.body = "<img src=\"#{image.image.url}\">"
+
+			patch :update, id: newPost, post: {
+				author_id: newPost.author_id,
+				body: newPost.body,
+				title: newPost.title
+			}
+
+			post = Post.first # This works since there's only one
+			assert_equal 1, post.images.count, "The post should have an image"
+
+			image = post.images.first
+
+			save_path = File.join(Rails.public_path, image.image.store_dir)
+			saved_file_path = File.join(save_path, image.image_identifier)
+			assert File.exist?(saved_file_path), "File should be saved: #{saved_file_path}"
+
+			document = Nokogiri::HTML.fragment(post.body)
+			image_tags = document.css("img")
+			assert_equal 1, image_tags.count
+
+			# Note that, now that the image is saved, this URL is different than
+			# the one submitted to :create
+			assert_equal image.image.url, image_tags.first.attributes["src"].value
 		end
 
 		test "should not update post if not logged in" do

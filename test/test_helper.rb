@@ -8,6 +8,7 @@ require "faker"
 require "mocha/mini_test"
 require 'capybara/rails'
 require 'database_cleaner'
+require 'test_after_commit'
 require 'coffee_script'
 require 'sass'
 #Capybara.app = Bespoke::Engine
@@ -37,4 +38,19 @@ def sign_in(user)
 		@controller.stubs(:current_user).returns(user)
 		@controller.stubs(:authenticate_user).returns(true)
 	end
+end
+
+def wait_until
+	require "timeout"
+	begin
+		Timeout.timeout(Capybara.default_wait_time) do
+			sleep(0.1) until value = yield
+			value
+		end
+	rescue
+	end
+end
+
+def test_image_file_path
+	File.join(Rails.root, '../', 'support', 'images', 'test.jpg')
 end

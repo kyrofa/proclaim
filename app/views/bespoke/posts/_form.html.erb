@@ -1,25 +1,67 @@
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		<% if @post.new_record? %>
+			new Editor($(document).find("form.new_post"),
+		              $(document).find("input#post_title"),
+		              $(document).find("form.new_post h1.editable"),
+		              $(document).find("input#post_body"),
+		              $(document).find("form.new_post div.editable"));
+		<% else %>
+			new Editor($(document).find("form.edit_post"),
+		              $(document).find("input#post_title"),
+		              $(document).find("form.edit_post h1.editable"),
+		              $(document).find("input#post_body"),
+		              $(document).find("form.edit_post div.editable"));
+		<% end %>
+	});
+</script>
+
 <%= form_for(@post) do |f| %>
-  <% if @post.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
+	<% if @post.errors.any? %>
+		<div id="error_explanation">
+			<h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
 
-      <ul>
-      <% @post.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+			<ul>
+				<% @post.errors.full_messages.each do |message| %>
+					<li><%= message %></li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
 
-  <div class="field">
-    <%= f.label :title %><br>
-    <%= f.text_field :title %>
-  </div>
-  <div class="field">
-    <%= f.label :body %><br>
-    <%= f.text_area :body %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+	<div class = "post">
+		<h1 class = "post_title editable" data-disable-return="true" data-disable-toolbar="true" data-placeholder="Post Title"><%= @post.title %></h1>
+
+		<div class = "post_body editable" data-placeholder = "Post Body" data-image-upload-path="<%= cache_image_path %>" data-image-delete-path="<%= discard_image_path %>">
+			<%= raw @post.body %>
+		</div>
+
+		<div class = "post_information" style = "margin-bottom: 30px;">
+			<% if @post.published? %>
+				Written <%= timeago_tag @post.published_at, format: "%B %d, %Y" %> by
+			<% elsif @post.new_record? %>
+				Currently being written by
+			<% else %>
+				Draft last updated <%= timeago_tag @post.updated_at, format: "%B %d, %Y" %> by
+			<% end %>
+			<%= @post.author.send(Bespoke.author_name_method) %>
+		</div>
+
+		<%= f.hidden_field :title %>
+		<%= f.hidden_field :body %>
+
+		<% if @post.published? and not @post.new_record? %>
+			This post has already been published
+		<% else %>
+			<div class = "field">
+				<%= label_tag :publish, "Publish this post" %>
+				<%= check_box_tag :publish, "true", @post.published? %>
+			</div>
+		<% end %>
+
+		<div class="actions" style = "margin-top: 30px;">
+			<%= f.submit %>
+		</div>
+	</div>
 <% end %>

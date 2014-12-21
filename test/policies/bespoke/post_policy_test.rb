@@ -4,7 +4,7 @@ class PostPolicyTest < ActiveSupport::TestCase
 	test "post scope" do
 		user = FactoryGirl.create(:user)
 		post1 = FactoryGirl.create(:post)
-		post2 = FactoryGirl.create(:post, published: true, publication_date: Date.today)
+		post2 = FactoryGirl.create(:published_post)
 
 		# Verify that a user can see all posts
 		posts = Pundit.policy_scope(user, Bespoke::Post)
@@ -34,7 +34,7 @@ class PostPolicyTest < ActiveSupport::TestCase
 	test "post show" do
 		user = FactoryGirl.create(:user)
 		post1 = FactoryGirl.create(:post)
-		post2 = FactoryGirl.create(:post, published: true, publication_date: Date.today)
+		post2 = FactoryGirl.create(:published_post)
 
 		# Verify that a user can see both posts
 		policy = Bespoke::PostPolicy.new(user, post1)
@@ -52,7 +52,7 @@ class PostPolicyTest < ActiveSupport::TestCase
 	test "post update" do
 		user = FactoryGirl.create(:user)
 		post1 = FactoryGirl.create(:post)
-		post2 = FactoryGirl.create(:post, published: true, publication_date: Date.today)
+		post2 = FactoryGirl.create(:published_post)
 
 		# Verify that a user can update any post
 		policy = Bespoke::PostPolicy.new(user, post1)
@@ -70,7 +70,7 @@ class PostPolicyTest < ActiveSupport::TestCase
 	test "post destroy" do
 		user = FactoryGirl.create(:user)
 		post1 = FactoryGirl.create(:post)
-		post2 = FactoryGirl.create(:post, published: true, publication_date: Date.today)
+		post2 = FactoryGirl.create(:published_post)
 
 		# Verify that a user can destroy any post
 		policy = Bespoke::PostPolicy.new(user, post1)
