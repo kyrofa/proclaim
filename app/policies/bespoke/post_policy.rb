@@ -30,7 +30,7 @@ module Bespoke
 					scope.all # Users can access all posts
 				else
 					# Guests can see all posts that are published
-					scope.where(published: true)
+					scope.published
 				end
 			end
 		end

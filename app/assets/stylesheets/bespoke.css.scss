@@ -10,6 +10,10 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
+ *= require font-awesome
+ *= require medium-editor/medium-editor
+ *= require medium-editor/themes/mani
+ *= require medium-editor-insert-plugin.min
  *= require_tree .
  *= require_self
  */

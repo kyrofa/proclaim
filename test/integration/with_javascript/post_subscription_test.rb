@@ -30,7 +30,6 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
-			fill_in 'Title', with: "Comment Title"
 			fill_in 'Body', with: "Comment Body"
 			check 'Notify me of other comments on this post'
 			fill_in 'Email', with: "example@example.com"
@@ -38,7 +37,8 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		assert_difference('Bespoke::Subscription.count') do
 			find('#new_comment input[type=submit]').click
-			assert page.has_css?('h3', text: 'Comment Title')
+			assert page.has_text? "Comment Author"
+			assert page.has_text? "Comment Body"
 		end
 
 		# Make sure a welcome email was sent
@@ -57,7 +57,6 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
-			fill_in 'Title', with: "Comment Title"
 			fill_in 'Body', with: "Comment Body"
 			check 'Notify me of other comments on this post'
 			fill_in 'Email', with: "example@example.com"
@@ -65,7 +64,8 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		assert_difference('Bespoke::Subscription.count') do
 			find('#new_comment input[type=submit]').click
-			assert page.has_css?('h3', text: 'Comment Title')
+			assert page.has_text? "Comment Author"
+			assert page.has_text? "Comment Body"
 		end
 
 		# Make sure a welcome email was sent
@@ -88,7 +88,6 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		click_link "Reply"
 		within("#reply_to_#{comment.id}_new_comment") do
 			fill_in 'Author', with: "Reply Author"
-			fill_in 'Title', with: "Reply Title"
 			fill_in 'Body', with: "Reply Body"
 			check 'Notify me of other comments on this post'
 			fill_in 'Email', with: "example@example.com"
@@ -96,7 +95,8 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		assert_difference('Bespoke::Subscription.count') do
 			find("#reply_to_#{comment.id}_new_comment input[type=submit]").click
-			assert page.has_css?('h3', text: 'Reply Title')
+			assert page.has_text? "Reply Author"
+			assert page.has_text? "Reply Body"
 		end
 
 		# Make sure a welcome email was sent
@@ -116,7 +116,6 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		click_link "Reply"
 		within("#reply_to_#{comment.id}_new_comment") do
 			fill_in 'Author', with: "Reply Author"
-			fill_in 'Title', with: "Reply Title"
 			fill_in 'Body', with: "Reply Body"
 			check 'Notify me of other comments on this post'
 			fill_in 'Email', with: "example@example.com"
@@ -124,7 +123,8 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		assert_difference('Bespoke::Subscription.count') do
 			find("#reply_to_#{comment.id}_new_comment input[type=submit]").click
-			assert page.has_css?('h3', text: 'Reply Title')
+			assert page.has_text? "Reply Author"
+			assert page.has_text? "Reply Body"
 		end
 
 		# Make sure a welcome email was sent
@@ -144,7 +144,6 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		# Create a new comment and say "notify me," but don't provide email
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
-			fill_in 'Title', with: "Comment Title"
 			fill_in 'Body', with: "Comment Body"
 			check 'Notify me of other comments on this post'
 		end
@@ -168,7 +167,6 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		# Create a new comment and say "notify me," but provide invalid email
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
-			fill_in 'Title', with: "Comment Title"
 			fill_in 'Body', with: "Comment Body"
 			check 'Notify me of other comments on this post'
 			fill_in 'Email', with: "bad_email"

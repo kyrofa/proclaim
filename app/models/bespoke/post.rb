@@ -4,12 +4,12 @@
 #
 #  id               :integer          not null, primary key
 #  author_id        :integer
-#  title            :string(255)      default(""), not null
+#  title            :string           default(""), not null
 #  body             :text             default(""), not null
-#  published        :boolean          default(FALSE), not null
+#  published        :boolean          default("f"), not null
 #  publication_date :datetime
-#  created_at       :datetime
-#  updated_at       :datetime
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #
 
 module Bespoke
@@ -17,31 +17,52 @@ module Bespoke
 		belongs_to :author, class_name: Bespoke.author_class
 		has_many :comments, inverse_of: :post, dependent: :destroy
 		has_many :subscriptions, inverse_of: :post, dependent: :destroy
+		has_many :images, inverse_of: :post, dependent: :destroy
+		accepts_nested_attributes_for :images, allow_destroy: true
+
+		include AASM
+
+		aasm column: :state, no_direct_assignment: true do
+			state :draft, initial: true
+			state :published
+
+			event :publish do
+				transitions from: :draft, to: :published
+
+				before do
+					self.published_at = DateTime.now
+				end
+			end
+		end
+
+		validates_presence_of :published_at, if: :published?
+		validates :published_at, absence: true, unless: :published?
 
 		validates_presence_of :title, :body, :author
-		validates_presence_of :publication_date, if: :published
+		validate :verifyBodyHtml
 
 		after_save :notifyBlogSubscribersIfPublished
 
+		attr_writer :excerpt_length
+		def excerpt_length
+			@excerpt_length || Bespoke.excerpt_length
+		end
+
+		def body_plaintext
+			Rails::Html::FullSanitizer.new.sanitize(body.gsub(/\r\n?/, ' '))
+		end
+
 		def excerpt
-			excerptLength = Bespoke.excerpt_length
+			document = Nokogiri::HTML.fragment(body)
 
-			if excerptLength >= body.length
-				return body
+			unless document.text.empty?
+				takeExcerptOf first_block_element_text(document)
+			else
+				""
 			end
-
-			excerpt = body.slice(0, excerptLength)
-
-			if body.slice(excerptLength) =~ /\s/
-				return excerpt.strip
-			end
-
-			# Make sure words aren't interrupted
-			excerpt.slice(0, excerpt.rindex(/\s/, excerpt.length)).strip
 		end
 
 		def notifyPostSubscribers(newComment)
-			Rails::logger.debug "::::::::::::: ADDED NEW COMMENT! ::::::::::"
 			subscriptions.each do | subscription |
 				subscription.deliver_new_comment_notification_email(newComment)
 			end
@@ -49,9 +70,60 @@ module Bespoke
 
 		private
 
+		def verifyBodyHtml
+			if not errors.messages.include?(:body) and
+			   body_plaintext.strip.empty? and
+			   Nokogiri::HTML.fragment(body).css("img").empty?
+				errors.add :body, :empty
+			end
+		end
+
+		def takeExcerptOf(text)
+			if excerpt_length >= text.length
+				return text
+			end
+
+			excerpt = text.slice(0, excerpt_length)
+
+			if text.slice(excerpt_length) =~ /\s/
+				return excerpt.strip
+			end
+
+			# Make sure words aren't interrupted
+			excerpt.slice(0, excerpt.rindex(/\s/, excerpt.length)).strip
+		end
+
+		def first_block_element_text(nokogiri_node)
+			if nokogiri_node.text?
+				return block_element_text(nokogiri_node.parent)
+			end
+
+			nokogiri_node.children.each do |child|
+				result = first_block_element_text(child)
+				if result
+					return result
+				end
+			end
+
+			nil
+		end
+
+		def block_element_text(nokogiri_block_element)
+			text = String.new
+			nokogiri_block_element.children.each do | child |
+				if child.text? or (child.description.try(:inline?))
+					text += child.text
+				else
+					break # Stop at the first non-inline non-text element
+				end
+			end
+
+			return text
+		end
+
 		def notifyBlogSubscribersIfPublished
 			# If we just published this post, notify the subscribers
-			if publication_date and publication_date_was.nil?
+			if published? and state_changed?
 				Subscription.blog_subscriptions.each do | subscription |
 					subscription.deliver_new_post_notification_email(self)
 				end

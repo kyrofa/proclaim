@@ -26,7 +26,7 @@ module Bespoke
 
 		# GET /posts/new
 		def new
-			@post = Post.new
+			@post = Post.new(author: current_author)
 			authorize @post
 		end
 
@@ -37,13 +37,21 @@ module Bespoke
 
 		# POST /posts
 		def create
-			params = post_params
-			params[:author] = current_author
-			@post = Post.new(params)
+			@post = Post.new(post_params)
+			@post.author = current_author
+
+			if params[:publish] == "true"
+				@post.publish
+			end
 
 			authorize @post
 
-			if @post.save
+			if @post.valid?
+				# Save and rewrite each image in Carrierwave's cache
+				@post.body = saved_and_rewrite_cached_images(@post.body)
+
+				@post.save
+
 				redirect_to @post, notice: 'Post was successfully created.'
 			else
 				render :new
@@ -52,9 +60,21 @@ module Bespoke
 
 		# PATCH/PUT /posts/1
 		def update
+			@post.assign_attributes(post_params)
+
+			if (params[:publish] == "true") and not @post.published?
+				@post.publish
+				@post.author = current_author # Reassign author when it's published
+			end
+
 			authorize @post
 
-			if @post.update(post_params)
+			if @post.valid?
+				# Save and rewrite each image in Carrierwave's cache
+				@post.body = saved_and_rewrite_cached_images(@post.body)
+
+				@post.save
+
 				redirect_to @post, notice: 'Post was successfully updated.'
 			else
 				render :edit
@@ -78,10 +98,34 @@ module Bespoke
 
 		# Only allow a trusted parameter "white list" through.
 		def post_params
+			# Ensure post title is sanitized of all HTML
+			if params[:post].include? :title
+				params[:post][:title] = Rails::Html::FullSanitizer.new.sanitize(params[:post][:title])
+			end
+
 			params.require(:post).permit(:title,
 			                             :body,
-			                             :published,
-			                             :publication_date)
+			                             images_attributes: [:id, :image, :_destroy])
+		end
+
+		def saved_and_rewrite_cached_images(body)
+			document = Nokogiri::HTML.fragment(body)
+			cache_path = ImageUploader.cache_dir
+			document.css("img").each do |image_tag|
+				url = image_tag.attributes["src"].value
+				if url.include? cache_path
+					cache_name = cache_name_from_url(url)
+					if cache_name
+						image = @post.images.build
+						image.image.retrieve_from_cache!(cache_name)
+						image.save
+
+						image_tag.attributes["src"].value = image.image.url
+					end
+				end
+			end
+
+			document.inner_html
 		end
 	end
 end

@@ -17,11 +17,16 @@ Gem::Specification.new do |s|
 	s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.rdoc"]
 	s.test_files = Dir["test/**/*"]
 
-	s.add_dependency "rails", "~> 4.1.7"
+	s.add_dependency "rails", "~> 4.2.0"
 	s.add_dependency "coffee-rails", "~> 4.0.0"
 	s.add_dependency "sass-rails", "> 4.0.3"
 	s.add_dependency "jquery-rails"
 	s.add_dependency "closure_tree"
+	s.add_dependency "medium-editor-rails"
+	s.add_dependency "font-awesome-rails"
+	s.add_dependency "carrierwave"
+	s.add_dependency "aasm"
+	s.add_dependency "rails-timeago"
 	s.add_dependency "pundit" # For simple authorization
 
 	s.add_development_dependency "sqlite3"
@@ -32,4 +37,5 @@ Gem::Specification.new do |s|
 	s.add_development_dependency "selenium-webdriver"
 	s.add_development_dependency "database_cleaner"
 	s.add_development_dependency "faker"
+	s.add_development_dependency "test_after_commit"
 end

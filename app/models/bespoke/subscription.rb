@@ -4,9 +4,9 @@
 #
 #  id         :integer          not null, primary key
 #  post_id    :integer
-#  email      :string(255)
-#  created_at :datetime
-#  updated_at :datetime
+#  email      :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 
 module Bespoke
@@ -28,15 +28,15 @@ module Bespoke
 		validates_presence_of :post, if: :post_id
 
 		def deliver_welcome_email
-			SubscriptionMailer.welcome_email(self).deliver
+			SubscriptionMailer.welcome_email(self).deliver_later
 		end
 
 		def deliver_new_post_notification_email(post)
-			SubscriptionMailer.new_post_notification_email(self, post).deliver
+			SubscriptionMailer.new_post_notification_email(self, post).deliver_later
 		end
 
 		def deliver_new_comment_notification_email(comment)
-			SubscriptionMailer.new_comment_notification_email(self, comment).deliver
+			SubscriptionMailer.new_comment_notification_email(self, comment).deliver_later
 		end
 
 		def token

@@ -5,11 +5,10 @@
 #  id         :integer          not null, primary key
 #  post_id    :integer
 #  parent_id  :integer
-#  author     :string(255)
-#  title      :string(255)
+#  author     :string
 #  body       :text
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 
 require 'test_helper'
@@ -20,12 +19,6 @@ module Bespoke
 			comment = FactoryGirl.build(:comment)
 
 			assert comment.save, "Factory needs to be updated to save successfully"
-		end
-
-		test "ensure title is required" do
-			comment = FactoryGirl.build(:comment, title: "")
-
-			refute comment.save, "Comment should require a title!"
 		end
 
 		test "ensure body is required" do

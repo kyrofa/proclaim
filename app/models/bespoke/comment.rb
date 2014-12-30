@@ -5,11 +5,10 @@
 #  id         :integer          not null, primary key
 #  post_id    :integer
 #  parent_id  :integer
-#  author     :string(255)
-#  title      :string(255)
+#  author     :string
 #  body       :text
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 
 module Bespoke
@@ -19,7 +18,7 @@ module Bespoke
 		after_initialize :maintainPost
 		after_create :notifyPostSubscribers
 
-		validates_presence_of :title, :body, :author, :post
+		validates_presence_of :body, :author, :post
 
 		private
 

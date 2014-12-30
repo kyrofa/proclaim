@@ -105,8 +105,7 @@ module Bespoke
 
 		# Only allow a trusted parameter "white list" through.
 		def comment_params
-			params.require(:comment).permit(:title,
-			                                :body,
+			params.require(:comment).permit(:body,
 			                                :author,
 			                                :post_id,
 			                                :parent_id)

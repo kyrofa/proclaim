@@ -4,8 +4,10 @@ class CreateBespokeSubscriptions < ActiveRecord::Migration
 			t.belongs_to :post, index: true
 			t.string :email
 
-			t.timestamps
+			t.timestamps null: false
 		end
+
+		add_foreign_key :bespoke_subscriptions, :posts
 
 		# This ensures that even if two clients try to create the same
 		# subscription at exactly the same time, the database won't accept

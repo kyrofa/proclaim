@@ -1,14 +1,18 @@
 class CommentsHandler
 	constructor: (@discussionClass, @commentClass, @commentFormClass,
-	              @cancelCommentButtonClass, @replyLinkClass, @updateLinkClass,
-	              @deleteLinkClass) ->
+	              @mainCommentFormClass, @cancelCommentButtonClass,
+	              @replyLinkClass, @updateLinkClass, @deleteLinkClass,
+	              @subscribeCheckboxClass, @subscribeEmailClass) ->
 		if (@discussionClass.length > 0) and
 		   (@commentClass.length > 0) and
 		   (@commentFormClass.length > 0) and
+		   (@mainCommentFormClass.length > 0) and
 		   (@cancelCommentButtonClass.length > 0) and
 		   (@replyLinkClass.length > 0) and
 		   (@updateLinkClass.length > 0) and
-		   (@deleteLinkClass.length > 0)
+		   (@deleteLinkClass.length > 0) and
+		   (@subscribeCheckboxClass.length > 0) and
+		   (@subscribeEmailClass.length > 0)
 			@cleanBindings()
 			@addBindings()
 		else
@@ -28,6 +32,8 @@ class CommentsHandler
 		$(document).on "ajax:success", @deleteLinkClass, @handleDeleteCommentSuccess
 		$(document).on "ajax:error", @deleteLinkClass, @handleDeleteCommentFailure
 
+		$(document).on "change", @subscribeCheckboxClass, @handleSubscribeCheckbox
+
 	cleanBindings: ->
 		$(document).off "click", @replyLinkClass
 		$(document).off "click", @updateLinkClass
@@ -42,6 +48,8 @@ class CommentsHandler
 		$(document).off "ajax:success", @deleteLinkClass
 		$(document).off "ajax:error", @deleteLinkClass
 
+		$(document).off "change", @subscribeCheckboxClass
+
 	# Disable the form until the new comment has been processed
 	handleCommentStarted: (event, xhr, settings) =>
 		form = $(event.target)
@@ -54,7 +62,8 @@ class CommentsHandler
 		form.find(":input").prop("disabled", false);
 		form.siblings('div.loading').remove()
 
-		#@removeForm form
+		if status == "success"
+			@removeForm form
 
 	handleCommentSuccess: (event, data, status, xhr) =>
 		if data.html.length == 0
@@ -73,11 +82,10 @@ class CommentsHandler
 				console.error("Invalid comment target!")
 				return
 
-		# Hide form, but don't remove so events can still be emitted
+			# Hide form, but don't remove so events can still be emitted
 			@removeForm form, true
 
 	handleCommentFailure: (event, xhr, status, error) =>
-		console.log("Failure!")
 		$(event.target).siblings("div.error").remove()
 		errorMessage = "<div class='error'>"
 		errorMessage += "<strong>The following errors have prevented this comment from being saved:</strong>"
@@ -114,13 +122,15 @@ class CommentsHandler
 				console.error("Invalid comment form data!")
 				return
 
+			# Remove all other non-main forms-- make this form exclusive
+			@removeForm $(document).find(@commentFormClass).not(@mainCommentFormClass)
+
 			target.append(form)
 			form = target.children(@commentFormClass)
 			form.addClass("new_comment")
 
 			form.children(@cancelCommentButtonClass).focus();
 			form.children("input:text:visible:first").focus();
-
 
 	showUpdateCommentForm: (event) =>
 		event.preventDefault()
@@ -149,6 +159,13 @@ class CommentsHandler
 
 		@removeForm form
 
+	handleSubscribeCheckbox: (event) =>
+		if event.target.checked
+			$(event.target).siblings(@subscribeEmailClass).show()
+		else
+			$(event.target).siblings(@subscribeEmailClass).val("")
+			$(event.target).siblings(@subscribeEmailClass).hide()
+
 	removeForm: (form, hideInsteadOfRemove = false) ->
 		if form.length == 0
 			console.error("Invalid comment form length for removal!")
@@ -156,15 +173,21 @@ class CommentsHandler
 
 		form.siblings("div.error").remove() # If any
 
-		# Don't remove the main comment form-- just clear it
-		if form.hasClass("main_comment_form")
-			form.each (index, element) ->
+		form.each (index, element) =>
+			thisForm = $(element)
+
+			# Don't remove the main comment form-- just clear it
+			if thisForm.is(@mainCommentFormClass)
+				console.log("Main class!")
 				element.reset()
-		else
-			if (hideInsteadOfRemove)
-				form.hide()
 			else
-				form.remove()
+				console.log(@mainCommentFormClass)
+				console.log("Not main class!")
+				console.log(thisForm)
+				if (hideInsteadOfRemove)
+					thisForm.hide()
+				else
+					thisForm.remove()
 
 # Make available to other scripts
 @CommentsHandler = CommentsHandler
