@@ -31,14 +31,14 @@ module Bespoke
 			reply = FactoryGirl.build(:comment,
 			                          post: parent.post,
 			                          parent: parent)
-			assert_create_comment reply, parent
+			assert_create_comment reply, 1, 1, parent
 
 			# Users should be able to make replies to comments on published posts
 			parent = FactoryGirl.create(:published_comment)
 			reply = FactoryGirl.build(:published_comment,
 			                          post: parent.post,
 			                          parent: parent)
-			assert_create_comment reply, parent
+			assert_create_comment reply, 1, 1, parent
 		end
 
 		test "should create root comment if not logged in" do
@@ -57,14 +57,27 @@ module Bespoke
 			reply = FactoryGirl.build(:comment,
 			                          post: parent.post,
 			                          parent: parent)
-			refute_create_comment reply, parent
+			refute_create_comment reply, 1, 1, parent
 
 			# Guests should be able to make replies to comments on published posts
 			parent = FactoryGirl.create(:published_comment)
 			reply = FactoryGirl.build(:published_comment,
 			                          post: parent.post,
 			                          parent: parent)
-			assert_create_comment reply, parent
+			assert_create_comment reply, 1, 1, parent
+		end
+
+		test "should not create root comment if spammy" do
+			newComment = FactoryGirl.build(:published_comment)
+			refute_create_comment newComment, 1, 2
+		end
+
+		test "should not create reply if spammy" do
+			parent = FactoryGirl.create(:published_comment)
+			reply = FactoryGirl.build(:published_comment,
+			                          post: parent.post,
+			                          parent: parent)
+			refute_create_comment reply, 3, 4, parent
 		end
 
 		test "should update root comment if logged in" do
@@ -103,15 +116,36 @@ module Bespoke
 
 		private
 
-		def assert_create_comment(comment, parent = nil)
+		def assert_create_comment(comment, antispam_solution = 1,
+		                          antispam_answer = 1, parent = nil,
+		                          subscription = nil)
+			subscription_params = nil
+		   if subscription
+		   	subscription_params = {
+		   		subscribe: true,
+		   		email: subscription.email
+		   	}
+			end
+
+			antispam_params = nil
+			if antispam_solution and antispam_answer
+				antispam_params = {
+					solution: antispam_solution,
+					answer: antispam_answer
+				}
+			end
+
 			assert_difference('Comment.count', 1,
 			                  "A comment should have been created") do
-				post :create, format: :json, comment: {
-					author: comment.author,
-					body: comment.body,
-					post_id: comment.post_id,
-					parent_id: comment.parent_id
-				}
+				post :create, format: :json,
+					comment: {
+						author: comment.author,
+						body: comment.body,
+						post_id: comment.post_id,
+						parent_id: comment.parent_id
+					},
+					subscription: subscription_params,
+					antispam: antispam_params
 			end
 
 			if parent
@@ -130,17 +164,43 @@ module Bespoke
 			               "The returned JSON should include the HTML containing the comment!"
 		end
 
-		def refute_create_comment(comment, parent = nil)
-			assert_no_difference('Comment.count',
-			                     "A comment should not be created!") do
-				post :create, format: :json, comment: {
-					author: comment.author,
-					body: comment.body,
-					post_id: comment.post_id
+		def refute_create_comment(comment, antispam_solution = 1,
+		                          antispam_answer = 1, parent = nil,
+		                          subscription = nil)
+			subscription_params = nil
+		   if subscription
+		   	subscription_params = {
+		   		subscribe: true,
+		   		email: subscription.email
+		   	}
+			end
+
+			antispam_params = nil
+			if antispam_solution and antispam_answer
+				antispam_params = {
+					solution: antispam_solution,
+					answer: antispam_answer
 				}
 			end
 
-			assert_response :not_found
+			assert_no_difference('Comment.count',
+			                     "A comment should not be created!") do
+				post :create, format: :json,
+					comment: {
+						author: comment.author,
+						body: comment.body,
+						post_id: comment.post_id,
+						parent_id: comment.parent_id
+					},
+					subscription: subscription_params,
+					antispam: antispam_params
+			end
+
+			if antispam_solution == antispam_answer
+				assert_response :not_found
+			else
+				assert_response :unprocessable_entity
+			end
 		end
 
 		def assert_update_comment(comment)

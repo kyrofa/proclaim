@@ -26,8 +26,8 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 #end
 
 class ActionDispatch::IntegrationTest
-  # Make the Capybara DSL available in all integration tests
-  include Capybara::DSL
+	# Make the Capybara DSL available in all integration tests
+	include Capybara::DSL
 end
 
 def sign_in(user)

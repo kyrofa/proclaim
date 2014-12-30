@@ -16,9 +16,14 @@ module Bespoke
 			newSubscription = FactoryGirl.build(:subscription)
 
 			assert_difference('Subscription.count') do
-				post :create, subscription: {
-					email: newSubscription.email
-				}
+				post :create,
+					subscription: {
+						email: newSubscription.email
+					},
+					antispam: {
+						solution: 5,
+						answer: 5
+					}
 			end
 
 			assert_redirected_to :subscribed
@@ -28,12 +33,32 @@ module Bespoke
 			newSubscription = FactoryGirl.build(:subscription)
 
 			assert_difference('Subscription.count') do
-				post :create, subscription: {
-					email: newSubscription.email
-				}
+				post :create,
+					subscription: {
+						email: newSubscription.email
+					},
+					antispam: {
+						solution: 3,
+						answer: 3
+					}
 			end
 
 			assert_redirected_to :subscribed
+		end
+
+		test "should not create subscription if spammy" do
+			newSubscription = FactoryGirl.build(:subscription)
+
+			assert_no_difference('Subscription.count') do
+				post :create,
+					subscription: {
+						email: newSubscription.email
+					},
+					antispam: {
+						solution: 5,
+						answer: 3
+					}
+			end
 		end
 
 		test "ensure token resolves to correct subscription" do

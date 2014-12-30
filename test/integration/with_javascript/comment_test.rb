@@ -11,6 +11,8 @@ class CommentTest < ActionDispatch::IntegrationTest
 		DatabaseCleaner.start
 
 		Capybara.current_driver = :selenium
+
+		@show_page = ShowPage.new
 	end
 
 	teardown do
@@ -27,8 +29,12 @@ class CommentTest < ActionDispatch::IntegrationTest
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
 			fill_in 'Body', with: "Comment Body"
+			fill_in 'What is', with: @show_page.antispam_solution
 		end
-		new_comment_submit_button.click
+
+		@show_page.new_comment_submit_button.click
+
+		assert page.has_no_css?('div.error')
 		assert page.has_text? "Comment Author"
 		assert page.has_text? "Comment Body"
 	end
@@ -40,24 +46,67 @@ class CommentTest < ActionDispatch::IntegrationTest
 		visit bespoke.post_path(post)
 
 		# Leave first reply
-		comment_reply_link(comment).click
+		@show_page.comment_reply_link(comment).click
 		within("#reply_to_#{comment.id}_new_comment") do
 			fill_in 'Author', with: "Reply Author 1"
 			fill_in 'Body', with: "Reply Body 1"
+			fill_in 'What is', with: @show_page.antispam_solution(comment)
 		end
-		new_comment_submit_button(comment).click
+
+		@show_page.new_comment_submit_button(comment).click
+
+		assert page.has_no_css?('div.error')
 		assert page.has_text? "Reply Author 1"
 		assert page.has_text? "Reply Body 1"
 
 		# Leave second reply
-		comment_reply_link(comment).click
+		@show_page.comment_reply_link(comment).click
 		within("#reply_to_#{comment.id}_new_comment") do
 			fill_in 'Author', with: "Reply Author 2"
 			fill_in 'Body', with: "Reply Body 2"
+			fill_in 'What is', with: @show_page.antispam_solution(comment)
 		end
-		new_comment_submit_button(comment).click
+
+		@show_page.new_comment_submit_button(comment).click
+
+		assert page.has_no_css?('div.error')
 		assert page.has_text? "Reply Author 2"
 		assert page.has_text? "Reply Body 2"
+	end
+
+	test "root comment should fail if spammy" do
+		post = FactoryGirl.create(:published_post)
+
+		visit bespoke.post_path(post)
+
+		# Test leaving a root comment
+		within('#new_comment') do
+			fill_in 'Author', with: "Comment Author"
+			fill_in 'Body', with: "Comment Body"
+			fill_in 'What is', with: "wrong answer"
+		end
+
+		@show_page.new_comment_submit_button.click
+
+		assert page.has_css?('div.error')
+	end
+
+	test "reply should fail if spammy" do
+		comment = FactoryGirl.create(:published_comment)
+		post = comment.post
+
+		visit bespoke.post_path(post)
+
+		@show_page.comment_reply_link(comment).click
+		within("#reply_to_#{comment.id}_new_comment") do
+			fill_in 'Author', with: "Reply Author 1"
+			fill_in 'Body', with: "Reply Body 1"
+			fill_in 'What is', with: "wrong answer"
+		end
+
+		@show_page.new_comment_submit_button(comment).click
+
+		assert page.has_css?('div.error')
 	end
 
 	test "reply forms should be exclusive" do
@@ -67,12 +116,12 @@ class CommentTest < ActionDispatch::IntegrationTest
 		visit bespoke.post_path(comment1.post)
 
 		# Check that a form shows up to reply to comment1
-		comment_reply_link(comment1).click
+		@show_page.comment_reply_link(comment1).click
 		assert page.has_css? "form#reply_to_#{comment1.id}_new_comment"
 
 		# Now, without closing that form manually, assert that it is closed
 		# automatically when we try to reply to comment2
-		comment_reply_link(comment2).click
+		@show_page.comment_reply_link(comment2).click
 		assert page.has_css? "form#reply_to_#{comment2.id}_new_comment"
 		assert page.has_no_css?("form#reply_to_#{comment1.id}_new_comment"),
 		       "The form from comment1 should be removed when replying to comment2!"
@@ -95,7 +144,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 
 		visit bespoke.post_path(comment.post)
 
-		comment_edit_link(comment).click
+		@show_page.comment_edit_link(comment).click
 		assert page.has_no_css?("p.comment_author", text: comment.author),
 		       "The comment author should have been completely replaced by the edit form!"
 		assert page.has_no_css?("div.comment_body", text: comment.body),
@@ -105,7 +154,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 			fill_in 'Author', with: "Edit Author"
 			fill_in 'Body', with: "Edit Body"
 		end
-		edit_comment_submit_button(comment).click
+		@show_page.edit_comment_submit_button(comment).click
 		assert page.has_css? "p.comment_author", text: "Edit Author"
 		assert page.has_css? "div.comment_body", text: "Edit Body"
 		assert page.has_no_css?("p.comment_author", text: comment.author),
@@ -125,7 +174,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 
 		visit bespoke.post_path(parent.post)
 
-		comment_edit_link(parent).click
+		@show_page.comment_edit_link(parent).click
 		assert page.has_no_css?("p.comment_author", text: parent.author),
 		       "The parent comment author should have been completely replaced by the edit form!"
 		assert page.has_no_css?("div.comment_body", text: parent.body),
@@ -139,7 +188,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 			fill_in 'Author', with: "Edit Author"
 			fill_in 'Body', with: "Edit Body"
 		end
-		edit_comment_submit_button(parent).click
+		@show_page.edit_comment_submit_button(parent).click
 		assert page.has_css?("p.comment_author", text: "Edit Author"),
 		       "The parent comment author should now be edited!"
 		assert page.has_css?("div.comment_body", text: "Edit Body"),
@@ -165,7 +214,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 
 		visit bespoke.post_path(parent.post)
 
-		comment_edit_link(child).click
+		@show_page.comment_edit_link(child).click
 		assert page.has_no_css?("p.comment_author", text: child.author),
 		       "The child comment author should have been completely replaced by the edit form!"
 		assert page.has_no_css?("div.comment_body", text: child.body),
@@ -179,7 +228,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 			fill_in 'Author', with: "Edit Author"
 			fill_in 'Body', with: "Edit Body"
 		end
-		edit_comment_submit_button(child).click
+		@show_page.edit_comment_submit_button(child).click
 		assert page.has_css? "p.comment_author", text: 'Edit Author'
 		assert page.has_css? "div.comment_body", text: 'Edit Body'
 		assert page.has_css? "p.comment_author", text: parent.author
@@ -213,7 +262,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 
 		current_count = Bespoke::Comment.count
 
-		comment_delete_link(comment).click
+		@show_page.comment_delete_link(comment).click
 		page.accept_alert
 
 		assert page.has_no_text? comment.author
@@ -241,7 +290,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 
 		current_count = Bespoke::Comment.count
 
-		comment_delete_link(parent).click
+		@show_page.comment_delete_link(parent).click
 		page.accept_alert
 
 		assert page.has_no_text?(parent.author), "Parent author should be gone!"
@@ -269,7 +318,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 
 		current_count = Bespoke::Comment.count
 
-		comment_delete_link(child).click
+		@show_page.comment_delete_link(child).click
 		page.accept_alert
 
 		assert page.has_no_text?(child.author), "Child author should be gone!"
@@ -290,53 +339,15 @@ class CommentTest < ActionDispatch::IntegrationTest
 			fill_in 'Author', with: "Comment Author"
 			# Make a mistake-- leave out the body
 		end
-		new_comment_submit_button.click
+		@show_page.new_comment_submit_button.click
 
 		# Errors should be on the page
 		assert page.has_css?('div.error')
 
 		# Now click cancel
-		new_comment_cancel_button.click
+		@show_page.new_comment_cancel_button.click
 
 		# Now errors should be cleared
 		assert page.has_no_css?('div.error')
-	end
-
-	private
-
-	def comment_reply_link(comment)
-		find("#comment_#{comment.id} .reply")
-	end
-
-	def comment_edit_link(comment)
-		find("#comment_#{comment.id} .edit")
-	end
-
-	def comment_delete_link(comment)
-		find("#comment_#{comment.id} .delete")
-	end
-
-	def edit_comment_submit_button(comment)
-		find("#edit_comment_#{comment.id} input[type=submit]")
-	end
-
-	def new_comment_submit_button(comment = nil)
-		if comment
-			find("#reply_to_#{comment.id}_new_comment input[type=submit]")
-		else
-			find('#new_comment input[type=submit]')
-		end
-	end
-
-	def edit_comment_cancel_button(comment)
-		find("#edit_comment_#{comment.id} button.cancel_comment")
-	end
-
-	def new_comment_cancel_button(comment = nil)
-		if comment
-			find("#reply_to_#{comment.id}_new_comment button.cancel_comment")
-		else
-			find('#new_comment button.cancel_comment')
-		end
 	end
 end

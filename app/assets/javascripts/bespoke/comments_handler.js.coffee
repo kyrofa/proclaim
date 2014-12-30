@@ -123,7 +123,9 @@ class CommentsHandler
 				return
 
 			# Remove all other non-main forms-- make this form exclusive
-			@removeForm $(document).find(@commentFormClass).not(@mainCommentFormClass)
+			other_forms = $(document).find(@commentFormClass).not(@mainCommentFormClass)
+			if other_forms.length > 0
+				@removeForm other_forms
 
 			target.append(form)
 			form = target.children(@commentFormClass)
@@ -157,6 +159,7 @@ class CommentsHandler
 		if form.hasClass("edit_comment")
 			form.siblings(@commentClass).show()
 
+		$(event.target).siblings(@subscribeEmailClass).hide()
 		@removeForm form
 
 	handleSubscribeCheckbox: (event) =>
@@ -178,12 +181,8 @@ class CommentsHandler
 
 			# Don't remove the main comment form-- just clear it
 			if thisForm.is(@mainCommentFormClass)
-				console.log("Main class!")
 				element.reset()
 			else
-				console.log(@mainCommentFormClass)
-				console.log("Not main class!")
-				console.log(thisForm)
 				if (hideInsteadOfRemove)
 					thisForm.hide()
 				else
