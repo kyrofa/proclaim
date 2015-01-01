@@ -1,3 +1,16 @@
 = Bespoke
 
-This project rocks and uses MIT-LICENSE.
+Add to gemfile
+
+Add "//= require bespoke" to JS manifest
+add "*= require bespoke" to CSS manifest
+
+add:
+
+# Set the default URL for named route helpers
+routes.default_url_options = { host: 'localhost', port: 3000 }
+
+# Set the default URL so mailers can contain URLs
+config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+to environments

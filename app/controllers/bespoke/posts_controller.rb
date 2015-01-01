@@ -3,8 +3,8 @@ require_dependency "bespoke/application_controller"
 module Bespoke
 	class PostsController < ApplicationController
 		before_action :authenticate_author, except: [:index, :show]
-		after_action :verify_authorized, :except => :index
-		after_action :verify_policy_scoped, :only => :index
+		after_action :verify_authorized, except: :index
+		after_action :verify_policy_scoped, only: :index
 		before_action :set_post, only: [:show, :edit, :update, :destroy]
 
 		# GET /posts

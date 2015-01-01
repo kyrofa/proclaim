@@ -22,12 +22,20 @@ module Bespoke
 
 		def create
 			@subscription = Subscription.new(subscription_params)
+
 			authorize @subscription
 
-			respond_to do |format|
-				if @subscription.save
-					format.html { redirect_to subscribed_path }
-				else
+			if antispam_params[:answer] == antispam_params[:solution]
+				respond_to do |format|
+					if @subscription.save
+						format.html { redirect_to subscribed_path }
+					else
+						format.html { render :new }
+					end
+				end
+			else
+				@subscription.errors.add(:base, "Antispam question wasn't answered correctly")
+				respond_to do |format|
 					format.html { render :new }
 				end
 			end
@@ -49,6 +57,11 @@ module Bespoke
 		# Only allow a trusted parameter "white list" through.
 		def subscription_params
 			params.require(:subscription).permit(:email)
+		end
+
+		def antispam_params
+			params.require(:antispam).permit(:solution,
+			                                 :answer)
 		end
 	end
 end

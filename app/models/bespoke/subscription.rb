@@ -16,12 +16,12 @@ module Bespoke
 
 		after_create :deliver_welcome_email
 
-		validates :email, presence: true, uniqueness: { scope: :post_id, case_sensitive: false }
+		validates :email, uniqueness: { scope: :post_id, case_sensitive: false }, format: { with: /@/ }
 
 		# RFC-compliant email addresses are way nasty to match with regex, so why
 		# try? We'll be sending them an email anyway-- if they don't get it, they
 		# can re-subscribe. We'll just do an easy validation match here.
-		validates_format_of :email, :with => /@/
+		#validates_format_of :email, :with => /@/
 
 		# Subscriptions aren't required to belong to a post, but if we're given
 		# one it had better be valid

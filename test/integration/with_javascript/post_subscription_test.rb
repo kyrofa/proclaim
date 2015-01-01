@@ -13,6 +13,8 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		Capybara.current_driver = :selenium
 
 		ActionMailer::Base.deliveries.clear
+
+		@show_page = ShowPage.new
 	end
 
 	teardown do
@@ -31,15 +33,15 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
 			fill_in 'Body', with: "Comment Body"
+			fill_in 'What is', with: @show_page.antispam_solution
 			check 'Notify me of other comments on this post'
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_difference('Bespoke::Subscription.count') do
-			find('#new_comment input[type=submit]').click
-			assert page.has_text? "Comment Author"
-			assert page.has_text? "Comment Body"
-		end
+		current_count = Bespoke::Subscription.count
+		@show_page.new_comment_submit_button.click
+		assert(wait_until { Bespoke::Subscription.count == current_count + 1 },
+		      "A new subscription should have been added!")
 
 		# Make sure a welcome email was sent
 		assert_equal ["example@example.com"], ActionMailer::Base.deliveries.last.to
@@ -58,15 +60,15 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
 			fill_in 'Body', with: "Comment Body"
+			fill_in 'What is', with: @show_page.antispam_solution
 			check 'Notify me of other comments on this post'
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_difference('Bespoke::Subscription.count') do
-			find('#new_comment input[type=submit]').click
-			assert page.has_text? "Comment Author"
-			assert page.has_text? "Comment Body"
-		end
+		current_count = Bespoke::Subscription.count
+		@show_page.new_comment_submit_button.click
+		assert(wait_until { Bespoke::Subscription.count == current_count + 1 },
+		      "A new subscription should have been added!")
 
 		# Make sure a welcome email was sent
 		assert_equal ["example@example.com"], ActionMailer::Base.deliveries.last.to
@@ -89,15 +91,15 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		within("#reply_to_#{comment.id}_new_comment") do
 			fill_in 'Author', with: "Reply Author"
 			fill_in 'Body', with: "Reply Body"
+			fill_in 'What is', with: @show_page.antispam_solution(comment)
 			check 'Notify me of other comments on this post'
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_difference('Bespoke::Subscription.count') do
-			find("#reply_to_#{comment.id}_new_comment input[type=submit]").click
-			assert page.has_text? "Reply Author"
-			assert page.has_text? "Reply Body"
-		end
+		current_count = Bespoke::Subscription.count
+		@show_page.new_comment_submit_button(comment).click
+		assert(wait_until { Bespoke::Subscription.count == current_count + 1 },
+		      "A new subscription should have been added!")
 
 		# Make sure a welcome email was sent
 		assert_equal ["example@example.com"], ActionMailer::Base.deliveries.last.to
@@ -117,15 +119,15 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		within("#reply_to_#{comment.id}_new_comment") do
 			fill_in 'Author', with: "Reply Author"
 			fill_in 'Body', with: "Reply Body"
+			fill_in 'What is', with: @show_page.antispam_solution(comment)
 			check 'Notify me of other comments on this post'
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_difference('Bespoke::Subscription.count') do
-			find("#reply_to_#{comment.id}_new_comment input[type=submit]").click
-			assert page.has_text? "Reply Author"
-			assert page.has_text? "Reply Body"
-		end
+		current_count = Bespoke::Subscription.count
+		@show_page.new_comment_submit_button(comment).click
+		assert(wait_until { Bespoke::Subscription.count == current_count + 1 },
+		      "A new subscription should have been added!")
 
 		# Make sure a welcome email was sent
 		assert_equal ["example@example.com"], ActionMailer::Base.deliveries.last.to
@@ -134,6 +136,47 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		assert 1, comment.post.subscriptions.count
 		assert_equal "example@example.com", comment.post.subscriptions.first.email
+	end
+
+	test "should not create new root comment with subscription if spammy" do
+		comment = FactoryGirl.create(:published_comment)
+
+		visit bespoke.post_path(comment.post)
+
+		within('#new_comment') do
+			fill_in 'Author', with: "Comment Author"
+			fill_in 'Body', with: "Comment Body"
+			fill_in 'What is', with: "wrong answer"
+			check 'Notify me of other comments on this post'
+			fill_in 'Email', with: "example@example.com"
+		end
+
+		@show_page.new_comment_submit_button.click
+		assert page.has_css?('div.error'), "Failed antispam question-- errors should show!"
+
+		# Make sure no email was sent
+		assert_empty ActionMailer::Base.deliveries
+	end
+
+	test "should not create new reply with subscription if spammy" do
+		comment = FactoryGirl.create(:published_comment)
+
+		visit bespoke.post_path(comment.post)
+
+		click_link "Reply"
+		within("#reply_to_#{comment.id}_new_comment") do
+			fill_in 'Author', with: "Reply Author"
+			fill_in 'Body', with: "Reply Body"
+			fill_in 'What is', with: "wrong answer"
+			check 'Notify me of other comments on this post'
+			fill_in 'Email', with: "example@example.com"
+		end
+
+		@show_page.new_comment_submit_button(comment).click
+		assert page.has_css?('div.error'), "Failed antispam question-- errors should show!"
+
+		# Make sure no email was sent
+		assert_empty ActionMailer::Base.deliveries
 	end
 
 	test "catch lack of email address" do
@@ -145,15 +188,12 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
 			fill_in 'Body', with: "Comment Body"
+			fill_in 'What is', with: @show_page.antispam_solution
 			check 'Notify me of other comments on this post'
 		end
 
-		assert_no_difference('Bespoke::Comment.count') do
-			assert_no_difference('Bespoke::Subscription.count') do
-				find('#new_comment input[type=submit]').click
-				assert page.has_css?('div.error')
-			end
-		end
+		@show_page.new_comment_submit_button.click
+		assert page.has_css?('div.error')
 
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries
@@ -168,16 +208,13 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
 			fill_in 'Body', with: "Comment Body"
+			fill_in 'What is', with: @show_page.antispam_solution
 			check 'Notify me of other comments on this post'
 			fill_in 'Email', with: "bad_email"
 		end
 
-		assert_no_difference('Bespoke::Comment.count') do
-			assert_no_difference('Bespoke::Subscription.count') do
-				find('#new_comment input[type=submit]').click
-				assert page.has_css?('div.error')
-			end
-		end
+		@show_page.new_comment_submit_button.click
+		assert page.has_css?('div.error')
 
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries
