@@ -1,0 +1,50 @@
+table.post
+{
+	td.post_title
+	{
+		text-align: center;
+		padding-bottom: 10px;
+		font-weight: bold;
+		font-size: 16pt;
+		border-bottom: solid 1px #ddd;
+	}
+
+	td.post_body
+	{
+		.mediumInsert
+		{
+			margin: 0px !important;
+
+			.mediumInsert-images img
+			{
+				margin: 0px;
+			}
+		}
+
+		figure.mediumInsert-images
+		{
+			text-align: center;
+			padding-bottom: 18px;
+			padding-right: 30px;
+		}
+
+		.medium-editor-insert-plugin p
+		{
+			margin: 0px 0px 10px;
+			box-sizing: border-box;
+		}
+	}
+
+	td.post_information
+	{
+		border-top: solid 1px #ddd;
+		border-bottom: solid 1px #ddd;
+		padding: 10px;
+		clear: both;
+	}
+}
+
+table.footer
+{
+	margin-top: 20px;
+}

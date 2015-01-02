@@ -1,19 +1,15 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-	</head>
-	<body>
-		<h1><%= @post.title %></h1>
-		<p>By <%= @post.author %></p>
+<table class = "post">
+	<tr>
+		<td class = "post_title"><h1><%= @post.title %></h1></td>
+	</tr>
 
-		<%= @post.body %>
+	<tr>
+		<td class = "post_body"><%= raw @post.body %></td>
+	</tr>
 
-		<p>
-			You're receiving this email because you requested to be notified if
-			a new post was made on <%= link_to "this blog", root_url %>. If you no
-			longer wish to receive these emails, simply
-			<%= link_to "unsubscribe", unsubscribe_url(@subscription.token) %>.
-		</p>
-	</body>
-</html>
+	<tr>
+		<td class = "post_information">
+			Written on <%= @post.published_at.strftime("%B %d, %Y at %I:%M %p %Z") %> by <%= @post.author.send(Bespoke.author_name_method) %>
+		</td>
+	</tr>
+</div>

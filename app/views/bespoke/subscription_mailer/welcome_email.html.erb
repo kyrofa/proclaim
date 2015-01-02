@@ -1,28 +1,25 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-	</head>
-	<body>
-		<% if @subscription.post %>
-			<h1>You'll be notified!</h1>
+<table class = "post">
+	<tr>
+		<td class = "post_title"><h1>
+			<% if @subscription.post %>
+				You'll be notified!
+			<% else %>
+				Thanks for subscribing!
+			<% end %>
+		</h1></td>
+	</tr>
 
-			<p>
-				You signed up to be notified of any new comments on
-				<%= link_to "this post", @subscription.post %>.
-			</p>
-		<% else %>
-			<h1>Thanks for subscribing!</h1>
-
-			<p>
-				You'll now begin receiving a notification each time a new post
-				is made.
-			</p>
-		<% end %>
-
-		<p>
-			If you no longer wish to receive this notification, simply
-			<%= link_to "unsubscribe", unsubscribe_url(@subscription.token) %>.
-		</p>
-	</body>
-</html>
+	<tr>
+		<td class = "post_body">
+			<% if @subscription.post %>
+				<p>
+					You signed up to be notified of any new comments on <%= link_to "this post", @subscription.post %>.
+				</p>
+			<% else %>
+				<p>
+					You'll now begin receiving a notification each time a new post is made at <%= link_to root_url.gsub(/\A.*:\/\//, '').gsub(/\A(.*?)\/*\z/, '\1'), posts_url %>.
+				</p>
+			<% end %>
+		</td>
+	</tr>
+</div>
