@@ -20,7 +20,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		DatabaseCleaner.clean
 		Capybara.use_default_driver
 
-		image = Bespoke::Image.new
+		image = Proclaim::Image.new
 		FileUtils.rm_rf(File.join(Rails.public_path, image.image.cache_dir))
 		FileUtils.rm_rf(File.join(Rails.public_path, image.image.store_dir))
 	end
@@ -29,7 +29,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		visit bespoke.new_post_path
+		visit proclaim.new_post_path
 
 		within('#new_post') do
 			element = find('h1.editable')
@@ -40,7 +40,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 			element.set("Paragraph 1\nParagraph 2") # Set the body text
 		end
 
-		assert_difference('Bespoke::Post.count') do
+		assert_difference('Proclaim::Post.count') do
 			click_button "Create"
 			assert page.has_text? "Post Title"
 			assert page.has_text? "Paragraph 1\nParagraph 2"
@@ -60,7 +60,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		assert File.exist?(cache_file_path), "File should have been cached: #{cache_file_path}"
 
-		visit bespoke.edit_post_path(post)
+		visit proclaim.edit_post_path(post)
 
 		find("img[src='#{image.image.url}']").hover
 		find("a.mediumInsert-imageRemove").click
@@ -86,7 +86,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		assert File.exist?(saved_file_path), "File should be saved: #{saved_file_path}"
 
-		visit bespoke.edit_post_path(image.post)
+		visit proclaim.edit_post_path(image.post)
 
 		find("img[src='#{image.image.url}']").hover
 		find("a.mediumInsert-imageRemove").click
@@ -119,7 +119,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		assert File.exist?(saved_file_path), "File should be saved: #{saved_file_path}"
 
-		visit bespoke.edit_post_path(image.post)
+		visit proclaim.edit_post_path(image.post)
 
 		find("img[src='#{image.image.url}']").hover
 		find("a.mediumInsert-imageRemove").click
@@ -131,7 +131,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		assert File.exist?(saved_file_path), "File should still be saved: #{saved_file_path}"
 
 		# Don't save. Just visit the post's show page
-		visit bespoke.post_path(image.post)
+		visit proclaim.post_path(image.post)
 
 		assert page.has_css?("img[src='#{image.image.url}']"), "Image should still be present!"
 		assert File.exist?(saved_file_path), "File should still be saved: #{saved_file_path}"
@@ -141,7 +141,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		visit bespoke.new_post_path
+		visit proclaim.new_post_path
 
 		within('#new_post') do
 			# Don't fill in title
@@ -150,7 +150,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 			element.set("Paragraph 1\nParagraph 2") # Set the text
 		end
 
-		assert_no_difference('Bespoke::Post.count') do
+		assert_no_difference('Proclaim::Post.count') do
 			click_button "Create"
 			assert page.has_css? "div#error_explanation"
 			wait_for_ajax
@@ -161,7 +161,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		visit bespoke.new_post_path
+		visit proclaim.new_post_path
 
 		within('#new_post') do
 			element = find('h1.editable')
@@ -170,7 +170,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 			# Don't fill in the body
 		end
 
-		assert_no_difference('Bespoke::Post.count') do
+		assert_no_difference('Proclaim::Post.count') do
 			click_button "Create"
 			assert page.has_css? "div#error_explanation"
 			wait_for_ajax

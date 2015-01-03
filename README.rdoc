@@ -1,9 +1,9 @@
-= Bespoke
+= Proclaim
 
 Add to gemfile
 
-Add "//= require bespoke" to JS manifest
-add "*= require bespoke" to CSS manifest
+Add "//= require proclaim" to JS manifest
+add "*= require proclaim" to CSS manifest
 
 add:
 

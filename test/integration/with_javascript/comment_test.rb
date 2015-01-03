@@ -23,7 +23,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	test "leave root comment" do
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
 		# Test leaving a root comment
 		within('#new_comment') do
@@ -43,7 +43,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 		comment = FactoryGirl.create(:published_comment)
 		post = comment.post
 
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
 		# Leave first reply
 		@show_page.comment_reply_link(comment).click
@@ -77,7 +77,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	test "root comment should fail if spammy" do
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
 		# Test leaving a root comment
 		within('#new_comment') do
@@ -95,7 +95,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 		comment = FactoryGirl.create(:published_comment)
 		post = comment.post
 
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
 		@show_page.comment_reply_link(comment).click
 		within("#reply_to_#{comment.id}_new_comment") do
@@ -113,7 +113,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 		comment1 = FactoryGirl.create(:published_comment)
 		comment2 = FactoryGirl.create(:published_comment, post: comment1.post)
 
-		visit bespoke.post_path(comment1.post)
+		visit proclaim.post_path(comment1.post)
 
 		# Check that a form shows up to reply to comment1
 		@show_page.comment_reply_link(comment1).click
@@ -130,7 +130,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	test "should not have option to edit if not logged in" do
 		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(comment.post)
+		visit proclaim.post_path(comment.post)
 
 		assert page.has_no_css?("#comment_#{comment.id} .edit"),
 		       "A guest should not be given the option to edit a comment!"
@@ -142,7 +142,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 
 		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(comment.post)
+		visit proclaim.post_path(comment.post)
 
 		@show_page.comment_edit_link(comment).click
 		assert page.has_no_css?("p.comment_author", text: comment.author),
@@ -172,7 +172,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 		                           post: parent.post,
 		                           parent: parent)
 
-		visit bespoke.post_path(parent.post)
+		visit proclaim.post_path(parent.post)
 
 		@show_page.comment_edit_link(parent).click
 		assert page.has_no_css?("p.comment_author", text: parent.author),
@@ -212,7 +212,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 		                           post: parent.post,
 		                           parent: parent)
 
-		visit bespoke.post_path(parent.post)
+		visit proclaim.post_path(parent.post)
 
 		@show_page.comment_edit_link(child).click
 		assert page.has_no_css?("p.comment_author", text: child.author),
@@ -243,7 +243,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	test "should not have option to delete if not logged in" do
 		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(comment.post)
+		visit proclaim.post_path(comment.post)
 
 		assert page.has_no_css?("#comment_#{comment.id} .delete"),
 		       "A guest should not be given the option to delete a comment!"
@@ -255,12 +255,12 @@ class CommentTest < ActionDispatch::IntegrationTest
 
 		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(comment.post)
+		visit proclaim.post_path(comment.post)
 
 		assert page.has_text? comment.author
 		assert page.has_text? comment.body
 
-		current_count = Bespoke::Comment.count
+		current_count = Proclaim::Comment.count
 
 		@show_page.comment_delete_link(comment).click
 		page.accept_alert
@@ -268,7 +268,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 		assert page.has_no_text? comment.author
 		assert page.has_no_text? comment.body
 
-		assert(wait_until { Bespoke::Comment.count == current_count - 1 },
+		assert(wait_until { Proclaim::Comment.count == current_count - 1 },
 		      "Root comment should have been deleted!")
 	end
 
@@ -281,14 +281,14 @@ class CommentTest < ActionDispatch::IntegrationTest
 		                           post: parent.post,
 		                           parent: parent)
 
-		visit bespoke.post_path(parent.post)
+		visit proclaim.post_path(parent.post)
 
 		assert page.has_text? parent.author
 		assert page.has_text? parent.body
 		assert page.has_text? child.author
 		assert page.has_text? child.body
 
-		current_count = Bespoke::Comment.count
+		current_count = Proclaim::Comment.count
 
 		@show_page.comment_delete_link(parent).click
 		page.accept_alert
@@ -298,7 +298,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 		assert page.has_no_text?(child.author), "Child author should be gone!"
 		assert page.has_no_text?(child.body), "Child body should be gone!"
 
-		assert(wait_until { Bespoke::Comment.count == current_count - 2 },
+		assert(wait_until { Proclaim::Comment.count == current_count - 2 },
 		      "Both parent and child should have been deleted!")
 	end
 
@@ -311,12 +311,12 @@ class CommentTest < ActionDispatch::IntegrationTest
 		                           post: parent.post,
 		                           parent: parent)
 
-		visit bespoke.post_path(parent.post)
+		visit proclaim.post_path(parent.post)
 
 		assert page.has_text? child.author
 		assert page.has_text? child.body
 
-		current_count = Bespoke::Comment.count
+		current_count = Proclaim::Comment.count
 
 		@show_page.comment_delete_link(child).click
 		page.accept_alert
@@ -326,14 +326,14 @@ class CommentTest < ActionDispatch::IntegrationTest
 		assert page.has_text?(parent.author), "Parent author should not be gone!"
 		assert page.has_text?(parent.body), "Parent body should not be gone!"
 
-		assert(wait_until { Bespoke::Comment.count == current_count - 1 },
+		assert(wait_until { Proclaim::Comment.count == current_count - 1 },
 		      "Child comment should have been deleted!")
 	end
 
 	test "cancel button should remove errors" do
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"

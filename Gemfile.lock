@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bespoke (0.0.1)
+    proclaim (0.0.1)
       aasm
       carrierwave
       closure_tree
@@ -202,12 +202,12 @@ PLATFORMS
 
 DEPENDENCIES
   annotate
-  bespoke!
   capybara
   database_cleaner
   factory_girl_rails
   faker
   mocha
+  proclaim!
   selenium-webdriver
   sqlite3
   test_after_commit

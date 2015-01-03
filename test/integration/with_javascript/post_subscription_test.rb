@@ -29,7 +29,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
@@ -39,7 +39,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_difference('Bespoke::Subscription.count', 1, "A new subscription should have been added!") do
+		assert_difference('Proclaim::Subscription.count', 1, "A new subscription should have been added!") do
 			@show_page.new_comment_submit_button.click
 			wait_for_ajax
 		end
@@ -56,7 +56,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	test "should be able to create new root comment with subscription while not logged in" do
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
@@ -66,7 +66,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_difference('Bespoke::Subscription.count', 1, "A new subscription should have been added!") do
+		assert_difference('Proclaim::Subscription.count', 1, "A new subscription should have been added!") do
 			@show_page.new_comment_submit_button.click
 			wait_for_ajax
 		end
@@ -86,7 +86,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(comment.post)
+		visit proclaim.post_path(comment.post)
 
 		click_link "Reply"
 		within("#reply_to_#{comment.id}_new_comment") do
@@ -97,7 +97,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_difference('Bespoke::Subscription.count', 1, "A new subscription should have been added!") do
+		assert_difference('Proclaim::Subscription.count', 1, "A new subscription should have been added!") do
 			@show_page.new_comment_submit_button(comment).click
 			wait_for_ajax
 		end
@@ -113,7 +113,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	test "should be able to create new reply with subscription while not logged in" do
 		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(comment.post)
+		visit proclaim.post_path(comment.post)
 
 		click_link "Reply"
 		within("#reply_to_#{comment.id}_new_comment") do
@@ -124,7 +124,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_difference('Bespoke::Subscription.count', 1, "A new subscription should have been added!") do
+		assert_difference('Proclaim::Subscription.count', 1, "A new subscription should have been added!") do
 			@show_page.new_comment_submit_button(comment).click
 			wait_for_ajax
 		end
@@ -141,7 +141,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	test "should not send new comment notification email containing own comment" do
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
@@ -151,7 +151,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_difference('Bespoke::Subscription.count', 1, "A new subscription should have been added!") do
+		assert_difference('Proclaim::Subscription.count', 1, "A new subscription should have been added!") do
 			@show_page.new_comment_submit_button.click
 			wait_for_ajax
 		end
@@ -165,7 +165,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	test "should not create new root comment with subscription if spammy" do
 		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(comment.post)
+		visit proclaim.post_path(comment.post)
 
 		within('#new_comment') do
 			fill_in 'Author', with: "Comment Author"
@@ -175,9 +175,9 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_no_difference('Bespoke::Comment.count',
+		assert_no_difference('Proclaim::Comment.count',
 		                     "A new comment should not have been added!") do
-			assert_no_difference('Bespoke::Subscription.count',
+			assert_no_difference('Proclaim::Subscription.count',
 				                  "A new subscription should not have been added!") do
 				@show_page.new_comment_submit_button.click
 				assert page.has_css?('div.error'), "Failed antispam question-- errors should show!"
@@ -192,7 +192,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	test "should not create new reply with subscription if spammy" do
 		comment = FactoryGirl.create(:published_comment)
 
-		visit bespoke.post_path(comment.post)
+		visit proclaim.post_path(comment.post)
 
 		click_link "Reply"
 		within("#reply_to_#{comment.id}_new_comment") do
@@ -203,9 +203,9 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		assert_no_difference('Bespoke::Comment.count',
+		assert_no_difference('Proclaim::Comment.count',
 		                     "A new comment should not have been added!") do
-			assert_no_difference('Bespoke::Subscription.count',
+			assert_no_difference('Proclaim::Subscription.count',
 				                  "A new subscription should not have been added!") do
 				@show_page.new_comment_submit_button(comment).click
 				assert page.has_css?('div.error'), "Failed antispam question-- errors should show!"
@@ -219,7 +219,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 	test "catch lack of email address" do
 		post = FactoryGirl.create(:published_post)
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
 		# Create a new comment and say "notify me," but don't provide email
 		within('#new_comment') do
@@ -229,9 +229,9 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			check 'Notify me of other comments on this post'
 		end
 
-		assert_no_difference('Bespoke::Comment.count',
+		assert_no_difference('Proclaim::Comment.count',
 		                     "A new comment should not have been added!") do
-			assert_no_difference('Bespoke::Subscription.count',
+			assert_no_difference('Proclaim::Subscription.count',
 				                  "A new subscription should not have been added!") do
 				@show_page.new_comment_submit_button.click
 				assert page.has_css?('div.error')
@@ -246,7 +246,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	test "catch bad email address" do
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
 		# Create a new comment and say "notify me," but provide invalid email
 		within('#new_comment') do
@@ -257,9 +257,9 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "bad_email"
 		end
 
-		assert_no_difference('Bespoke::Comment.count',
+		assert_no_difference('Proclaim::Comment.count',
 		                     "A new comment should not have been added!") do
-			assert_no_difference('Bespoke::Subscription.count',
+			assert_no_difference('Proclaim::Subscription.count',
 				                  "A new subscription should not have been added!") do
 				@show_page.new_comment_submit_button.click
 				assert page.has_css?('div.error')

@@ -11,7 +11,7 @@ require 'database_cleaner'
 require 'test_after_commit'
 require 'coffee_script'
 require 'sass'
-#Capybara.app = Bespoke::Engine
+#Capybara.app = Proclaim::Engine
 
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -22,7 +22,7 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 #FactoryGirl.reload
 
 #class ActionController::TestCase
-#	include Bespoke::Engine.routes.url_helpers
+#	include Proclaim::Engine.routes.url_helpers
 #end
 
 class ActionDispatch::IntegrationTest

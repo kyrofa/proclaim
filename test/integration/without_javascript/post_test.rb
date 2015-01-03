@@ -12,13 +12,13 @@ class PostTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		visit bespoke.posts_path
+		visit proclaim.posts_path
 
 		assert page.has_css? "a", text: "New Post"
 	end
 
 	test "index should not give option to create new post if not logged in" do
-		visit bespoke.posts_path
+		visit proclaim.posts_path
 
 		assert page.has_no_css? "a", text: "New Post"
 	end
@@ -29,7 +29,7 @@ class PostTest < ActionDispatch::IntegrationTest
 
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.posts_path
+		visit proclaim.posts_path
 
 		assert page.has_css? "a", text: "Edit"
 	end
@@ -37,7 +37,7 @@ class PostTest < ActionDispatch::IntegrationTest
 	test "index should not give option to edit post if not logged in" do
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.posts_path
+		visit proclaim.posts_path
 
 		assert page.has_no_css? "a", text: "Edit"
 	end
@@ -48,7 +48,7 @@ class PostTest < ActionDispatch::IntegrationTest
 
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.posts_path
+		visit proclaim.posts_path
 
 		assert page.has_css? "a", text: "Delete"
 	end
@@ -56,7 +56,7 @@ class PostTest < ActionDispatch::IntegrationTest
 	test "index should not give option to delete post if not logged in" do
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.posts_path
+		visit proclaim.posts_path
 
 		assert page.has_no_css? "a", text: "Delete"
 	end
@@ -65,7 +65,7 @@ class PostTest < ActionDispatch::IntegrationTest
 		post1 = FactoryGirl.create(:published_post)
 		post2 = FactoryGirl.create(:published_post)
 
-		visit bespoke.posts_path
+		visit proclaim.posts_path
 
 		assert page.has_text? post1.title
 		assert page.has_text? post2.title
@@ -75,10 +75,10 @@ class PostTest < ActionDispatch::IntegrationTest
 		post1 = FactoryGirl.create(:published_post)
 		post2 = FactoryGirl.create(:published_post)
 
-		visit bespoke.posts_path
+		visit proclaim.posts_path
 
-		assert page.has_text? post1.author.send(Bespoke.author_name_method)
-		assert page.has_text? post2.author.send(Bespoke.author_name_method)
+		assert page.has_text? post1.author.send(Proclaim.author_name_method)
+		assert page.has_text? post2.author.send(Proclaim.author_name_method)
 	end
 
 	test "index should show excerpts" do
@@ -89,7 +89,7 @@ class PostTest < ActionDispatch::IntegrationTest
 		post2 = FactoryGirl.create(:published_post,
 		                           body: "foo")
 
-		visit bespoke.posts_path
+		visit proclaim.posts_path
 
 		post1RenderedBody = page.find("#post_#{post1.id} span.excerpt")
 		post2RenderedBody = page.find("#post_#{post2.id} span.excerpt")
@@ -107,7 +107,7 @@ class PostTest < ActionDispatch::IntegrationTest
 		post2 = FactoryGirl.create(:published_post,
 		                           body: "foo")
 
-		visit bespoke.posts_path
+		visit proclaim.posts_path
 
 		assert page.has_css?("#post_#{post1.id} a", text: "(more)"),
 		       "Post 1 should contain a link to view more"
@@ -118,9 +118,9 @@ class PostTest < ActionDispatch::IntegrationTest
 	test "show should show author name" do
 		post = FactoryGirl.create(:published_post)
 
-		visit bespoke.post_path(post)
+		visit proclaim.post_path(post)
 
-		assert page.has_text? post.author.send(Bespoke.author_name_method)
+		assert page.has_text? post.author.send(Proclaim.author_name_method)
 	end
 
 	test "image should have relative source path" do

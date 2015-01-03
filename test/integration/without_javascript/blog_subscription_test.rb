@@ -12,14 +12,14 @@ class BlogSubscriptionTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		visit bespoke.new_subscription_path
+		visit proclaim.new_subscription_path
 
 		within('#new_subscription') do
 			fill_in 'Email', with: "example@example.com"
 			fill_in 'What is', with: antispam_solution
 		end
 
-		assert_difference('Bespoke::Subscription.count', 1,
+		assert_difference('Proclaim::Subscription.count', 1,
 		                  "Should have successfully created subscription!") do
 			find('#new_subscription input[type=submit]').click
 		end
@@ -28,14 +28,14 @@ class BlogSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should be able to create new blog subscription while not logged in" do
-		visit bespoke.new_subscription_path
+		visit proclaim.new_subscription_path
 
 		within('#new_subscription') do
 			fill_in 'Email', with: "example@example.com"
 			fill_in 'What is', with: antispam_solution
 		end
 
-		assert_difference('Bespoke::Subscription.count', 1,
+		assert_difference('Proclaim::Subscription.count', 1,
 		                  "Should have successfully created subscription!") do
 			find('#new_subscription input[type=submit]').click
 		end
@@ -47,14 +47,14 @@ class BlogSubscriptionTest < ActionDispatch::IntegrationTest
 		user = FactoryGirl.create(:user)
 		sign_in user
 
-		visit bespoke.new_subscription_path
+		visit proclaim.new_subscription_path
 
 		within('#new_subscription') do
 			fill_in 'Email', with: "example@example.com"
 			fill_in 'What is', with: "wrong answer"
 		end
 
-		assert_no_difference('Bespoke::Subscription.count',
+		assert_no_difference('Proclaim::Subscription.count',
 		                     "Should have failed antispam questions!") do
 			find('#new_subscription input[type=submit]').click
 		end
@@ -64,14 +64,14 @@ class BlogSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "catch bad email address" do
-		visit bespoke.new_subscription_path
+		visit proclaim.new_subscription_path
 
 		within('#new_subscription') do
 			fill_in 'Email', with: "bad_email_address"
 			fill_in 'What is', with: antispam_solution
 		end
 
-		assert_no_difference('Bespoke::Subscription.count',
+		assert_no_difference('Proclaim::Subscription.count',
 		                     "Should have caught bad email address!") do
 			find('#new_subscription input[type=submit]').click
 		end

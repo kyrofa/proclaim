@@ -13,16 +13,16 @@
 
 ActiveRecord::Schema.define(version: 20141222224905) do
 
-  create_table "bespoke_comment_hierarchies", id: false, force: :cascade do |t|
+  create_table "proclaim_comment_hierarchies", id: false, force: :cascade do |t|
     t.integer "ancestor_id",   null: false
     t.integer "descendant_id", null: false
     t.integer "generations",   null: false
   end
 
-  add_index "bespoke_comment_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "comment_anc_desc_udx", unique: true
-  add_index "bespoke_comment_hierarchies", ["descendant_id"], name: "comment_desc_idx"
+  add_index "proclaim_comment_hierarchies", ["ancestor_id", "descendant_id", "generations"], name: "comment_anc_desc_udx", unique: true
+  add_index "proclaim_comment_hierarchies", ["descendant_id"], name: "comment_desc_idx"
 
-  create_table "bespoke_comments", force: :cascade do |t|
+  create_table "proclaim_comments", force: :cascade do |t|
     t.integer  "post_id"
     t.integer  "parent_id"
     t.string   "author"
@@ -31,18 +31,18 @@ ActiveRecord::Schema.define(version: 20141222224905) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "bespoke_comments", ["post_id"], name: "index_bespoke_comments_on_post_id"
+  add_index "proclaim_comments", ["post_id"], name: "index_proclaim_comments_on_post_id"
 
-  create_table "bespoke_images", force: :cascade do |t|
+  create_table "proclaim_images", force: :cascade do |t|
     t.integer  "post_id"
     t.string   "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "bespoke_images", ["post_id"], name: "index_bespoke_images_on_post_id"
+  add_index "proclaim_images", ["post_id"], name: "index_proclaim_images_on_post_id"
 
-  create_table "bespoke_posts", force: :cascade do |t|
+  create_table "proclaim_posts", force: :cascade do |t|
     t.integer  "author_id"
     t.string   "title",        default: "",      null: false
     t.text     "body",         default: "",      null: false
@@ -52,18 +52,18 @@ ActiveRecord::Schema.define(version: 20141222224905) do
     t.datetime "updated_at",                     null: false
   end
 
-  add_index "bespoke_posts", ["author_id"], name: "index_bespoke_posts_on_author_id"
-  add_index "bespoke_posts", ["state"], name: "index_bespoke_posts_on_state"
+  add_index "proclaim_posts", ["author_id"], name: "index_proclaim_posts_on_author_id"
+  add_index "proclaim_posts", ["state"], name: "index_proclaim_posts_on_state"
 
-  create_table "bespoke_subscriptions", force: :cascade do |t|
+  create_table "proclaim_subscriptions", force: :cascade do |t|
     t.integer  "post_id"
     t.string   "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "bespoke_subscriptions", ["post_id", "email"], name: "index_bespoke_subscriptions_on_post_id_and_email", unique: true
-  add_index "bespoke_subscriptions", ["post_id"], name: "index_bespoke_subscriptions_on_post_id"
+  add_index "proclaim_subscriptions", ["post_id", "email"], name: "index_proclaim_subscriptions_on_post_id_and_email", unique: true
+  add_index "proclaim_subscriptions", ["post_id"], name: "index_proclaim_subscriptions_on_post_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "first_name"

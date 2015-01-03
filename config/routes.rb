@@ -1,4 +1,4 @@
-Bespoke::Engine.routes.draw do
+Proclaim::Engine.routes.draw do
 	resources :posts
 
 	resources :images, only: [:create, :destroy]
