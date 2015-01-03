@@ -53,7 +53,6 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		sign_in user
 
 		image = FactoryGirl.build(:image, post: nil)
-		image.image.asset_host = "http://#{Capybara.current_session.server.host}:#{Capybara.current_session.server.port}"
 		post = FactoryGirl.create(:post, body: @edit_page.medium_inserted_image_html(image))
 
 		cache_file_path = File.join(Rails.public_path, image.image.cache_dir, image.image.cache_name)
@@ -79,7 +78,6 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		sign_in user
 
 		image = FactoryGirl.create(:image)
-		image.image.asset_host = "http://#{Capybara.current_session.server.host}:#{Capybara.current_session.server.port}"
 		image.post.body = "<p>test</p>" + @edit_page.medium_inserted_image_html(image)
 		image.post.save
 
@@ -113,7 +111,6 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		sign_in user
 
 		image = FactoryGirl.create(:image)
-		image.image.asset_host = "http://#{Capybara.current_session.server.host}:#{Capybara.current_session.server.port}"
 		image.post.body = @edit_page.medium_inserted_image_html(image)
 		image.post.save
 
