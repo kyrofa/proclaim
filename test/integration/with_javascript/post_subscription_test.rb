@@ -175,10 +175,15 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		@show_page.new_comment_submit_button.click
-		assert page.has_css?('div.error'), "Failed antispam question-- errors should show!"
-
-		wait_for_ajax
+		assert_no_difference('Bespoke::Comment.count',
+		                     "A new comment should not have been added!") do
+			assert_no_difference('Bespoke::Subscription.count',
+				                  "A new subscription should not have been added!") do
+				@show_page.new_comment_submit_button.click
+				assert page.has_css?('div.error'), "Failed antispam question-- errors should show!"
+				wait_for_ajax
+			end
+		end
 
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries
@@ -198,10 +203,15 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		@show_page.new_comment_submit_button(comment).click
-		assert page.has_css?('div.error'), "Failed antispam question-- errors should show!"
-
-		wait_for_ajax
+		assert_no_difference('Bespoke::Comment.count',
+		                     "A new comment should not have been added!") do
+			assert_no_difference('Bespoke::Subscription.count',
+				                  "A new subscription should not have been added!") do
+				@show_page.new_comment_submit_button(comment).click
+				assert page.has_css?('div.error'), "Failed antispam question-- errors should show!"
+				wait_for_ajax
+			end
+		end
 
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries
@@ -219,9 +229,15 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			check 'Notify me of other comments on this post'
 		end
 
-		@show_page.new_comment_submit_button.click
-		assert page.has_css?('div.error')
-		wait_for_ajax
+		assert_no_difference('Bespoke::Comment.count',
+		                     "A new comment should not have been added!") do
+			assert_no_difference('Bespoke::Subscription.count',
+				                  "A new subscription should not have been added!") do
+				@show_page.new_comment_submit_button.click
+				assert page.has_css?('div.error')
+				wait_for_ajax
+			end
+		end
 
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries
@@ -241,10 +257,15 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "bad_email"
 		end
 
-		@show_page.new_comment_submit_button.click
-		assert page.has_css?('div.error')
-
-		wait_for_ajax
+		assert_no_difference('Bespoke::Comment.count',
+		                     "A new comment should not have been added!") do
+			assert_no_difference('Bespoke::Subscription.count',
+				                  "A new subscription should not have been added!") do
+				@show_page.new_comment_submit_button.click
+				assert page.has_css?('div.error')
+				wait_for_ajax
+			end
+		end
 
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries

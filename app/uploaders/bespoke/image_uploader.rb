@@ -13,8 +13,6 @@ module Bespoke
 		storage :file
 		# storage :fog
 
-		asset_host Bespoke.asset_host || Rails.application.routes.url_helpers.root_url.gsub(/\A(.*?)\/*\z/, '\1')
-
 		# Override the directory where uploaded files will be stored.
 		# This is a sensible default for uploaders that are meant to be mounted:
 		def store_dir
