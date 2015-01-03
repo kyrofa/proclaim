@@ -16,32 +16,28 @@ module Bespoke
 					subscription = nil
 					params = subscription_params
 					if params and params[:subscribe]
-						subscription = @comment.post.subscriptions.build(email: params[:email])
+						subscription = Subscription.new(email: params[:email], post: @comment.post)
 					end
 
 					respond_to do |format|
-						errorMessages = Array.new
-						if subscription and not subscription.valid?
-							errorMessages += subscription.errors.full_messages
-						end
-
-						if not @comment.valid?
-							errorMessages += @comment.errors.full_messages
-						end
-
-						if errorMessages.empty?
-							if (subscription.nil? or (subscription and subscription.save)) and @comment.save
-								format.json { render_comment_json(@comment) }
-							else
-								errorMessages += @comment.errors.full_messages
+						begin
+							Comment.transaction do
+								@comment.save!
 
 								if subscription
-									errorMessages += subscription.errors.full_messages
+									subscription.save!
 								end
-							end
-						end
 
-						unless errorMessages.empty?
+								format.json { render_comment_json(@comment) }
+							end
+						rescue ActiveRecord::RecordInvalid
+							errorMessages = Array.new
+							errorMessages += @comment.errors.full_messages
+
+							if subscription
+								errorMessages += subscription.errors.full_messages
+							end
+
 							format.json { render json: errorMessages, status: :unprocessable_entity }
 						end
 					end

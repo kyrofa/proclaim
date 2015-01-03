@@ -23,7 +23,6 @@ Gem::Specification.new do |s|
 	s.add_dependency "jquery-rails"
 	s.add_dependency "nokogiri"
 	s.add_dependency "premailer", "~> 1.8.2"
-	s.add_dependency "reverse_markdown"
 	s.add_dependency "closure_tree"
 	s.add_dependency "medium-editor-rails"
 	s.add_dependency "font-awesome-rails"

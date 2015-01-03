@@ -10,14 +10,13 @@ require 'aasm'
 require 'rails-timeago'
 require 'pundit'
 require 'premailer'
-require 'reverse_markdown'
 
 module Bespoke
 	class Engine < ::Rails::Engine
 		isolate_namespace Bespoke
 
 		initializer :assets do
-			Rails.application.config.assets.precompile += %w{ link.png remove.png resize-bigger.png resize-smaller.png unlink.png bespoke/email.css }
+			Rails.application.config.assets.precompile += %w{ link.png remove.png resize-bigger.png resize-smaller.png unlink.png }
 		end
 
 		initializer :append_migrations do |app|

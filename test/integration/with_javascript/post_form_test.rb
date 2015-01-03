@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class PostFormTest < ActionDispatch::IntegrationTest
+	include WaitForAjax
 	self.use_transactional_fixtures = false
 
 	setup do
@@ -11,6 +12,8 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		DatabaseCleaner.start
 
 		Capybara.current_driver = :selenium
+
+		@edit_page = EditPage.new
 	end
 
 	teardown do
@@ -41,6 +44,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 			click_button "Create"
 			assert page.has_text? "Post Title"
 			assert page.has_text? "Paragraph 1\nParagraph 2"
+			wait_for_ajax
 		end
 	end
 
@@ -50,7 +54,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		image = FactoryGirl.build(:image, post: nil)
 		image.image.asset_host = "http://#{Capybara.current_session.server.host}:#{Capybara.current_session.server.port}"
-		post = FactoryGirl.create(:post, body: medium_inserted_image_html(image))
+		post = FactoryGirl.create(:post, body: @edit_page.medium_inserted_image_html(image))
 
 		cache_file_path = File.join(Rails.public_path, image.image.cache_dir, image.image.cache_name)
 		cache_path = File.dirname(cache_file_path)
@@ -64,6 +68,8 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		assert page.has_no_css?("img[src='#{image.image.url}']"), "Image should have been removed!"
 
+		wait_for_ajax
+
 		refute File.exist?(cache_file_path), "Should have removed cache file: #{cache_file_path}"
 		refute File.exist?(cache_path), "Should have removed cache path: #{cache_path}"
 	end
@@ -74,7 +80,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		image = FactoryGirl.create(:image)
 		image.image.asset_host = "http://#{Capybara.current_session.server.host}:#{Capybara.current_session.server.port}"
-		image.post.body = "<p>test</p>" + medium_inserted_image_html(image)
+		image.post.body = "<p>test</p>" + @edit_page.medium_inserted_image_html(image)
 		image.post.save
 
 		save_path = File.join(Rails.public_path, image.image.store_dir)
@@ -88,6 +94,8 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		find("a.mediumInsert-imageRemove").click
 
 		assert page.has_no_css?("img[src='#{image.image.url}']"), "Image should have been removed!"
+
+		wait_for_ajax
 
 		assert File.exist?(saved_file_path), "File should still be saved: #{saved_file_path}"
 
@@ -106,7 +114,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		image = FactoryGirl.create(:image)
 		image.image.asset_host = "http://#{Capybara.current_session.server.host}:#{Capybara.current_session.server.port}"
-		image.post.body = medium_inserted_image_html(image)
+		image.post.body = @edit_page.medium_inserted_image_html(image)
 		image.post.save
 
 		save_path = File.join(Rails.public_path, image.image.store_dir)
@@ -120,6 +128,8 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		find("a.mediumInsert-imageRemove").click
 
 		assert page.has_no_css?("img[src='#{image.image.url}']"), "Image should have been removed!"
+
+		wait_for_ajax
 
 		assert File.exist?(saved_file_path), "File should still be saved: #{saved_file_path}"
 
@@ -146,6 +156,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		assert_no_difference('Bespoke::Post.count') do
 			click_button "Create"
 			assert page.has_css? "div#error_explanation"
+			wait_for_ajax
 		end
 	end
 
@@ -165,12 +176,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		assert_no_difference('Bespoke::Post.count') do
 			click_button "Create"
 			assert page.has_css? "div#error_explanation"
+			wait_for_ajax
 		end
-	end
-
-	private
-
-	def medium_inserted_image_html(image)
-		"<div class=\"mediumInsert\"><div class=\"mediumInsert-placeholder\"><figure class=\"mediumInsert-images\"><img src=\"#{image.image.url}\"></figure></div></div>"
 	end
 end
