@@ -64,8 +64,6 @@ module Proclaim
 
 				if @image.new_record?
 					@image.image.remove!
-#				else
-#					@image.destroy
 				end
 
 				respond_to do |format|
