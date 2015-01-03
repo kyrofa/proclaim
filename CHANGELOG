@@ -1,3 +1,7 @@
+v 0.1.1
+  - Fixed post form that was too wide to upload images
+  - Fixed views generator missing email layout
+
 v 0.1.0
   - Added medium editor to post form, using Carrierwave for image uploads
   - Added subscriptions to both the blog and posts (i.e. subscribe to be
