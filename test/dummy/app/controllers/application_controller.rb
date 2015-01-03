@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 		nil
 	end
 
-	def authenticate_user
+	def authenticate_user!
 		false
 	end
 end

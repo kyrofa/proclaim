@@ -20,7 +20,12 @@ module Proclaim
 		end
 
 		initializer :append_migrations do |app|
-			unless app.root.to_s.match root.to_s
+			engine_root = Pathname(root)
+			application_root = Pathname(app.root)
+			within_engine = false
+			application_root.ascend {|f| within_engine = true and break if f == engine_root}
+
+			unless within_engine # Don't run migrations twice for dummy app
 				config.paths["db/migrate"].expanded.each do |expanded_path|
 					app.config.paths["db/migrate"] << expanded_path
 				end
