@@ -8,16 +8,11 @@ module Proclaim
 			desc "Copy all Proclaim views into application"
 
 			def copy_views
-				if options[:views]
-					options[:views].each do |directory|
-						directory directory.to_sym, "app/views/proclaim/#{directory}"
-					end
-				else
-					directory :comments, "app/views/proclaim/comments"
-					directory :posts, "app/views/proclaim/posts"
-					directory :subscription_mailer, "app/views/proclaim/subscription_mailer"
-					directory :subscriptions, "app/views/proclaim/subscriptions"
-				end
+				directory :comments, "app/views/proclaim/comments"
+				directory :posts, "app/views/proclaim/posts"
+				directory :subscription_mailer, "app/views/proclaim/subscription_mailer"
+				directory :subscriptions, "app/views/proclaim/subscriptions"
+				directory "../layouts", "app/views/layouts"
 			end
 		end
 	end

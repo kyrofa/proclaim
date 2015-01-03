@@ -44,6 +44,12 @@ input.datetime_picker
 	margin: -1em 0 0 0;
 }
 
+div.post_body
+{
+	width: calc(100% - 80px);
+	margin: 0 auto;
+}
+
 div.post_body.show .mediumInsert
 {
 	margin: 0px !important;
@@ -52,7 +58,6 @@ div.post_body.show .mediumInsert
 	{
 		margin: 0px;
 	}
-
 }
 
 figure.mediumInsert-images
