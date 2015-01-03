@@ -14,7 +14,7 @@ your way.
 Proclaim 0.1 works with Rails 4.2 and on. Add it to your Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.1.0"
+gem 'proclaim', "~> 0.1.1"
 ```
 
 Run `bundle install` to install it.
