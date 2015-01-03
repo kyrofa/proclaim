@@ -4,6 +4,8 @@ class PostTest < ActionDispatch::IntegrationTest
 	setup do
 		ApplicationController.any_instance.stubs(:current_user).returns(nil)
 		ApplicationController.any_instance.stubs(:authenticate_user).returns(false)
+
+		@edit_page = EditPage.new
 	end
 
 	test "index should give option to create new post if logged in" do
@@ -119,5 +121,20 @@ class PostTest < ActionDispatch::IntegrationTest
 		visit bespoke.post_path(post)
 
 		assert page.has_text? post.author.send(Bespoke.author_name_method)
+	end
+
+	test "image should have relative source path" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		image = FactoryGirl.create(:image)
+		image.post.body = @edit_page.medium_inserted_image_html(image)
+		image.post.save
+
+		image_tags = Nokogiri::HTML.fragment(image.post.body).css("img")
+
+		assert_equal 1, image_tags.length
+		refute_match root_url, image_tags[0].attribute("src"),
+		             "Images should have relative paths"
 	end
 end

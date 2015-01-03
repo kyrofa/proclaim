@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class PostSubscriptionTest < ActionDispatch::IntegrationTest
+	include WaitForAjax
 	self.use_transactional_fixtures = false
 
 	setup do
@@ -38,10 +39,10 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		current_count = Bespoke::Subscription.count
-		@show_page.new_comment_submit_button.click
-		assert(wait_until { Bespoke::Subscription.count == current_count + 1 },
-		      "A new subscription should have been added!")
+		assert_difference('Bespoke::Subscription.count', 1, "A new subscription should have been added!") do
+			@show_page.new_comment_submit_button.click
+			wait_for_ajax
+		end
 
 		# Make sure a welcome email was sent
 		assert_equal ["example@example.com"], ActionMailer::Base.deliveries.last.to
@@ -65,10 +66,10 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		current_count = Bespoke::Subscription.count
-		@show_page.new_comment_submit_button.click
-		assert(wait_until { Bespoke::Subscription.count == current_count + 1 },
-		      "A new subscription should have been added!")
+		assert_difference('Bespoke::Subscription.count', 1, "A new subscription should have been added!") do
+			@show_page.new_comment_submit_button.click
+			wait_for_ajax
+		end
 
 		# Make sure a welcome email was sent
 		assert_equal ["example@example.com"], ActionMailer::Base.deliveries.last.to
@@ -96,14 +97,13 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		current_count = Bespoke::Subscription.count
-		@show_page.new_comment_submit_button(comment).click
-		assert(wait_until { Bespoke::Subscription.count == current_count + 1 },
-		      "A new subscription should have been added!")
+		assert_difference('Bespoke::Subscription.count', 1, "A new subscription should have been added!") do
+			@show_page.new_comment_submit_button(comment).click
+			wait_for_ajax
+		end
 
 		# Make sure a welcome email was sent
 		assert_equal ["example@example.com"], ActionMailer::Base.deliveries.last.to
-
 		comment.reload # Refresh comment to pull in new associations
 
 		assert 1, comment.post.subscriptions.count
@@ -124,10 +124,10 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
-		current_count = Bespoke::Subscription.count
-		@show_page.new_comment_submit_button(comment).click
-		assert(wait_until { Bespoke::Subscription.count == current_count + 1 },
-		      "A new subscription should have been added!")
+		assert_difference('Bespoke::Subscription.count', 1, "A new subscription should have been added!") do
+			@show_page.new_comment_submit_button(comment).click
+			wait_for_ajax
+		end
 
 		# Make sure a welcome email was sent
 		assert_equal ["example@example.com"], ActionMailer::Base.deliveries.last.to
@@ -136,6 +136,30 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		assert 1, comment.post.subscriptions.count
 		assert_equal "example@example.com", comment.post.subscriptions.first.email
+	end
+
+	test "should not send new comment notification email containing own comment" do
+		post = FactoryGirl.create(:published_post)
+
+		visit bespoke.post_path(post)
+
+		within('#new_comment') do
+			fill_in 'Author', with: "Comment Author"
+			fill_in 'Body', with: "Comment Body"
+			fill_in 'What is', with: @show_page.antispam_solution
+			check 'Notify me of other comments on this post'
+			fill_in 'Email', with: "example@example.com"
+		end
+
+		assert_difference('Bespoke::Subscription.count', 1, "A new subscription should have been added!") do
+			@show_page.new_comment_submit_button.click
+			wait_for_ajax
+		end
+
+		# Make sure only a single email was sent
+		assert_equal 1, ActionMailer::Base.deliveries.count,
+		             "Only a welcome email should have been sent!"
+		assert_match "Welcome", ActionMailer::Base.deliveries.last.subject
 	end
 
 	test "should not create new root comment with subscription if spammy" do
@@ -153,6 +177,8 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		@show_page.new_comment_submit_button.click
 		assert page.has_css?('div.error'), "Failed antispam question-- errors should show!"
+
+		wait_for_ajax
 
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries
@@ -175,13 +201,14 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 		@show_page.new_comment_submit_button(comment).click
 		assert page.has_css?('div.error'), "Failed antispam question-- errors should show!"
 
+		wait_for_ajax
+
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries
 	end
 
 	test "catch lack of email address" do
 		post = FactoryGirl.create(:published_post)
-
 		visit bespoke.post_path(post)
 
 		# Create a new comment and say "notify me," but don't provide email
@@ -194,6 +221,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		@show_page.new_comment_submit_button.click
 		assert page.has_css?('div.error')
+		wait_for_ajax
 
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries
@@ -215,6 +243,8 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		@show_page.new_comment_submit_button.click
 		assert page.has_css?('div.error')
+
+		wait_for_ajax
 
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries

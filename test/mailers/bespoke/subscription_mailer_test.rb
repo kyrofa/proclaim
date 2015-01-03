@@ -9,11 +9,15 @@ module Bespoke
 			Rails.application.config.action_mailer.default_url_options
 		end
 
+		setup do
+			@edit_page = EditPage.new
+		end
+
 		test "welcome email" do
 			subscription = FactoryGirl.create(:subscription)
 
 			mail = SubscriptionMailer.welcome_email(subscription)
-			assert_equal "Welcome!", mail.subject
+			assert_match "Welcome", mail.subject
 			assert_equal [subscription.email], mail.to
 			assert_equal ["from@example.com"], mail.from
 			assert_equal 2, mail.body.parts.length # Ensure multipart: text and HTML
@@ -40,7 +44,7 @@ module Bespoke
 
 		test "new post notification email" do
 			subscription = FactoryGirl.create(:subscription)
-			post = FactoryGirl.create(:post)
+			post = FactoryGirl.create(:published_post)
 
 			mail = SubscriptionMailer.new_post_notification_email(subscription, post)
 			assert_equal "New Post: #{post.title}", mail.subject
@@ -51,6 +55,23 @@ module Bespoke
 			# Verify the email includes an unsubscription URL
 			assert_match bespoke.unsubscribe_url(subscription.token), get_text_part(mail)
 			assert_match bespoke.unsubscribe_url(subscription.token), get_html_part(mail)
+		end
+
+		test "images in new post notification email should have absolute URLs" do
+			subscription = FactoryGirl.create(:subscription)
+
+			image = FactoryGirl.create(:image)
+			image.post.body = @edit_page.medium_inserted_image_html(image)
+			image.post.publish
+			image.post.save
+
+			mail = SubscriptionMailer.new_post_notification_email(subscription, image.post)
+
+			image_tags = Nokogiri::HTML(get_html_part(mail)).css("img")
+
+			assert_equal 1, image_tags.length
+			assert_match root_url, image_tags[0].attribute("src"),
+				          "Images should have absolute URLs in emails"
 		end
 
 		private

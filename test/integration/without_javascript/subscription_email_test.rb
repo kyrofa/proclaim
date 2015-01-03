@@ -14,7 +14,7 @@ class SubscriptionEmailTest < ActionDispatch::IntegrationTest
 
 		# Make sure subscriber was sent a welcome email
 		assert_equal [subscription.email], ActionMailer::Base.deliveries.last.to
-		assert_equal "Welcome!", ActionMailer::Base.deliveries.last.subject
+		assert_match "Welcome", ActionMailer::Base.deliveries.last.subject
 	end
 
 	test "should email notification to post subscriber when new comment is made" do
