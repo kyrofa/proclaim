@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+
+			table.main
+			{
+				width: 100%;
+			}
+
+			table.post
+			{
+				width: 600px;
+				margin: 0 auto;
+			}
+
+			td.post_title
+			{
+				text-align: center;
+				border-bottom: solid 1px #ddd;
+			}
+
+			td.post_title h1
+			{
+				margin: 0 0 10px 0;
+				padding: 0;
+			}
+
+			.mediumInsert
+			{
+				margin: 0px;
+			}
+
+			.mediumInsert.small
+			{
+				float: left;
+				max-width: calc(33.33% + 40px);
+				min-height: 18px;
+			}
+
+			.mediumInsert img
+			{
+				display: block;
+				margin: 0px;
+				vertical-align: top;
+				max-width: 600px;
+				border: 0px none;
+			}
+
+			.mediumInsert.small img
+			{
+				max-width: 100%;
+			}
+
+			figure.mediumInsert-images
+			{
+				width: 100%;
+				margin: 0px;
+				text-align: center;
+			}
+
+			figure.mediumInsert-images.small
+			{
+				padding-bottom: 18px;
+				padding-right: 30px;
+			}
+
+			figure.mediumInsert-images:first-child
+			{
+				margin-right: 0px;
+				width: 100%;
+			}
+
+			.medium-editor-insert-plugin p
+			{
+				margin: 0px 0px 10px;
+				box-sizing: border-box;
+			}
+
+			td.post_body
+			{
+				padding-bottom: 10px;
+			}
+
+			td.post_body blockquote
+			{
+				padding: 10px 20px;
+				margin: 0 0 20px;
+				border-left: 5px solid #eeeeee;
+			}
+
+			td.post_information
+			{
+				border-top: solid 1px #ddd;
+				border-bottom: solid 1px #ddd;
+				padding: 10px;
+				clear: both;
+			}
+
+			table.footer
+			{
+				margin-top: 20px;
+				color: #888;
+			}
+		</style>
+	</head>
+	<body>
+		<table class = "main">
+			<tr><td><%= yield %></td></tr>
+		</table>
+
+		<table class = "footer">
+			<tr>
+				<td>
+					<% url = root_url.gsub(/\A.*:\/\//, '').gsub(/\A(.*?)\/*\z/, '\1') %>
+
+					<% if @subscription.post %>
+						You're receiving this email because you requested to be notified if a new comment was made on <%= link_to "this post", @subscription.post %>
+						at <%= link_to url, posts_url %>.
+					<% else  %>
+						You're receiving this email because you requested to be notified if a new post was made at <%= link_to url, posts_url %>.
+					<% end %>
+					If you no longer wish to receive these emails, simply <%= link_to "unsubscribe", unsubscribe_url(@subscription.token) %>.
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

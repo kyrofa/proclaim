@@ -1,0 +1,6 @@
+v 0.1.0
+  - Added medium editor to post form, using Carrierwave for image uploads
+  - Added subscriptions to both the blog and posts (i.e. subscribe to be
+    notified of new posts or new comments on a given post)
+  - Added comments to posts
+  - Added posts

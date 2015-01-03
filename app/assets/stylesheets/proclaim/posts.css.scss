@@ -1,0 +1,77 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+
+h1.post_title
+{
+	text-align: center;
+	padding-bottom: 10px;
+	font-weight: bold;
+	border-bottom: solid 1px #ddd;
+}
+
+div.post_information
+{
+	border-top: solid 1px #ddd;
+	border-bottom: solid 1px #ddd;
+	padding: 10px;
+	clear: both;
+}
+
+div.post_excerpt_information
+{
+	font-size: 13px;
+	color: rgba(0, 0, 0, 0.3);
+	margin-top: 10px;
+}
+
+input.datetime_picker
+{
+	cursor: pointer;
+}
+
+.editable
+{
+	&:focus
+	{
+		outline: none;
+	}
+}
+
+.mediumInsert
+{
+	margin: -1em 0 0 0;
+}
+
+div.post_body.show .mediumInsert
+{
+	margin: 0px !important;
+
+	.mediumInsert-images img
+	{
+		margin: 0px;
+	}
+
+}
+
+figure.mediumInsert-images
+{
+	text-align: center;
+}
+
+.medium-editor-insert-plugin p
+{
+	margin: 0px 0px 10px;
+	box-sizing: border-box;
+}
+
+.medium-editor-placeholder:after
+{
+	position: relative;
+}
+
+h1.post_title.editable:after
+{
+	text-align: center;
+}

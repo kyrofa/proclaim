@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Proclaim::Engine => "/proclaim"
 
-  mount Bespoke::Engine => "/bespoke"
+  root 'proclaim/posts#index'
 end

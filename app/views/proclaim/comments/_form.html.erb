@@ -1,0 +1,51 @@
+<%
+	target ||= nil
+	main ||= false
+
+	formClass = "comment_form"
+	namespace = nil
+	namespace_space = ""
+
+	if comment.parent and comment.new_record?
+		namespace = "reply_to_#{comment.parent.id}"
+		namespace_space = namespace + "_"
+	end
+
+	if main
+		formClass += " main_comment_form"
+	end
+%>
+
+<%
+	random_number_1 = rand(4)+1
+	random_number_2 = rand(4)+1
+%>
+
+<%= form_for comment, namespace: namespace, remote: true, format: :json, html: {class: formClass}, data: {target: target} do |f| %>
+	<%= f.label :author %><br />
+	<%= f.text_field :author %><br />
+	<%= f.label :body %><br />
+	<%= f.text_area :body %><br />
+
+
+
+	<% if comment.new_record? %>
+		<%= label namespace_space+"antispam", "answer", "Spam bots can't do math. What is #{random_number_1} + #{random_number_2}?" %><br />
+		<%= text_field "antispam", "answer", id: namespace_space+"antispam_answer" %><br />
+		<%= hidden_field "antispam", "solution", value: random_number_1+random_number_2, id: namespace_space+"antispam_solution" %>
+	<% end %>
+
+	<%= label namespace_space+"subscription", "subscribe", "Notify me of other comments on this post" %><br />
+	<%= check_box "subscription", "subscribe", {id: namespace_space+"subscription_subscribe", class: "subscription_subscribe"}, "true", nil %><br />
+
+	<div class = "subscription_email" style = "display: none;">
+		<%= label namespace_space+"subscription", "email"%><br />
+		<%= text_field "subscription", "email", id: namespace_space+"subscription_email" %>
+	</div>
+
+	<%= f.hidden_field :post_id %>
+	<%= f.hidden_field :parent_id %>
+
+	<%= f.submit "Comment" %>
+	<%= f.button "Cancel", class: "cancel_comment" %>
+<% end %>
