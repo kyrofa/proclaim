@@ -7,6 +7,13 @@ It's not meant to *be* your entire website-- it's a mountable engine. Mount it
 where you want it, configure it, and you have a blog. It otherwise stays out of
 your way.
 
+Proclaim stays minimal by making use of HTML5's contenteditable attribute. It
+also uses the
+[Medium Editor clone](https://github.com/daviferreira/medium-editor) by Davi
+Ferreira, in concert with Pavel Linkesch's
+[Image Insert plugin](https://github.com/orthes/medium-editor-insert-plugin)
+tied to CarrierWave for image uploads.
+
 ## Getting Started
 
 ### Get Proclaim
@@ -14,7 +21,7 @@ your way.
 Proclaim 0.1 works with Rails 4.2 and on. Add it to your Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.1.1"
+gem 'proclaim', "~> 0.1.2"
 ```
 
 Run `bundle install` to install it.

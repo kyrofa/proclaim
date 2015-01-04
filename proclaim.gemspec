@@ -20,6 +20,8 @@ Gem::Specification.new do |s|
 	s.files = Dir["{app,config,db,lib,vendor,test}/**/*", "LICENSE", "Rakefile", "README.md", "Gemfile", "proclaim.gemspec", "CHANGELOG", "VERSION"]
 	s.test_files = Dir["test/**/*"]
 
+	s.required_ruby_version = '>= 1.9.3'
+
 	s.add_dependency "rails", "~> 4.2"
 	s.add_dependency "coffee-rails", "~> 4.1"
 	s.add_dependency "sass-rails", "~> 5.0"
