@@ -1,3 +1,7 @@
+v 0.1.2
+  - Fixed spacing around image on post show
+  - Added Ruby version requirement to gemspec
+
 v 0.1.1
   - Fixed post form that was too wide to upload images
   - Fixed views generator missing email layout

@@ -21,7 +21,7 @@ tied to CarrierWave for image uploads.
 Proclaim 0.1 works with Rails 4.2 and on. Add it to your Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.1.1"
+gem 'proclaim', "~> 0.1.2"
 ```
 
 Run `bundle install` to install it.
