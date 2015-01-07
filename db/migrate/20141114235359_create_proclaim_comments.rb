@@ -10,6 +10,6 @@ class CreateProclaimComments < ActiveRecord::Migration
 			t.timestamps null: false
 		end
 
-		add_foreign_key :proclaim_comments, :posts
+		add_foreign_key :proclaim_comments, :proclaim_posts, column: :post_id
 	end
 end

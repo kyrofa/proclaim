@@ -14,6 +14,17 @@ Ferreira, in concert with Pavel Linkesch's
 [Image Insert plugin](https://github.com/orthes/medium-editor-insert-plugin)
 tied to CarrierWave for image uploads.
 
+Proclaim doesn't include any users or authentication. It was made to be able to
+work with whatever setup you're using. All that it requires is that your
+application _has_ users and authentication (
+[Devise](https://github.com/plataformatec/devise) is recommended). In Proclaim
+0.1, authentication is also used as authorization. If a user is logged in, it
+can create/publish/edit/delete posts and edit/delete comments. If no user is
+logged in, it can only read posts and create comments.
+
+More information about configuring Proclaim for your specific authentication
+scheme is given below.
+
 ## Getting Started
 
 ### Get Proclaim
@@ -84,9 +95,10 @@ root to: "home#index"
 
 The Proclaim engine has a number of configurable parameters that mostly relate
 to tying the engine in with the rest of the site. Proclaim tries to be as
-unobtrusive as possible-- it doesn't provide users or authentication. It does,
-however, require some concept of authors, expecting that they authenticate
-somehow, and posts will belong to whichever author publishes them.
+unobtrusive as possible-- as mentioned above, it doesn't provide users or
+authentication. It does, however, require some concept of authors, expecting
+that they authenticate somehow, and posts will belong to whichever author
+publishes them.
 
 All configuration items (and their defaults) follow:
 

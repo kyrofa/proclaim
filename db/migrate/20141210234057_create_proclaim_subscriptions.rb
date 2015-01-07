@@ -7,7 +7,7 @@ class CreateProclaimSubscriptions < ActiveRecord::Migration
 			t.timestamps null: false
 		end
 
-		add_foreign_key :proclaim_subscriptions, :posts
+		add_foreign_key :proclaim_subscriptions, :proclaim_posts, column: :post_id
 
 		# This ensures that even if two clients try to create the same
 		# subscription at exactly the same time, the database won't accept
