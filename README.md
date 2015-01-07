@@ -16,8 +16,8 @@ tied to CarrierWave for image uploads.
 
 Proclaim doesn't include any users or authentication. It was made to be able to
 work with whatever setup you're using. All that it requires is that your
-application _has_ users and authentication (
-[Devise](https://github.com/plataformatec/devise) is recommended). In Proclaim
+application _has_ users and authentication
+([Devise](https://github.com/plataformatec/devise) is recommended). In Proclaim
 0.1, authentication is also used as authorization. If a user is logged in, it
 can create/publish/edit/delete posts and edit/delete comments. If no user is
 logged in, it can only read posts and create comments.
@@ -32,7 +32,7 @@ scheme is given below.
 Proclaim 0.1 works with Rails 4.2 and on. Add it to your Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.1.2"
+gem 'proclaim', "~> 0.1.3"
 ```
 
 Run `bundle install` to install it.
