@@ -13,6 +13,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require medium-editor
-//= require medium-editor-insert-plugin.all.min
+//= require medium-editor-insert-plugin.all
 //= require rails-timeago
 //= require_tree .
