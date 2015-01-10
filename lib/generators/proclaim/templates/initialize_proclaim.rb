@@ -19,4 +19,7 @@ Proclaim.setup do |config|
 
 	# Maximum length for the excerpts shown on the posts index.
 	#excerpt_length = 500
+
+	# Buttons to display on post editor toolbar
+	#editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote']
 end
