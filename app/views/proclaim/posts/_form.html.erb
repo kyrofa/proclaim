@@ -6,13 +6,15 @@
 		              $(document).find("input#post_title"),
 		              $(document).find("form.new_post h1.editable"),
 		              $(document).find("input#post_body"),
-		              $(document).find("form.new_post div.editable"));
+		              $(document).find("form.new_post div.editable"),
+		              <%= raw Proclaim.editor_toolbar_buttons.to_json %>);
 		<% else %>
 			new Editor($(document).find("form.edit_post"),
 		              $(document).find("input#post_title"),
 		              $(document).find("form.edit_post h1.editable"),
 		              $(document).find("input#post_body"),
-		              $(document).find("form.edit_post div.editable"));
+		              $(document).find("form.edit_post div.editable"),
+		              <%= raw Proclaim.editor_toolbar_buttons.to_json %>);
 		<% end %>
 	});
 </script>

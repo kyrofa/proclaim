@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
 	s.add_dependency "premailer", "~> 1.8"
 	s.add_dependency "closure_tree", "~> 5.2"
 	s.add_dependency "font-awesome-rails", "~> 4.2"
-	s.add_dependency "medium-editor-rails", "~> 0.13"
+	s.add_dependency "medium-editor-rails", "~> 1.0"
 	s.add_dependency "carrierwave", "~> 0.10"
 	s.add_dependency "aasm", "~> 4.0"
 	s.add_dependency "rails-timeago", "~> 2.11"
