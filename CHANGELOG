@@ -1,3 +1,5 @@
+  - Added ability to alter the buttons shown on editor toolbar
+  - Upgraded to Medium Editor 2.0.0
   - Fix image toolbar's missing icons in production
   - Edit/Delete buttons on post show page
   - Posts ordered by publication date
