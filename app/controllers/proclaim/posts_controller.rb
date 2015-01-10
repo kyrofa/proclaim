@@ -9,7 +9,7 @@ module Proclaim
 
 		# GET /posts
 		def index
-			@posts = policy_scope(Post)
+			@posts = policy_scope(Post).order(published_at: :desc, updated_at: :desc)
 			authorize Post
 		end
 

@@ -115,6 +115,36 @@ class PostTest < ActionDispatch::IntegrationTest
 		       "Post 2 should not contain a link to see more"
 	end
 
+	test "index should show posts ordered by publication date" do
+		post1 = FactoryGirl.create(:published_post)
+		post2 = FactoryGirl.create(:published_post)
+
+		visit proclaim.posts_path
+
+		assert page.body.index(post2.title) < page.body.index(post1.title),
+		       "Post 2 should be shown before post 1!"
+	end
+
+	test "index should show drafts ordered by modification date" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		post1 = FactoryGirl.create(:post)
+		post2 = FactoryGirl.create(:post)
+		post3 = FactoryGirl.create(:post)
+
+		# Update post1 so its updated_at is newest
+		post2.body = "Updated Body"
+		post2.save
+
+		visit proclaim.posts_path
+
+		assert page.body.index(post2.title) < page.body.index(post3.title),
+		       "Post 2 draft should be shown before post 3 draft!"
+		assert page.body.index(post3.title) < page.body.index(post1.title),
+		       "Post 3 draft should be shown before post 1 draft!"
+	end
+
 	test "show should show author name" do
 		post = FactoryGirl.create(:published_post)
 

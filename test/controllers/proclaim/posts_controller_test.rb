@@ -40,6 +40,39 @@ module Proclaim
 			assert_includes assigns(:posts), post2
 		end
 
+		test "posts should be ordered by publication date" do
+			post1 = FactoryGirl.create(:published_post)
+			post2 = FactoryGirl.create(:published_post)
+
+			get :index
+			assert_response :success
+			assert_not_nil assigns(:posts)
+			assert_equal 2, assigns(:posts).count
+			assert_equal post2, assigns(:posts).first
+			assert_equal post1, assigns(:posts).last
+		end
+
+		test "drafts should be ordered by updated date" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			post1 = FactoryGirl.create(:post)
+			post2 = FactoryGirl.create(:post)
+			post3 = FactoryGirl.create(:post)
+
+			# Update post1 so its updated_at is newest
+			post2.body = "Updated Body"
+			post2.save
+
+			get :index
+			assert_response :success
+			assert_not_nil assigns(:posts)
+			assert_equal 3, assigns(:posts).count
+			assert_equal post2, assigns(:posts).first
+			assert_equal post3, assigns(:posts).second
+			assert_equal post1, assigns(:posts).last
+		end
+
 		test "should get new if logged in" do
 			user = FactoryGirl.create(:user)
 			sign_in user
