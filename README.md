@@ -8,19 +8,15 @@ where you want it, configure it, and you have a blog. It otherwise stays out of
 your way.
 
 Proclaim stays minimal by making use of HTML5's contenteditable attribute. It
-also uses the
-[Medium Editor clone](https://github.com/daviferreira/medium-editor) by Davi
-Ferreira, in concert with Pavel Linkesch's
-[Image Insert plugin](https://github.com/orthes/medium-editor-insert-plugin)
-tied to CarrierWave for image uploads.
+also uses the [Medium Editor clone][1] by Davi Ferreira, in concert with Pavel
+Linkesch's [Image Insert plugin][2] tied to CarrierWave for image uploads.
 
 Proclaim doesn't include any users or authentication. It was made to be able to
 work with whatever setup you're using. All that it requires is that your
-application _has_ users and authentication
-([Devise](https://github.com/plataformatec/devise) is recommended). In Proclaim
-0.1, authentication is also used as authorization. If a user is logged in, it
-can create/publish/edit/delete posts and edit/delete comments. If no user is
-logged in, it can only read posts and create comments.
+application _has_ users and authentication ([Devise][3] is recommended). In
+Proclaim 0.1, authentication is also used as authorization. If a user is logged
+in, it can create/publish/edit/delete posts and edit/delete comments. If no user
+is logged in, it can only read posts and create comments.
 
 More information about configuring Proclaim for your specific authentication
 scheme is given below.
@@ -32,7 +28,7 @@ scheme is given below.
 Proclaim 0.1 works with Rails 4.2 and on. Add it to your Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.1.3"
+gem 'proclaim', "~> 0.2.0"
 ```
 
 Run `bundle install` to install it.
@@ -108,6 +104,7 @@ Proclaim.author_name_method = :name
 Proclaim.current_author_method = :current_user
 Proclaim.authentication_method = :authenticate_user!
 Proclaim.excerpt_length = 500
+Proclaim.editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote']
 ```
 
 - **Proclaim.author_class**
@@ -137,6 +134,11 @@ Proclaim.excerpt_length = 500
   Maximum length for the excerpts shown on the posts index. The excerpts may be
   less than this, but will never exceed it.
 
+- **Proclaim.editor_toolbar_buttons**
+
+  The buttons to be displayed on the Medium Editor toolbar. For a full list of
+  options, see the README for [that project][1].
+
 Astute readers may note that the defaults corresponds to defaults from Devise (on
 the User class). If that's not your setup, all of these options can be changed
 in the initializer installed by `rails generate proclaim:install`.
@@ -154,3 +156,7 @@ application and alter them by using the generator:
 ```ruby
 rails generate proclaim:views
 ```
+
+[1]: https://github.com/daviferreira/medium-editor  "Medium Editor Clone"
+[2]: https://github.com/orthes/medium-editor-insert-plugin "Image Insert plugin"
+[3]: https://github.com/plataformatec/devise "Devise"

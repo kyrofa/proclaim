@@ -16,6 +16,9 @@ module Proclaim
 	mattr_accessor :excerpt_length
 	@@excerpt_length = 500 # 500 characters (won't interrupt words)
 
+	mattr_accessor :editor_toolbar_buttons
+	@@editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote']
+
 	def self.setup
 		yield self
 	end

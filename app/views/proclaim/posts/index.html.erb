@@ -5,26 +5,65 @@
 <% if @posts.empty? %>
 	<p>No posts have been made, yet.</p>
 <% else %>
-	<% @posts.each do |post| %>
-		<h1><%= link_to post.title, post %></h1>
-		<div id = "post_<%= post.id %>">
-			<% excerpt = post.excerpt %>
-			<span class = "excerpt"><%= excerpt %></span>
+	<table style = "width: 100%;">
+		<tr>
+			<td id = "published_posts">
+				<% @posts.published.each do |post| %>
+				<h1><%= link_to post.title, post %></h1>
+				<div id = "post_<%= post.id %>">
+					<% excerpt = post.excerpt %>
+					<span class = "excerpt"><%= excerpt %></span>
 
-			<% if excerpt.length < post.body.length %>
-				. . . <%= link_to "(more)", post %>
+					<% if excerpt.length < post.body.length %>
+						. . . <%= link_to "(more)", post %>
+					<% end %>
+				</div>
+				<div class = "post_excerpt_information">
+					<div style = "float: right;">
+						<% if policy(post).edit? %>
+							<%= link_to 'Edit', edit_post_path(post) %>
+						<% end %>
+						<% if policy(post).destroy? %>
+							<% if policy(post).edit? %>
+								|
+							<% end %>
+							<%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+						<% end %>
+					</div>
+					<%= post.author.send(Proclaim.author_name_method) %><br />
+					<%= timeago_tag post.updated_at, format: "%B %d, %Y" %>
+				</div>
 			<% end %>
-		</div>
-		<div class = "post_excerpt_information">
-			<div style = "float: right;">
-				<% if policy(post).edit? %>
-					<%= link_to 'Edit', edit_post_path(post) %>
-				<% end %>
-				<% if policy(post).destroy? %>
-					<%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %>
-				<% end %>
-			</div>
-			<%= post.author.send(Proclaim.author_name_method) %>
-		</div>
-	<% end %>
+			</td>
+
+			<% drafts = @posts.draft %>
+			<% unless drafts.blank? %>
+				<td id = "draft_posts">
+					<div id = "draft_list">
+						<h2>Drafts</h2>
+						<% drafts.each do |post| %>
+							<h3 class = "draft_list_item">
+								<%= link_to post.title, post %>
+							</h3>
+							<div class = "post_excerpt_information">
+								<div style = "float: right;">
+									<% if policy(post).edit? %>
+										<%= link_to 'Edit', edit_post_path(post) %>
+									<% end %>
+									<% if policy(post).destroy? %>
+										<% if policy(post).edit? %>
+											|
+										<% end %>
+										<%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+									<% end %>
+								</div>
+								<%= post.author.send(Proclaim.author_name_method) %><br />
+								<%= timeago_tag post.updated_at, format: "%B %d, %Y" %>
+							</div>
+						<% end %>
+					</div>
+				</td>
+			<% end %>
+		</tr>
+	</table>
 <% end %>

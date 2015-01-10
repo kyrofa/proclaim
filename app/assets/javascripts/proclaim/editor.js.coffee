@@ -1,6 +1,6 @@
 class Editor
 	constructor: (@form, @titleFormField, @titleEditableItem,
-	              @bodyFormField, @bodyEditableItem) ->
+	              @bodyFormField, @bodyEditableItem, @toolbarButtons) ->
 		if (@form.length == 1) and (@titleFormField.length == 1) and
 		   (@titleEditableItem.length == 1) and (@bodyFormField.length == 1) and
 		   (@bodyEditableItem.length == 1)
@@ -8,8 +8,10 @@ class Editor
 			imageDeletePath = @bodyEditableItem.data("image-delete-path")
 
 			if (imageUploadPath.length > 0) and (imageDeletePath.length > 0)
-				@bodyEditor = new MediumEditor(@bodyEditableItem,
-				                           {buttonLabels: 'fontawesome'})
+				@bodyEditor = new MediumEditor(@bodyEditableItem, {
+					buttonLabels: 'fontawesome',
+					buttons: @toolbarButtons
+				})
 
 				@titleEditor = new MediumEditor(@titleEditableItem)
 

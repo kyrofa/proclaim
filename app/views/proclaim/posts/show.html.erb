@@ -14,6 +14,19 @@
 	});
 </script>
 
+<div style = "float: right;">
+	<% if policy(@post).edit? %>
+		<%= link_to 'Edit', edit_post_path(@post) %>
+	<% end %>
+
+	<% if policy(@post).destroy? %>
+		<% if policy(@post).edit? %>
+			|
+		<% end %>
+		<%= link_to 'Delete', @post, method: :delete, data: { confirm: 'Are you sure?' } %>
+	<% end %>
+</div>
+
 <div class = "post">
 	<h1 class = "post_title"><%= @post.title %></h1>
 
