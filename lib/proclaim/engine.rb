@@ -16,7 +16,21 @@ module Proclaim
 		isolate_namespace Proclaim
 
 		initializer :assets do
-			Rails.application.config.assets.precompile += %w{ link.png remove.png resize-bigger.png resize-smaller.png unlink.png }
+			Rails.application.config.assets.precompile += %w{
+				link.png
+				remove.png
+				resize-bigger.png
+				resize-smaller.png
+				unlink.png
+				medium-editor-insert-plugin.css.scss
+				medium-editor-insert-plugin-frontend.css.scss
+				medium-editor-insert-plugin.all.js
+				addons/medium-editor-insert-embeds.js
+				addons/medium-editor-insert-maps.js
+				addons/medium-editor-insert-tables.js
+				addons/medium-editor-insert-images.js
+				addons/medium-editor-insert-plugin.js
+			}
 		end
 
 		initializer :append_migrations do |app|
