@@ -28,7 +28,7 @@ scheme is given below.
 Proclaim 0.1 works with Rails 4.2 and on. Add it to your Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.1.3"
+gem 'proclaim', "~> 0.2.0"
 ```
 
 Run `bundle install` to install it.
