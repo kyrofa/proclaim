@@ -31,7 +31,7 @@
 						<% end %>
 					</div>
 					<%= post.author.send(Proclaim.author_name_method) %><br />
-					<%= timeago_tag post.updated_at, format: "%B %d, %Y" %>
+					<%= timeago_tag post.published_at, format: "%B %d, %Y" %>
 				</div>
 			<% end %>
 			</td>
