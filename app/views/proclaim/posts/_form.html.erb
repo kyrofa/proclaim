@@ -7,14 +7,14 @@
 		              $(document).find("form.new_post h1.editable"),
 		              $(document).find("input#post_body"),
 		              $(document).find("form.new_post div.editable"),
-		              <%= raw Proclaim.editor_toolbar_buttons.to_json %>);
+		              <%= Proclaim.editor_toolbar_buttons.to_json.html_safe %>);
 		<% else %>
 			new Editor($(document).find("form.edit_post"),
 		              $(document).find("input#post_title"),
 		              $(document).find("form.edit_post h1.editable"),
 		              $(document).find("input#post_body"),
 		              $(document).find("form.edit_post div.editable"),
-		              <%= raw Proclaim.editor_toolbar_buttons.to_json %>);
+		              <%= Proclaim.editor_toolbar_buttons.to_json.html_safe %>);
 		<% end %>
 	});
 </script>
@@ -33,10 +33,10 @@
 	<% end %>
 
 	<div class = "post">
-		<h1 class = "post_title editable" data-disable-return="true" data-disable-toolbar="true" data-placeholder="Post Title"><%= raw @post.title %></h1>
+		<h1 class = "post_title editable" data-disable-return="true" data-disable-toolbar="true" data-placeholder="Post Title"><%= @post.title %></h1>
 
 		<div class = "post_body editable" data-placeholder = "Post Body" data-image-upload-path="<%= cache_image_path %>" data-image-delete-path="<%= discard_image_path %>">
-			<%= raw @post.body %>
+			<%= @post.body.html_safe %>
 		</div>
 
 		<div class = "post_information" style = "margin-bottom: 30px;">
