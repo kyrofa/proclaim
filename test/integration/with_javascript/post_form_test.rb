@@ -33,17 +33,19 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		within('#new_post') do
 			element = find('h1.editable')
-			element.click()
+			#element.click()
 			element.set("Post Title") # Set the title text
 			element = find('div.editable')
-			element.click() # Select the element
+			#element.click() # Select the element
 			element.set("Paragraph 1\nParagraph 2") # Set the body text
 		end
 
-		assert_difference('Proclaim::Post.count') do
+		assert_difference('Proclaim::Post.count', 1,
+		                  "A post should have been created") do
 			click_button "Create"
-			assert page.has_text? "Post Title"
-			assert page.has_text? "Paragraph 1\nParagraph 2"
+			assert page.has_text?("Post Title"), "Post title should be shown"
+			assert page.has_text?("Paragraph 1\nParagraph 2"),
+			       "Post body should be shown"
 			wait_for_ajax
 		end
 	end
@@ -137,6 +139,48 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		assert File.exist?(saved_file_path), "File should still be saved: #{saved_file_path}"
 	end
 
+	test "form should not replace non-alphanumeric text in title with HTML entities" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		visit proclaim.new_post_path
+
+		within('#new_post') do
+			element = find('h1.editable')
+			#element.click()
+			element.set("\"quotes\"") # Set the title text
+			# Don't fill in body
+		end
+
+		click_button "Create"
+
+		assert page.has_css? "div#error_explanation"
+
+		assert page.has_text?("\"quotes\""), "Form should still be showing quotes in title!"
+		assert page.has_no_text?("&quot;quotes&quot;"), "Form should not be showing HTML entities in title!"
+	end
+
+	test "show should not replace non-alphanumeric text in title with HTML entities" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		visit proclaim.new_post_path
+
+		within('#new_post') do
+			element = find('h1.editable')
+			#element.click()
+			element.set("\"quotes\"") # Set the title text
+			element = find('div.editable')
+			#element.click() # Select the element
+			element.set("Paragraph 1\nParagraph 2") # Set the body text
+		end
+
+		click_button "Create"
+
+		assert page.has_text?("\"quotes\""), "Show page should be showing quotes in title!"
+		assert page.has_no_text?("&quot;quotes&quot;"), "Show page should not be showing HTML entities in title!"
+	end
+
 	test "should show error without title" do
 		user = FactoryGirl.create(:user)
 		sign_in user
@@ -146,13 +190,15 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		within('#new_post') do
 			# Don't fill in title
 			element = find('div.editable')
-			element.click() # Select the element
+			#element.click() # Select the element
 			element.set("Paragraph 1\nParagraph 2") # Set the text
 		end
 
-		assert_no_difference('Proclaim::Post.count') do
+		assert_no_difference('Proclaim::Post.count',
+		                     "No post should have been created without a title") do
 			click_button "Create"
-			assert page.has_css? "div#error_explanation"
+			assert page.has_css?("div#error_explanation"),
+			       "Should show error complaining about lack of title"
 			wait_for_ajax
 		end
 	end
@@ -165,7 +211,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		within('#new_post') do
 			element = find('h1.editable')
-			element.click()
+			#element.click()
 			element.set("Post Title") # Set the title text
 			# Don't fill in the body
 		end

@@ -28,7 +28,7 @@
 </div>
 
 <div class = "post">
-	<h1 class = "post_title"><%= @post.title %></h1>
+	<h1 class = "post_title"><%= raw @post.title %></h1>
 
 	<div class = "post_body show">
 		<%= raw @post.body %>
