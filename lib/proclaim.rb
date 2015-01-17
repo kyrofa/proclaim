@@ -19,6 +19,9 @@ module Proclaim
 	mattr_accessor :editor_toolbar_buttons
 	@@editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote']
 
+	mattr_accessor :mailer_sender
+	@@mailer_sender = nil
+
 	def self.setup
 		yield self
 	end

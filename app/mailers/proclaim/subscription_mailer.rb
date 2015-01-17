@@ -1,6 +1,6 @@
 module Proclaim
 	class SubscriptionMailer < ActionMailer::Base
-		default from: "from@example.com"
+		default from: Proclaim.mailer_sender || default_params[:from]
 
 		def welcome_email(subscription)
 			@subscription = subscription
