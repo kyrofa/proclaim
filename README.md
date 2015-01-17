@@ -25,10 +25,11 @@ scheme is given below.
 
 ### Get Proclaim
 
-Proclaim 0.1 works with Rails 4.2 and on. Add it to your Gemfile with:
+Proclaim 0.2 works with Rails 4.2 and on, with Ruby 1.9.3 and on. Add it to your
+Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.2.2"
+gem 'proclaim', "~> 0.2.3"
 ```
 
 Run `bundle install` to install it.
