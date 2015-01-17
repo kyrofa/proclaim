@@ -49,7 +49,7 @@ module Proclaim
 		end
 
 		def body_plaintext
-			Rails::Html::FullSanitizer.new.sanitize(body.gsub(/\r\n?/, ' '))
+			HTMLEntities.new.decode(Rails::Html::FullSanitizer.new.sanitize(body.gsub(/\r\n?/, ' ')))
 		end
 
 		def excerpt

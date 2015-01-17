@@ -100,7 +100,7 @@ module Proclaim
 		def post_params
 			# Ensure post title is sanitized of all HTML
 			if params[:post].include? :title
-				params[:post][:title] = Rails::Html::FullSanitizer.new.sanitize(params[:post][:title])
+				params[:post][:title] = HTMLEntities.new.decode(Rails::Html::FullSanitizer.new.sanitize(params[:post][:title]))
 			end
 
 			params.require(:post).permit(:title,

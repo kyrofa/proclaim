@@ -1,3 +1,7 @@
+v 0.2.2
+  - Fixed post titles showing HTML entities
+  - Fixed posts index to show published time instead of updated time
+
 v 0.2.1
   - Fixed out-of-date initializer template
 

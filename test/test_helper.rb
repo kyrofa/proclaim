@@ -11,7 +11,6 @@ require 'database_cleaner'
 require 'test_after_commit'
 require 'coffee_script'
 require 'sass'
-#Capybara.app = Proclaim::Engine
 
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -24,6 +23,12 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 #class ActionController::TestCase
 #	include Proclaim::Engine.routes.url_helpers
 #end
+
+# Selenium isn't working with Firefox 35 (01/16/14). Use Chrome instead, for
+# now. Too bad, really... I hate Chrome.
+Capybara.register_driver :selenium do |app|
+	Capybara::Selenium::Driver.new(app, :browser => :chrome)
+end
 
 class ActionDispatch::IntegrationTest
 	# Make the Capybara DSL available in all integration tests
