@@ -1,6 +1,6 @@
 <div id = "comment_<%= comment.id %>" class = "comment">
 	<div class = "comment_body">
-		<%= comment.body %>
+		<%= simple_format h comment.body %>
 	</div>
 	<p class = "comment_author">By <%= comment.author %></p>
 

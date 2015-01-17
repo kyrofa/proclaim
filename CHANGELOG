@@ -1,3 +1,6 @@
+v 0.2.4
+  - Added simple format to comments, to preserve line breaks
+
 v 0.2.3
   - Fixed inability to set "from" field in emails sent from Proclaim
 
