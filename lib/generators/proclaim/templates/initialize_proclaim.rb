@@ -22,4 +22,7 @@ Proclaim.setup do |config|
 
 	# Buttons to display on post editor toolbar
 	#config.editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote']
+
+	# Email address to use in the "from" field of all emails
+	#config.mailer_sender = '"My Blog" <blog@example.com>'
 end

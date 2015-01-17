@@ -25,10 +25,11 @@ scheme is given below.
 
 ### Get Proclaim
 
-Proclaim 0.1 works with Rails 4.2 and on. Add it to your Gemfile with:
+Proclaim 0.2 works with Rails 4.2 and on, with Ruby 1.9.3 and on. Add it to your
+Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.2.2"
+gem 'proclaim', "~> 0.2.3"
 ```
 
 Run `bundle install` to install it.
@@ -105,6 +106,7 @@ Proclaim.current_author_method = :current_user
 Proclaim.authentication_method = :authenticate_user!
 Proclaim.excerpt_length = 500
 Proclaim.editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote']
+Proclaim.mailer_sender = nil
 ```
 
 - **Proclaim.author_class**
@@ -138,6 +140,12 @@ Proclaim.editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor', 'hea
 
   The buttons to be displayed on the Medium Editor toolbar. For a full list of
   options, see the README for [that project][1].
+
+- **Proclaim.mailer_sender**
+
+  The email address to use in the "from" field of all emails from Proclaim. If
+  not specified (the default), the mailer's default params will be used, which
+  means it should be set in your environment.
 
 Astute readers may note that the defaults corresponds to defaults from Devise (on
 the User class). If that's not your setup, all of these options can be changed
