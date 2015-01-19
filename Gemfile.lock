@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    proclaim (0.2.4)
+    proclaim (0.3.0)
       aasm (~> 4.0)
       carrierwave (~> 0.10)
       closure_tree (~> 5.2)

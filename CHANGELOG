@@ -1,3 +1,7 @@
+v 0.3.0
+  - Implemented sanitization for post body, using lists of allowed HTML tags and
+    attributes that can be customized via initializer.
+
 v 0.2.4
   - Added simple format to comments, to preserve line breaks
 
