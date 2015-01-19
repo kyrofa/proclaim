@@ -151,7 +151,7 @@ module Proclaim
 
 			document = Nokogiri::HTML.fragment(post.body)
 			image_tags = document.css("img")
-			assert_equal 1, image_tags.count
+			assert_equal 1, image_tags.count, "Post body should have one image tag"
 
 			# Note that, now that the image is saved, this URL is different than
 			# the one submitted to :create
@@ -288,7 +288,8 @@ module Proclaim
 
 			document = Nokogiri::HTML.fragment(post.body)
 			image_tags = document.css("img")
-			assert_equal 1, image_tags.count
+			assert_equal 1, image_tags.count,
+			             "Post body should contain one image tag"
 
 			# Note that, now that the image is saved, this URL is different than
 			# the one submitted to :create

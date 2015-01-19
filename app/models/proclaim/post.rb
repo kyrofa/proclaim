@@ -41,6 +41,7 @@ module Proclaim
 		validates_presence_of :title, :body, :author
 		validate :verifyBodyHtml
 
+		before_save :sanitizeBody
 		after_save :notifyBlogSubscribersIfPublished
 
 		attr_writer :excerpt_length
@@ -75,6 +76,17 @@ module Proclaim
 			   body_plaintext.strip.empty? and
 			   Nokogiri::HTML.fragment(body).css("img").empty?
 				errors.add :body, :empty
+			end
+		end
+
+		def sanitizeBody
+			unless Proclaim.editor_whitelist_tags.blank? and
+			       Proclaim.editor_whitelist_attributes.blank?
+				sanitizer = Rails::Html::WhiteListSanitizer.new
+				self.body = sanitizer.sanitize(
+				                   body,
+				                   tags: Proclaim.editor_whitelist_tags,
+				                   attributes: Proclaim.editor_whitelist_attributes)
 			end
 		end
 

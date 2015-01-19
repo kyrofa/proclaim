@@ -29,7 +29,7 @@ Proclaim 0.2 works with Rails 4.2 and on, with Ruby 1.9.3 and on. Add it to your
 Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.2.4"
+gem 'proclaim', "~> 0.3.0"
 ```
 
 Run `bundle install` to install it.
@@ -105,7 +105,16 @@ Proclaim.author_name_method = :name
 Proclaim.current_author_method = :current_user
 Proclaim.authentication_method = :authenticate_user!
 Proclaim.excerpt_length = 500
-Proclaim.editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote']
+Proclaim.editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor',
+                                   'header1', 'header2', 'quote']
+Proclaim.editor_whitelist_tags = %w(h1 h2 h3 h4 h5 h6
+                                    div p blockquote
+                                    ul ol li
+                                    a b strong i u
+                                    img figure
+                                    pre sup sub br)
+Proclaim.editor_whitelist_attributes = %w(class id style href title src alt
+                                          align draggable)
 Proclaim.mailer_sender = nil
 ```
 
@@ -140,6 +149,14 @@ Proclaim.mailer_sender = nil
 
   The buttons to be displayed on the Medium Editor toolbar. For a full list of
   options, see the README for [that project][1].
+
+- **Proclaim.editor_whitelist_tags**
+
+  A list of all HTML tags that are allowed in the post body.
+
+- **Proclaim.editor_whitelist_attributes**
+
+  A list of all HTML attributes that are allowed in the post body.
 
 - **Proclaim.mailer_sender**
 
