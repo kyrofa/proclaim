@@ -123,5 +123,12 @@ module Proclaim
 			                         body: "This is outside.<p>This is inside.</p>")
 			assert_equal "This is outside.", post.excerpt
 		end
+
+		test "verify body sanitization" do
+			post = FactoryGirl.create(:post,
+			                          body: "foo <script>alert('bar');</script>")
+
+			assert_equal "foo alert('bar');", post.body
+		end
 	end
 end

@@ -163,7 +163,8 @@ class PostTest < ActionDispatch::IntegrationTest
 
 		image_tags = Nokogiri::HTML.fragment(image.post.body).css("img")
 
-		assert_equal 1, image_tags.length
+		assert_equal 1, image_tags.length,
+		             "Post body should contain one image tag"
 		refute_match root_url, image_tags[0].attribute("src"),
 		             "Images should have relative paths"
 	end

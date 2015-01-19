@@ -69,7 +69,7 @@ module Proclaim
 
 			image_tags = Nokogiri::HTML(get_html_part(mail)).css("img")
 
-			assert_equal 1, image_tags.length
+			assert_equal 1, image_tags.length, "Email should have one image tag"
 			assert_match root_url, image_tags[0].attribute("src"),
 				          "Images should have absolute URLs in emails"
 		end

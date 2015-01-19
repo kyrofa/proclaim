@@ -17,7 +17,20 @@ module Proclaim
 	@@excerpt_length = 500 # 500 characters (won't interrupt words)
 
 	mattr_accessor :editor_toolbar_buttons
-	@@editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote']
+	@@editor_toolbar_buttons = ['bold', 'italic', 'underline', 'anchor',
+	                            'header1', 'header2', 'quote']
+
+	mattr_accessor :editor_whitelist_tags
+	@@editor_whitelist_tags = %w(h1 h2 h3 h4 h5 h6
+	                             div p blockquote
+	                             ul ol li
+	                             a b strong i u
+	                             img figure
+	                             pre sup sub br)
+
+	mattr_accessor :editor_whitelist_attributes
+	@@editor_whitelist_attributes = %w(class id style href title src alt align
+	                                   draggable)
 
 	mattr_accessor :mailer_sender
 	@@mailer_sender = nil
