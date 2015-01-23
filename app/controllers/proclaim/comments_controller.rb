@@ -16,7 +16,9 @@ module Proclaim
 					subscription = nil
 					params = subscription_params
 					if params and params[:subscribe]
-						subscription = Subscription.new(email: params[:email], post: @comment.post)
+						subscription = Subscription.new(name: @comment.author,
+						                                email: params[:email],
+						                                post: @comment.post)
 					end
 
 					respond_to do |format|

@@ -133,7 +133,7 @@
 					<% else  %>
 						You're receiving this email because you requested to be notified if a new post was made at <%= link_to url, posts_url %>.
 					<% end %>
-					If you no longer wish to receive these emails, simply <%= link_to "unsubscribe", unsubscribe_url(@subscription.token) %>.
+					If you no longer wish to receive these emails, simply <%= link_to "unsubscribe", subscription_url(@subscription.token) %>.
 				</td>
 			</tr>
 		</table>

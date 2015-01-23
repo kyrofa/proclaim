@@ -22,13 +22,8 @@ module Proclaim
 			end.join.html_safe
 		end
 
-#		def timeago(time, options = {})
-#			options[:class] ||= "timeago"
-#			if time
-#				content_tag(:time,
-#					         time.to_s,
-#					         options.merge(datetime: time.getutc.iso8601))
-#			end
-#		end
+		def proclaim_title(page_title)
+			content_for :proclaim_title, page_title.to_s
+		end
 	end
 end

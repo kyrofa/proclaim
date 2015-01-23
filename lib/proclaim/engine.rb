@@ -50,5 +50,23 @@ module Proclaim
 		config.generators do |g|
 			g.fixture_replacement :factory_girl, :dir => 'test/factories'
 		end
+
+		initializer :ensure_secret_key_presence do |app|
+			if app.respond_to?(:secrets)
+				Proclaim.secret_key ||= app.secrets.secret_key_base
+			elsif app.config.respond_to?(:secret_key_base)
+				Proclaim.secret_key ||= app.config.secret_key_base
+			end
+
+			if Proclaim.secret_key.nil?
+				raise <<-ERROR
+Proclaim.secret_key was not set. Please add the following to your Proclaim initializer:
+
+  config.secret_key = '#{SecureRandom.hex(64)}'
+
+Please ensure you restarted your application after installing Proclaim or setting the key.
+ERROR
+			end
+		end
 	end
 end

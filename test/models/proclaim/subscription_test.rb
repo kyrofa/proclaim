@@ -27,6 +27,11 @@ module Proclaim
 			       "Post subscriptions should have unique emails!"
 		end
 
+		test "should require a name" do
+			subscription = FactoryGirl.build(:subscription, name: nil)
+			refute subscription.save, "Subscription should require a name!"
+		end
+
 		test "should not save without valid email address" do
 			subscription = FactoryGirl.build(:subscription, email: nil)
 			refute subscription.save,

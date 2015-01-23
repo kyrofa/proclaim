@@ -1,3 +1,5 @@
-<h1>New post</h1>
+<% proclaim_title "New Post" %>
+
+<h1><%= content_for :proclaim_title %></h1>
 
 <%= render 'form' %>

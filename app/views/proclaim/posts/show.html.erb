@@ -1,3 +1,5 @@
+<% proclaim_title @post.title %>
+
 <script type="text/javascript">
 	$(document).ready(function()
 	{
@@ -28,7 +30,7 @@
 </div>
 
 <div class = "post">
-	<h1 class = "post_title"><%= @post.title %></h1>
+	<h1 class = "post_title"><%= content_for :proclaim_title %></h1>
 
 	<div class = "post_body show">
 		<%= @post.body.html_safe %>

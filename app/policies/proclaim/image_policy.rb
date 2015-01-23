@@ -21,7 +21,7 @@ module Proclaim
 				if @user
 					scope.all # Users can access all images
 				else
-					nil
+					scope.none
 				end
 			end
 		end

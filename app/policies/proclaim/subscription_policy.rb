@@ -1,5 +1,13 @@
 module Proclaim
 	class SubscriptionPolicy < ApplicationPolicy
+		def index?
+			not @user.nil? # A user can view the list of subscriptions
+		end
+
+		def show?
+			true # Anyone can show the subscription since it requires a token
+		end
+
 		def create?
 			# A user can subscribe to anything. Guests can only subscribe to
 			# published posts or the blog in general.
@@ -10,12 +18,8 @@ module Proclaim
 			end
 		end
 
-		def unsubscribe?
-			destroy?
-		end
-
 		def destroy?
-			true # Anyone can unsubscribe (it requires a token anyway)
+			show?
 		end
 
 		class Scope < Scope
@@ -24,7 +28,7 @@ module Proclaim
 					scope.all # Users can access all subscriptions
 				else
 					# Guests can see none
-					nil
+					scope.none
 				end
 			end
 		end

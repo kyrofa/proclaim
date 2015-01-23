@@ -1,3 +1,7 @@
+  - Fixed bug where email field didn't hide after successful comment
+  - Added ability to administer subscriptions
+  - Removed the use of calc from mailer layout
+
 v 0.3.1
   - Fixed bug causing floated images to display improperly in emails
   - Added link to emails to view post online

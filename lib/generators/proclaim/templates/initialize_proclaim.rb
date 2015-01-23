@@ -38,4 +38,8 @@ Proclaim.setup do |config|
 
 	# Email address to use in the "from" field of all emails
 	#config.mailer_sender = '"My Blog" <blog@example.com>'
+
+	# Secret key to use for subscription tokens. Changing this will invalidate
+	# any tokens already generated.
+	#config.secret_key = nil
 end
