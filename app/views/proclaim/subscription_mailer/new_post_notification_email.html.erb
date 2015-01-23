@@ -4,6 +4,12 @@
 	</tr>
 
 	<tr>
+		<td class = "view_online">
+			(If you'd like to view this post online, <%= link_to "feel free", post_url(@post) %>)
+		</td>
+	</tr>
+
+	<tr>
 		<td class = "post_body"><%= @post.body.html_safe %></td>
 	</tr>
 
