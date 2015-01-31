@@ -1,5 +1,6 @@
 FactoryGirl.define do
 	factory :subscription, class: Proclaim::Subscription do
+		sequence(:name) {|n| "name#{n}"}
 		sequence(:email) {|n| "email#{n}@example.com"}
 
 		factory :post_subscription do

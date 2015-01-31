@@ -169,6 +169,24 @@ the User class). If that's not your setup, all of these options can be changed
 in the initializer installed by `rails generate proclaim:install`.
 
 
+## Handy Things
+
+### Page Titles
+
+Each of Proclaim's included views stores its associated page title in the
+content identifier `:proclaim_title`. In order to actually get that into one's
+page title, then, one must simply throw something like this in one's layout
+header:
+
+```html
+<head>
+	...
+	<title><%= content_for :proclaim_title %></title>
+	...
+</head>
+```
+
+
 ## Customizations
 
 Proclaim was built to help you quickly develop an application that includes a

@@ -40,7 +40,7 @@ namespace :test do
   end
 
   Rails::TestTask.new(:units) do |t|
-    t.pattern = 'test/{models,helpers,unit}/**/*_test.rb'
+    t.pattern = 'test/{models,helpers,unit,policies}/**/*_test.rb'
   end
 
   Rails::TestTask.new(:functionals) do |t|

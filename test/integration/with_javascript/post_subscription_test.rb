@@ -39,10 +39,17 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 			fill_in 'Email', with: "example@example.com"
 		end
 
+		# Verify that email field is shown
+		assert page.has_text?('Email')
+
 		assert_difference('Proclaim::Subscription.count', 1, "A new subscription should have been added!") do
 			@show_page.new_comment_submit_button.click
 			wait_for_ajax
 		end
+
+		# Now email field should be hidden
+		assert page.has_no_text?('Email'),
+		       "Email field should be hidden again when form is successful"
 
 		# Make sure a welcome email was sent
 		assert_equal ["example@example.com"], ActionMailer::Base.deliveries.last.to
@@ -269,5 +276,27 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 
 		# Make sure no email was sent
 		assert_empty ActionMailer::Base.deliveries
+	end
+
+	test "cancel button should remove email field" do
+		post = FactoryGirl.create(:published_post)
+
+		visit proclaim.post_path(post)
+
+		within('#new_comment') do
+			fill_in 'Author', with: "Comment Author"
+			fill_in 'Body', with: "Comment Body"
+			fill_in 'What is', with: @show_page.antispam_solution
+			check 'Notify me of other comments on this post'
+		end
+
+		# Verify email field is shown
+		assert page.has_text?('Email')
+
+		# Now click cancel
+		@show_page.new_comment_cancel_button.click
+
+		# Now email field should be hidden
+		assert page.has_no_text?('Email')
 	end
 end

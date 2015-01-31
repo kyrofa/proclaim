@@ -17,6 +17,17 @@ class PostPolicyTest < ActiveSupport::TestCase
 		assert_includes posts, post2
 	end
 
+	test "post index" do
+		user = FactoryGirl.create(:user)
+
+		# Verify that a user can visit the index
+		policy = Proclaim::PostPolicy.new(user, Proclaim::Post)
+		assert policy.index?, "A user should be able to visit the index"
+
+		# Verify that a guest can also visit the index
+		policy = Proclaim::PostPolicy.new(nil, Proclaim::Post)
+		assert policy.index?, "A guest should be able to visit the index"
+	end
 
 	test "post create" do
 		user = FactoryGirl.create(:user)

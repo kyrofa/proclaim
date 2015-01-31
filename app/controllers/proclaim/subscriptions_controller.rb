@@ -2,22 +2,22 @@ require_dependency "proclaim/application_controller"
 
 module Proclaim
 	class SubscriptionsController < ApplicationController
-		after_action :verify_authorized, except: [:subscribed, :unsubscribed]
-		before_action :set_subscription, only: [:unsubscribe, :destroy]
+		after_action :verify_authorized
+		after_action :verify_policy_scoped, only: :index
+		before_action :set_subscription, only: [:show, :edit, :update, :destroy]
+
+		def index
+			@subscriptions = policy_scope(Subscription).order(:post_id, :name)
+			authorize Subscription
+		end
 
 		def new
 			@subscription = Subscription.new
 			authorize @subscription
 		end
 
-		def subscribed
-		end
-
-		def unsubscribe
+		def show
 			authorize @subscription
-		end
-
-		def unsubscribed
 		end
 
 		def create
@@ -28,13 +28,19 @@ module Proclaim
 			if antispam_params[:answer] == antispam_params[:solution]
 				respond_to do |format|
 					if @subscription.save
-						format.html { redirect_to subscribed_path }
+						format.html {
+							redirect_to subscription_path(@subscription.token),
+							            notice: "Thanks for subscribing! You should "\
+							                    "receive a confirmation email soon."
+						}
 					else
 						format.html { render :new }
 					end
 				end
 			else
-				@subscription.errors.add(:base, "Antispam question wasn't answered correctly")
+				@subscription.errors.add(:base,
+				                         "Antispam question wasn't answered "\
+				                         "correctly")
 				respond_to do |format|
 					format.html { render :new }
 				end
@@ -43,9 +49,20 @@ module Proclaim
 
 		def destroy
 			authorize @subscription
-
 			@subscription.destroy
-			redirect_to unsubscribed_path, notice: "Successfully unsubscribed."
+
+			respond_to do |format|
+				format.html {
+					if current_author
+						redirect_to subscriptions_path,
+					               notice: "Subscription was successfully destroyed."
+					else
+						redirect_to posts_path,
+					               notice: "Successfully unsubscribed. Sorry to "\
+					                       "see you go!"
+					end
+				}
+			end
 		end
 
 		private
@@ -56,7 +73,7 @@ module Proclaim
 
 		# Only allow a trusted parameter "white list" through.
 		def subscription_params
-			params.require(:subscription).permit(:email)
+			params.require(:subscription).permit(:name, :email)
 		end
 
 		def antispam_params

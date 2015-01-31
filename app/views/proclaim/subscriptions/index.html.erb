@@ -1,0 +1,89 @@
+<% proclaim_title "Manage Subscriptions" %>
+
+<h1><%= content_for :proclaim_title %></h1>
+
+<%= link_to "New Blog Subscription", new_subscription_path %>
+
+<%
+	blog_subscriptions = @subscriptions.select {|subscription| subscription.post.nil?}
+	post_subscriptions = @subscriptions - blog_subscriptions
+
+	posts = Hash.new
+
+	post_subscriptions.each do | subscription |
+		post_title = subscription.post.title
+		unless posts.has_key? post_title
+			posts[post_title] = Array.new
+		end
+
+		posts[post_title] << subscription
+	end
+%>
+
+<% unless posts.empty? %>
+	<div class = "post_subscriptions">
+		<h2>Post Subscriptions</h2>
+		<% posts.each do | post_title, subscriptions | %>
+			<h4><%= post_title %></h4>
+			<table class = "subscriptions">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Email</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<% subscriptions.each do | subscription | %>
+						<tr class = "subscription">
+							<td><%= subscription.name %></td>
+							<td><%= subscription.email %></td>
+							<td style = "text-align: right;">
+								<% if policy(subscription).destroy? %>
+									<%= link_to 'Delete',
+									            subscription_path(subscription.token),
+									            method: :delete,
+									            data: { confirm: 'Are you sure?' } %>
+								<% end %>
+							</td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		<% end %>
+	</div>
+<% end %>
+
+<% unless blog_subscriptions.empty? %>
+	<div class = "blog_subscriptions">
+		<h2>Blog Subscriptions</h2>
+		<table class = "subscriptions">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<% blog_subscriptions.each do | subscription | %>
+					<tr class = "subscription">
+						<td><%= subscription.name %></td>
+						<td><%= subscription.email %></td>
+						<td style = "text-align: right;">
+							<% if policy(subscription).destroy? %>
+								<%= link_to 'Delete', subscription_path(subscription.token), method: :delete, data: { confirm: 'Are you sure?' } %>
+							<% end %>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+<% end %>
+
+<% if posts.empty? and blog_subscriptions.empty? %>
+	<p style = "margin-top: 10px;">
+		This blog has no current subscribers.
+	</p>
+<% end %>

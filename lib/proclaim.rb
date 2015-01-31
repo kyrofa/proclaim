@@ -35,6 +35,9 @@ module Proclaim
 	mattr_accessor :mailer_sender
 	@@mailer_sender = nil
 
+	mattr_accessor :secret_key
+	@@secret_key = nil
+
 	def self.setup
 		yield self
 	end

@@ -16,12 +16,12 @@ module Proclaim
 
 		after_create :deliver_welcome_email
 
-		validates :email, uniqueness: { scope: :post_id, case_sensitive: false }, format: { with: /@/ }
-
 		# RFC-compliant email addresses are way nasty to match with regex, so why
 		# try? We'll be sending them an email anyway-- if they don't get it, they
 		# can re-subscribe. We'll just do an easy validation match here.
-		#validates_format_of :email, :with => /@/
+		validates :email, uniqueness: { scope: :post_id, case_sensitive: false }, format: { with: /@/ }
+
+		validates_presence_of :name
 
 		# Subscriptions aren't required to belong to a post, but if we're given
 		# one it had better be valid
@@ -44,15 +44,15 @@ module Proclaim
 		end
 
 		def self.verifier
-			ActiveSupport::MessageVerifier.new(Rails.application.secrets.secret_key_base)
+			ActiveSupport::MessageVerifier.new(Proclaim.secret_key)
 		end
 
 		def self.from_token(token)
 			begin
 				id = verifier.verify(token)
-				Subscription.find_by_id(id)
+				Subscription.find(id)
 			rescue ActiveSupport::MessageVerifier::InvalidSignature
-				nil
+				raise ActiveRecord::RecordNotFound
 			end
 		end
 
