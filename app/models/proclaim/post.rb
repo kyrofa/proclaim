@@ -20,6 +20,8 @@ module Proclaim
 		has_many :images, inverse_of: :post, dependent: :destroy
 		accepts_nested_attributes_for :images, allow_destroy: true
 
+		after_create { Proclaim.notify_new_post(self) }
+
 		include AASM
 
 		aasm column: :state, no_direct_assignment: true do

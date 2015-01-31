@@ -17,6 +17,7 @@ module Proclaim
 		belongs_to :post, inverse_of: :comments
 		after_initialize :maintainPost
 		after_create :notifyPostSubscribers
+		after_create { Proclaim.notify_new_comment(self) }
 
 		validates_presence_of :body, :author, :post
 
