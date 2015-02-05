@@ -16,6 +16,7 @@
 			table.post
 			{
 				width: 600px;
+				table-layout: fixed;
 				margin: 0 auto;
 			}
 
@@ -36,6 +37,7 @@
 			td.post_title h1
 			{
 				margin: 0 0 10px 0;
+				font-size: 30px;
 				padding: 0;
 			}
 
@@ -93,6 +95,7 @@
 			td.post_body
 			{
 				padding-bottom: 10px;
+				font-size: 18px;
 			}
 
 			td.post_body blockquote
@@ -114,6 +117,16 @@
 			{
 				margin-top: 20px;
 				color: #888;
+			}
+		</style>
+
+		<style data-premailer="ignore">
+			@media only screen and (max-width: 480px)
+			{
+				table[class="post"]
+				{
+					width: 320px !important;
+				}
 			}
 		</style>
 	</head>
