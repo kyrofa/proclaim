@@ -39,9 +39,9 @@ module Proclaim
 	@@secret_key = nil
 
 	# Callbacks (must be Procs)
-	mattr_accessor :new_post_callbacks
-	@@new_post_callbacks = Array.new
-	private_class_method :new_post_callbacks, :new_post_callbacks=
+	mattr_accessor :post_published_callbacks
+	@@post_published_callbacks = Array.new
+	private_class_method :post_published_callbacks, :post_published_callbacks=
 
 	mattr_accessor :new_comment_callbacks
 	@@new_comment_callbacks = Array.new
@@ -57,19 +57,33 @@ module Proclaim
 		yield self
 	end
 
-	def self.after_new_post(*callbacks, &block)
+	def self.after_post_published(*callbacks, &block)
 		callbacks.each do |callback|
-			@@new_post_callbacks.unshift(callback)
+			if callback.respond_to? :call
+				@@post_published_callbacks.unshift(callback)
+			else
+				raise "Proclaim does not support callbacks that aren't blocks or "\
+				      "Procs"
+			end
 		end
 
 		if block_given?
-			@@new_post_callbacks.unshift(block)
+			@@post_published_callbacks.unshift(block)
 		end
+	end
+
+	def self.reset_post_published_callbacks
+		@@post_published_callbacks = Array.new
 	end
 
 	def self.after_new_comment(*callbacks, &block)
 		callbacks.each do |callback|
-			@@new_comment_callbacks.unshift(callback)
+			if callback.respond_to? :call
+				@@new_comment_callbacks.unshift(callback)
+			else
+				raise "Proclaim does not support callbacks that aren't blocks or "\
+				      "Procs"
+			end
 		end
 
 		if block_given?
@@ -77,9 +91,18 @@ module Proclaim
 		end
 	end
 
+	def self.reset_new_comment_callbacks
+		@@new_comment_callbacks = Array.new
+	end
+
 	def self.after_new_subscription(*callbacks, &block)
 		callbacks.each do |callback|
-			@@new_subscription_callbacks.unshift(callback)
+			if callback.respond_to? :call
+				@@new_subscription_callbacks.unshift(callback)
+			else
+				raise "Proclaim does not support callbacks that aren't blocks or "\
+				      "Procs"
+			end
 		end
 
 		if block_given?
@@ -87,8 +110,12 @@ module Proclaim
 		end
 	end
 
-	def self.notify_new_post(post)
-		@@new_post_callbacks.each do |callback|
+	def self.reset_new_subscription_callbacks
+		@@new_subscription_callbacks = Array.new
+	end
+
+	def self.notify_post_published(post)
+		@@post_published_callbacks.each do |callback|
 			callback.call(post)
 		end
 	end
