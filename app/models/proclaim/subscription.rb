@@ -15,6 +15,7 @@ module Proclaim
 		belongs_to :post, inverse_of: :subscriptions
 
 		after_create :deliver_welcome_email
+		after_create { Proclaim.notify_new_subscription(self) }
 
 		# RFC-compliant email addresses are way nasty to match with regex, so why
 		# try? We'll be sending them an email anyway-- if they don't get it, they
