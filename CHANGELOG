@@ -1,7 +1,10 @@
+0.4.0
+  - Added media query to emails for better display on mobile devices
   - Added callbacks as a way for main app to be notified of new posts,
-    comments, or subscriptions. Configured in initializer.
+    comments, or subscriptions. Configured in initializer
   - Fixed bug where email field didn't hide after successful comment
   - Added ability to administer subscriptions
+  - Added page titles for each Proclaim page
   - Removed the use of calc from mailer layout
 
 v 0.3.1

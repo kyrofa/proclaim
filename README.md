@@ -14,7 +14,7 @@ Linkesch's [Image Insert plugin][2] tied to CarrierWave for image uploads.
 Proclaim doesn't include any users or authentication. It was made to be able to
 work with whatever setup you're using. All that it requires is that your
 application _has_ users and authentication ([Devise][3] is recommended). In
-Proclaim 0.1, authentication is also used as authorization. If a user is logged
+Proclaim 0.4, authentication is also used as authorization. If a user is logged
 in, it can create/publish/edit/delete posts and edit/delete comments. If no user
 is logged in, it can only read posts and create comments.
 
@@ -25,11 +25,11 @@ scheme is given below.
 
 ### Get Proclaim
 
-Proclaim 0.2 works with Rails 4.2 and on, with Ruby 1.9.3 and on. Add it to your
+Proclaim 0.4 works with Rails 4.2 and on, with Ruby 1.9.3 and on. Add it to your
 Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.3.1"
+gem 'proclaim', "~> 0.4.0"
 ```
 
 Run `bundle install` to install it.
@@ -116,6 +116,7 @@ Proclaim.editor_whitelist_tags = %w(h1 h2 h3 h4 h5 h6
 Proclaim.editor_whitelist_attributes = %w(class id style href title src alt
                                           align draggable)
 Proclaim.mailer_sender = nil
+Proclaim.secret_key = nil
 ```
 
 - **Proclaim.author_class**
@@ -132,13 +133,14 @@ Proclaim.mailer_sender = nil
 
 - **Proclaim.current_author_method**
 
-  Method to obtain the currently-authenticated user. Should return nil if no
-  user is currently authenticated.
+  Method to obtain the currently-authenticated user. This should be a method on
+  the `ApplicationController`, and it should return nil if no user is currently
+  authenticated.
 
 - **Proclaim.authentication_method**
 
-  Method to verify that a user is authenticated, and if not, will redirect to
-  some sort of authentication page.
+  `ApplicationController` method to verify that a user is authenticated, and if
+  not, to redirect to some sort of authentication page.
 
 - **Proclaim.excerpt_length**
 
@@ -164,9 +166,14 @@ Proclaim.mailer_sender = nil
   not specified (the default), the mailer's default params will be used, which
   means it should be set in your environment.
 
-Astute readers may note that the defaults corresponds to defaults from Devise (on
-the User class). If that's not your setup, all of these options can be changed
-in the initializer installed by `rails generate proclaim:install`.
+- **Proclaim.secret_key**
+
+  The secret key to use for generating subscription tokens. Changing this will
+  invalidate any tokens already generated.
+
+Astute readers may note that the defaults corresponds to defaults from Devise
+(on the User class). If that's not your setup, all of these options can be
+changed in the initializer installed by `rails generate proclaim:install`.
 
 
 ## Handy Things
@@ -186,6 +193,62 @@ header:
 </head>
 ```
 
+### Callbacks
+
+Proclaim can notify your main application when certain things happen. These are
+all configured in the initializer installed by
+`rails generate proclaim:install`.
+
+#### When Posts Are Published
+
+To register callbacks for when a post is published, use `after_post_published`
+in the initializer, for example:
+
+```ruby
+Proclaim.setup do |config|
+	# Can specify multiple callbacks. You can use a Proc:
+	config.after_post_published lambda { |p| puts "Post published: #{p.title}"}
+
+	# Or you can use a block:
+	config.after_post_published do |p|
+		puts "Post published: #{p.title}"
+	end
+end
+```
+
+#### When Comments Are Made
+
+To register callbacks for when a comment is made, use `after_new_comment`
+in the initializer, for example:
+
+```ruby
+Proclaim.setup do |config|
+	# Can specify multiple callbacks. You can use a Proc:
+	config.after_new_comment lambda { |c| puts "Comment made by #{c.author}"}
+
+	# Or you can use a block:
+	config.after_new_comment do |c|
+		puts "Comment made by #{c.author}"
+	end
+end
+```
+
+#### When Subscriptions Are Created
+
+To register callbacks for when a subscription is created, use
+`after_new_subscription` in the initializer, for example:
+
+```ruby
+Proclaim.setup do |config|
+	# Can specify multiple callbacks. You can use a Proc:
+	config.after_new_subscription lambda { |s| puts "New subsciber: #{s.name}"}
+
+	# Or you can use a block:
+	config.after_new_subscription do |s|
+		puts "New subsciber: #{s.name}"
+	end
+end
+```
 
 ## Customizations
 

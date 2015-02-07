@@ -2,9 +2,11 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<style>
-			* {
+			*
+			{
 				box-sizing: border-box;
 			}
 
@@ -57,7 +59,7 @@
 			{
 				margin: 0px;
 				vertical-align: top;
-				max-width: 600px;
+				max-width: 100%;
 				border: 0px none;
 			}
 
@@ -121,7 +123,23 @@
 		</style>
 
 		<style data-premailer="ignore">
-			@media only screen and (max-width: 480px)
+			@media only screen and (min-width: 521px) and (max-width: 620px)
+			{
+				table[class="post"]
+				{
+					width: 500px !important;
+				}
+			}
+
+			@media only screen and (min-width: 421px) and (max-width: 520px)
+			{
+				table[class="post"]
+				{
+					width: 400px !important;
+				}
+			}
+
+			@media only screen and (max-width: 420px)
 			{
 				table[class="post"]
 				{

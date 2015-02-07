@@ -42,4 +42,19 @@ Proclaim.setup do |config|
 	# Secret key to use for subscription tokens. Changing this will invalidate
 	# any tokens already generated.
 	#config.secret_key = nil
+
+	# Register a callback to be called when a post is published
+	#config.after_post_published do |post|
+	#	puts "A post was just published!"
+	#end
+
+	# Register a callback to be called when a new comment is created
+	#config.after_new_comment do |comment|
+	#	puts "A new comment was just made!"
+	#end
+
+	# Register a callback to be called when a new subscription is created
+	#config.after_new_subscription do |subscription|
+	#	puts "A new subscription was just created!"
+	#end
 end
