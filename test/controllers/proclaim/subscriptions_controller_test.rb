@@ -9,6 +9,60 @@ module Proclaim
 			@controller.stubs(:authenticate_user).returns(false)
 		end
 
+		test "should get index if logged in" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			subscription1 = FactoryGirl.create(:subscription)
+			subscription2 = FactoryGirl.create(:subscription)
+
+			get :index
+			assert_response :success
+			assert_not_nil assigns(:subscriptions)
+			assert_includes assigns(:subscriptions), subscription1
+			assert_includes assigns(:subscriptions), subscription2
+		end
+
+		test "should not get index if not logged in" do
+			get :index
+			assert_response :redirect
+			assert_match /not authorized/, flash[:error]
+		end
+
+		test "should get show if logged in" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			subscription = FactoryGirl.create(:subscription)
+
+			get :show, token: subscription.token
+			assert_response :success
+			assert_equal subscription, assigns(:subscription)
+		end
+
+		test "should get show if not logged in" do
+			subscription = FactoryGirl.create(:subscription)
+
+			get :show, token: subscription.token
+			assert_response :success
+			assert_equal subscription, assigns(:subscription)
+		end
+
+		test "should get new if logged in" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			get :new
+			assert_response :success
+			assert_not_nil assigns(:subscription)
+		end
+
+		test "should get new if not logged in" do
+			get :new
+			assert_response :success
+			assert_not_nil assigns(:subscription)
+		end
+
 		test "should create subscription if logged in" do
 			user = FactoryGirl.create(:user)
 			sign_in user
@@ -18,6 +72,7 @@ module Proclaim
 			assert_difference('Subscription.count') do
 				post :create,
 					subscription: {
+						name: newSubscription.name,
 						email: newSubscription.email
 					},
 					antispam: {
@@ -26,7 +81,7 @@ module Proclaim
 					}
 			end
 
-			assert_redirected_to :subscribed
+			assert_redirected_to subscription_path(assigns(:subscription).token)
 		end
 
 		test "should create subscription if not logged in" do
@@ -35,6 +90,7 @@ module Proclaim
 			assert_difference('Subscription.count') do
 				post :create,
 					subscription: {
+						name: newSubscription.name,
 						email: newSubscription.email
 					},
 					antispam: {
@@ -43,7 +99,7 @@ module Proclaim
 					}
 			end
 
-			assert_redirected_to :subscribed
+			assert_redirected_to subscription_path(assigns(:subscription).token)
 		end
 
 		test "should not create subscription if spammy" do
@@ -52,6 +108,7 @@ module Proclaim
 			assert_no_difference('Subscription.count') do
 				post :create,
 					subscription: {
+						name: newSubscription.name,
 						email: newSubscription.email
 					},
 					antispam: {
@@ -61,33 +118,31 @@ module Proclaim
 			end
 		end
 
-		test "ensure token resolves to correct subscription" do
-			subscription1 = FactoryGirl.create(:subscription)
-			subscription2 = FactoryGirl.create(:subscription)
+		test "should delete subscription if logged in" do
+			user = FactoryGirl.create(:user)
+			sign_in user
 
-			get :unsubscribe, token: subscription1.token
-			assert_response :success
-			assert_equal subscription1, assigns(:subscription)
+			subscription = FactoryGirl.create(:subscription)
 
-			get :unsubscribe, token: subscription2.token
-			assert_response :success
-			assert_equal subscription2, assigns(:subscription)
+			assert_difference('Subscription.count', -1) do
+				delete :destroy, token: subscription.token
+			end
+
+			# If a user is logged in, deletion should take them back to the
+			# subscriptions index
+			assert_redirected_to subscriptions_path
 		end
 
-		test "ensure deletion with token actually deletes correct subscription" do
-			subscription1 = FactoryGirl.create(:subscription)
-			subscription2 = FactoryGirl.create(:subscription)
+		test "should delete subscription if not logged in" do
+			subscription = FactoryGirl.create(:subscription)
 
 			assert_difference('Subscription.count', -1) do
-				delete :destroy, token: subscription1.token
+				delete :destroy, token: subscription.token
 			end
-			assert_equal subscription2, Subscription.first
-			assert_redirected_to :unsubscribed
 
-			assert_difference('Subscription.count', -1) do
-				delete :destroy, token: subscription2.token
-			end
-			assert_redirected_to :unsubscribed
+			# If no user is logged in, deletion should take them back to the
+			# posts index
+			assert_redirected_to posts_path
 		end
 	end
 end

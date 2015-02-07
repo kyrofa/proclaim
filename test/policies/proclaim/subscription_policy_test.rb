@@ -13,7 +13,32 @@ class SubscriptionPolicyTest < ActiveSupport::TestCase
 
 		# Verify that without a user, no subscription can be seen
 		subscriptions = Pundit.policy_scope(nil, Proclaim::Subscription)
-		assert_nil subscriptions
+		assert_empty subscriptions
+	end
+
+	test "subscription index" do
+		user = FactoryGirl.create(:user)
+
+		# Verify that a user can visit the index
+		policy = Proclaim::SubscriptionPolicy.new(user, Proclaim::Subscription)
+		assert policy.index?, "A user should be able to visit the index"
+
+		# Verify that a guest cannot visit the index
+		policy = Proclaim::SubscriptionPolicy.new(nil, Proclaim::Subscription)
+		refute policy.index?, "A guest should not be able to visit the index"
+	end
+
+	test "subscription show" do
+		user = FactoryGirl.create(:user)
+		subscription = FactoryGirl.create(:subscription)
+
+		# Verify that a user can view a subscription
+		policy = Proclaim::SubscriptionPolicy.new(user, subscription)
+		assert policy.show?, "A user should be able to view a subscription"
+
+		# Verify that a guest can also view a subscription
+		policy = Proclaim::SubscriptionPolicy.new(nil, subscription)
+		assert policy.show?, "A guest should be able to view a subscription"
 	end
 
 	test "subscription creation" do
@@ -54,26 +79,13 @@ class SubscriptionPolicyTest < ActiveSupport::TestCase
 		user = FactoryGirl.create(:user)
 		subscription = FactoryGirl.create(:subscription)
 
-		# Verify that a even a user can't update a subscription (for now)
+		# Verify that a even a user can't update a subscription
 		policy = Proclaim::SubscriptionPolicy.new(user, subscription)
 		refute policy.update?, "A user should not be able to update subscriptions!"
 
 		# Verify that a guest cannot update a subscription
 		policy = Proclaim::SubscriptionPolicy.new(nil, subscription)
 		refute policy.update?, "A guest should not be able to update subscription!"
-	end
-
-	test "subscription unsubscribe" do
-		user = FactoryGirl.create(:user)
-		subscription = FactoryGirl.create(:subscription)
-
-		# Verify that a user can unsubscribe
-		policy = Proclaim::SubscriptionPolicy.new(user, subscription)
-		assert policy.unsubscribe?, "A user should be able to unsubscribe!"
-
-		# Verify that a guest can also unsubscribe
-		policy = Proclaim::SubscriptionPolicy.new(nil, subscription)
-		assert policy.unsubscribe?, "A guest should be able to unsubscribe!"
 	end
 
 	test "subscription destroy" do

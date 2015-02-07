@@ -2,9 +2,11 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<style>
-			* {
+			*
+			{
 				box-sizing: border-box;
 			}
 
@@ -16,6 +18,7 @@
 			table.post
 			{
 				width: 600px;
+				table-layout: fixed;
 				margin: 0 auto;
 			}
 
@@ -36,6 +39,7 @@
 			td.post_title h1
 			{
 				margin: 0 0 10px 0;
+				font-size: 30px;
 				padding: 0;
 			}
 
@@ -48,7 +52,6 @@
 			{
 				float: left;
 				max-width: 35%;
-				max-width: calc(33.33% + 40px);
 				min-height: 18px;
 			}
 
@@ -56,7 +59,7 @@
 			{
 				margin: 0px;
 				vertical-align: top;
-				max-width: 600px;
+				max-width: 100%;
 				border: 0px none;
 			}
 
@@ -94,6 +97,7 @@
 			td.post_body
 			{
 				padding-bottom: 10px;
+				font-size: 18px;
 			}
 
 			td.post_body blockquote
@@ -117,6 +121,32 @@
 				color: #888;
 			}
 		</style>
+
+		<style data-premailer="ignore">
+			@media only screen and (min-width: 521px) and (max-width: 620px)
+			{
+				table[class="post"]
+				{
+					width: 500px !important;
+				}
+			}
+
+			@media only screen and (min-width: 421px) and (max-width: 520px)
+			{
+				table[class="post"]
+				{
+					width: 400px !important;
+				}
+			}
+
+			@media only screen and (max-width: 420px)
+			{
+				table[class="post"]
+				{
+					width: 320px !important;
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<table class = "main">
@@ -134,7 +164,7 @@
 					<% else  %>
 						You're receiving this email because you requested to be notified if a new post was made at <%= link_to url, posts_url %>.
 					<% end %>
-					If you no longer wish to receive these emails, simply <%= link_to "unsubscribe", unsubscribe_url(@subscription.token) %>.
+					If you no longer wish to receive these emails, simply <%= link_to "unsubscribe", subscription_url(@subscription.token) %>.
 				</td>
 			</tr>
 		</table>

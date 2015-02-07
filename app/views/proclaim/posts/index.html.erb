@@ -1,3 +1,5 @@
+<% proclaim_title "Posts" %>
+
 <% if policy(Proclaim::Post).new? %>
 	<%= link_to 'New Post', new_post_path %>
 <% end %>

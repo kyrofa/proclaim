@@ -3,7 +3,7 @@ require_dependency "proclaim/application_controller"
 module Proclaim
 	class PostsController < ApplicationController
 		before_action :authenticate_author, except: [:index, :show]
-		after_action :verify_authorized, except: :index
+		after_action :verify_authorized
 		after_action :verify_policy_scoped, only: :index
 		before_action :set_post, only: [:show, :edit, :update, :destroy]
 
@@ -40,16 +40,20 @@ module Proclaim
 			@post = Post.new(post_params)
 			@post.author = current_author
 
-			if params[:publish] == "true"
-				@post.publish
-			end
-
 			authorize @post
 
-			if @post.valid?
+			# Save here before potentially publishing, so we can save images
+			if @post.save
+
+				if params[:publish] == "true"
+					@post.publish
+					authorize @post # Re-authorize now that it's to be published
+				end
+
 				# Save and rewrite each image in Carrierwave's cache
 				@post.body = saved_and_rewrite_cached_images(@post.body)
 
+				# Save again, in case the body changed or it was published
 				@post.save
 
 				redirect_to @post, notice: 'Post was successfully created.'

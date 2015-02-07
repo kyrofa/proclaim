@@ -179,6 +179,9 @@ class CommentsHandler
 		form.each (index, element) =>
 			thisForm = $(element)
 
+			# Hide the email field
+			thisForm.children(@subscribeEmailClass).hide()
+
 			# Don't remove the main comment form-- just clear it
 			if thisForm.is(@mainCommentFormClass)
 				element.reset()

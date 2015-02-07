@@ -22,9 +22,13 @@ module Proclaim
 			assert_equal ["from@example.com"], mail.from
 			assert_equal 2, mail.body.parts.length # Ensure multipart: text and HTML
 
+			# Verify the email includes a greeting
+			assert_match "Hello, #{subscription.name}", get_text_part(mail)
+			assert_match "Hello, #{subscription.name}", get_html_part(mail)
+
 			# Verify the email includes an unsubscription URL
-			assert_match proclaim.unsubscribe_url(subscription.token), get_text_part(mail)
-			assert_match proclaim.unsubscribe_url(subscription.token), get_html_part(mail)
+			assert_match proclaim.subscription_url(subscription.token), get_text_part(mail)
+			assert_match proclaim.subscription_url(subscription.token), get_html_part(mail)
 		end
 
 		test "new comment notification email" do
@@ -38,8 +42,8 @@ module Proclaim
 			assert_equal 2, mail.body.parts.length # Ensure multipart: text and HTML
 
 			# Verify the email includes an unsubscription URL
-			assert_match proclaim.unsubscribe_url(subscription.token), get_text_part(mail)
-			assert_match proclaim.unsubscribe_url(subscription.token), get_html_part(mail)
+			assert_match proclaim.subscription_url(subscription.token), get_text_part(mail)
+			assert_match proclaim.subscription_url(subscription.token), get_html_part(mail)
 		end
 
 		test "new post notification email" do
@@ -53,8 +57,8 @@ module Proclaim
 			assert_equal 2, mail.body.parts.length # Ensure multipart: text and HTML
 
 			# Verify the email includes an unsubscription URL
-			assert_match proclaim.unsubscribe_url(subscription.token), get_text_part(mail)
-			assert_match proclaim.unsubscribe_url(subscription.token), get_html_part(mail)
+			assert_match proclaim.subscription_url(subscription.token), get_text_part(mail)
+			assert_match proclaim.subscription_url(subscription.token), get_html_part(mail)
 		end
 
 		test "images in new post notification email should have absolute URLs" do

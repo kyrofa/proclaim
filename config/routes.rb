@@ -7,12 +7,8 @@ Proclaim::Engine.routes.draw do
 
 	resources :comments, only: [:create, :update, :destroy]
 
-	resources :subscriptions, only: [:new, :create]
-
-	get 'subscriptions/subscribed' => 'subscriptions#subscribed', as: :subscribed
-	get 'subscriptions/unsubscribe' => 'subscriptions#unsubscribed', as: :unsubscribed
-	get 'subscriptions/unsubscribe/:token' => 'subscriptions#unsubscribe', as: :unsubscribe
-	delete 'subscriptions/unsubscribe/:token' => 'subscriptions#destroy'
+	# Subscription administration is authenticated via tokens
+	resources :subscriptions, param: :token, except: [:edit, :update]
 
 	root 'posts#index'
 end
