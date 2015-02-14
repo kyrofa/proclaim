@@ -17,6 +17,13 @@ module Proclaim
 		def show
 			begin
 				authorize @post
+
+				# If an old id or a numeric id was used to find the record, then
+				# the request path will not match the post_path, and we should do
+				# a 301 redirect that uses the current friendly id.
+				if request.path != post_path(@post)
+					return redirect_to @post, status: :moved_permanently
+				end
 			rescue Pundit::NotAuthorizedError
 				# Don't leak that this resource actually exists. Turn the
 				# "permission denied" into a "not found"
@@ -97,7 +104,7 @@ module Proclaim
 
 		# Use callbacks to share common setup or constraints between actions.
 		def set_post
-			@post = Post.find(params[:id])
+			@post = Post.friendly.find(params[:id])
 		end
 
 		# Only allow a trusted parameter "white list" through.
