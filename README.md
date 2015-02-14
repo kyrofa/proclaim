@@ -29,7 +29,7 @@ Proclaim 0.5 works with Rails 4.2 and on, with Ruby 1.9.3 and on. Add it to your
 Gemfile with:
 
 ```ruby
-gem 'proclaim', "~> 0.5.2"
+gem 'proclaim', "~> 0.5.3"
 ```
 
 Run `bundle install` to install it.
