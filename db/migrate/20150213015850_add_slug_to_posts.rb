@@ -1,7 +1,7 @@
 class AddSlugToPosts < ActiveRecord::Migration
 	def change
 		change_table :proclaim_posts do |t|
-			t.string :slug, null: false
+			t.string :slug
 		end
 
 		# This ensures that even if two clients try to create the same

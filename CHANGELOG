@@ -1,3 +1,6 @@
+v 0.5.2
+  - Fixed broken migration adding slugs to posts
+
 v 0.5.1
   - Fixed bad post body placeholder
 
