@@ -145,12 +145,42 @@ class PostTest < ActionDispatch::IntegrationTest
 		       "Post 3 draft should be shown before post 1 draft!"
 	end
 
-	test "show should show author name" do
+	test "show should include author name" do
 		post = FactoryGirl.create(:published_post)
 
 		visit proclaim.post_path(post)
 
 		assert page.has_text? post.author.send(Proclaim.author_name_method)
+	end
+
+	test "show should work via id" do
+		post = FactoryGirl.create(:published_post)
+
+		visit proclaim.post_path(post.id)
+		assert page.has_text? post.title
+		assert_equal proclaim.post_path(post.friendly_id), current_path,
+		             "Post show via ID should redirect to more friendly URL"
+	end
+
+	test "show should work via slug" do
+		post = FactoryGirl.create(:published_post)
+
+		visit proclaim.post_path(post.friendly_id)
+		assert page.has_text? post.title
+	end
+
+	test "show should work via old slugs for published posts" do
+		post = FactoryGirl.create(:published_post, title: "New Post")
+		old_slug = post.friendly_id
+
+		# Change slug
+		post.title = "New Post Modified"
+		post.save
+
+		visit proclaim.post_path(old_slug)
+		assert page.has_text? post.title
+		assert_equal proclaim.post_path(post.friendly_id), current_path,
+		             "Post show via ID should redirect to more friendly URL"
 	end
 
 	test "image should have relative source path" do
