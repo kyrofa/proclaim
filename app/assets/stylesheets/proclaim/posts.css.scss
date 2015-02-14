@@ -99,12 +99,16 @@ figure.mediumInsert-images
 	box-sizing: border-box;
 }
 
-.medium-editor-placeholder:after
+div.post_body.editable:after
 {
-	position: relative;
+	top: 0;
 }
 
-h1.post_title.editable:after
+h1.post_title.editable
 {
-	text-align: center;
+	&:after
+	{
+		position: relative;
+		text-align: center;
+	}
 }
