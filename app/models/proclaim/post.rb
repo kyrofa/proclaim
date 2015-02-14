@@ -86,7 +86,7 @@ module Proclaim
 		private
 
 		def should_generate_new_friendly_id?
-			title_changed?
+			title_changed? || super
 		end
 
 		def move_friendly_id_error_to_title
