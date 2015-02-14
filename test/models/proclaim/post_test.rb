@@ -130,5 +130,60 @@ module Proclaim
 
 			assert_equal "foo alert('bar');", post.body
 		end
+
+		test "verify slug presence" do
+			post = FactoryGirl.build(:post, title: "New Post")
+			assert_nil post.slug
+
+			post.save
+			assert_equal "new-post", post.slug
+
+			assert_equal post, Post.friendly.find(post.slug)
+			assert_equal post, Post.friendly.find(post.id),
+			             "Should also be able to use regular-old ID"
+		end
+
+		test "verify slug uniqueness" do
+			post = FactoryGirl.create(:post, title: "New Post")
+			assert_equal "new-post", post.slug
+
+			post = FactoryGirl.build(:post, title: "New Post") # Same title
+			post.valid?
+
+			assert post.save, "Title should not be required to be unique"
+			assert_not_equal "new-post", post.slug, "Slugs should be unique"
+		end
+
+		test "verify unpublished post slug changes but does not keep history" do
+			post = FactoryGirl.create(:post, title: "New Post")
+			assert_equal "new-post", post.slug
+			assert_equal post, Post.friendly.find(post.slug)
+
+			post.title = "New Post Modified"
+			post.save
+			assert_equal "new-post-modified", post.slug,
+			             "The slug should change if the post title changes"
+			assert_equal post, Post.friendly.find(post.slug)
+
+			# Assert that we cannot use the old slug
+			refute Post.friendly.exists_by_friendly_id?("new-post"),
+				    "Should not be able to use old slug on an unpublished post"
+		end
+
+		test "verify published post slug changes and keeps history" do
+			post = FactoryGirl.create(:published_post, title: "New Post")
+			assert_equal "new-post", post.slug
+			assert_equal post, Post.friendly.find(post.slug)
+
+			post.title = "New Post Modified"
+			post.save
+			assert_equal "new-post-modified", post.slug,
+			             "The slug should change if the post title changes"
+			assert_equal post, Post.friendly.find(post.slug)
+
+			# Also assert that we can use the old slug (i.e. published links
+			# can't be broken)
+			assert_equal post, Post.friendly.find("new-post")
+		end
 	end
 end

@@ -33,11 +33,27 @@
 	<% end %>
 
 	<div class = "post">
-		<h1 class = "post_title editable" data-disable-return="true" data-disable-toolbar="true" data-placeholder="Post Title"><%= @post.title %></h1>
+		<%=
+			fake_form_field @post, :title do
+				content_tag :h1, @post.title, class: "post_title editable",
+				            data: {
+				            	placeholder: "Post Title",
+				            	disable_return: "true",
+				            	disable_toolbar: "true",
+				            }
+			end
+		%>
 
-		<div class = "post_body editable" data-placeholder = "Post Body" data-image-upload-path="<%= cache_image_path %>" data-image-delete-path="<%= discard_image_path %>">
-			<%= @post.body.html_safe %>
-		</div>
+		<%=
+			fake_form_field @post, :body do
+				content_tag :div, @post.body.html_safe, class: "post_body editable",
+				            data: {
+				            	placeholder: "Post Body",
+				            	image_upload_path: cache_image_path,
+				            	image_delete_path: discard_image_path,
+				            }
+			end
+		%>
 
 		<div class = "post_information" style = "margin-bottom: 30px;">
 			<% if @post.published? %>

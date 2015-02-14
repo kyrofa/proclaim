@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
 	s.add_dependency "sass-rails", "~> 5.0"
 	s.add_dependency "jquery-rails", "~> 4.0"
 	s.add_dependency "htmlentities", "~> 4.3"
+	s.add_dependency "friendly_id", "~> 5.1"
 	s.add_dependency "nokogiri", "~> 1.6"
 	s.add_dependency "premailer", "~> 1.8"
 	s.add_dependency "closure_tree", "~> 5.2"
