@@ -1,3 +1,6 @@
+v 0.5.3
+  - Fixed bug causing initial slugs to not be generated
+
 v 0.5.2
   - Fixed broken migration adding slugs to posts
 
