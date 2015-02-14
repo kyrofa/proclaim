@@ -1,3 +1,7 @@
+0.5.0
+  - Fixed bug causing possible blank excerpt
+  - Make post URLs more friendly (backward-compatible)
+
 0.4.0
   - Added media query to emails for better display on mobile devices
   - Added callbacks as a way for main app to be notified of new posts,
