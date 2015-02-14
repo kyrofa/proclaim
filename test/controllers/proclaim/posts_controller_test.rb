@@ -173,7 +173,19 @@ module Proclaim
 			assert_match /not authorized/, flash[:error]
 		end
 
-		test "should show post if logged in" do
+		test "should show draft post if logged in" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			# Should show draft post
+			newPost = FactoryGirl.create(:post)
+
+			get :show, id: newPost
+			assert_response :success
+			assert_equal newPost, assigns(:post)
+		end
+
+		test "should show published post if logged in" do
 			user = FactoryGirl.create(:user)
 			sign_in user
 
@@ -182,31 +194,77 @@ module Proclaim
 
 			get :show, id: newPost
 			assert_response :success
-			assert_equal assigns(:post), newPost
-
-			# Should also show unpublished post
-			newPost = FactoryGirl.create(:post)
-
-			get :show, id: newPost
-			assert_response :success
-			assert_equal assigns(:post), newPost
+			assert_equal newPost, assigns(:post)
 		end
 
-		test "should show post if not logged in" do
-			# Should show published post
-			newPost = FactoryGirl.create(:published_post)
-
-			get :show, id: newPost
-			assert_response :success
-			assert_equal assigns(:post), newPost
-
-			# Should not show unpublished post
+		test "should not show draft post if not logged in" do
+			# Should not show draft post
 			newPost = FactoryGirl.create(:post)
 
 			# Controller should hide the "permission denied" in a "not-found"
 			assert_raises ActiveRecord::RecordNotFound do
 				get :show, id: newPost
 			end
+		end
+
+		test "should show published post if not logged in" do
+			# Should show published post
+			newPost = FactoryGirl.create(:published_post)
+
+			get :show, id: newPost
+			assert_response :success
+			assert_equal newPost, assigns(:post)
+		end
+
+		test "should show post via id" do
+			post = FactoryGirl.create(:published_post, title: "New Post")
+
+			# Test with ID
+			get :show, id: post.id
+			assert_response :redirect,
+			                "Visiting a post by ID should redirect to slug"
+			assert_equal post, assigns(:post)
+		end
+
+		test "should show post via slug" do
+			post = FactoryGirl.create(:published_post, title: "New Post")
+
+			# Test with slug
+			get :show, id: post.friendly_id
+			assert_response :success
+			assert_equal post, assigns(:post)
+		end
+
+		test "should not show draft post via old slugs" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			post = FactoryGirl.create(:post, title: "New Post")
+			old_slug = post.friendly_id
+
+			# Now change slug
+			post.title = "New Post Modified"
+			post.save
+
+			# Verify that old slug doesn't work
+			assert_raises ActiveRecord::RecordNotFound,
+			              "Draft posts should not maintain slug history" do
+				get :show, id: old_slug
+			end
+		end
+
+		test "should show published post via old slugs" do
+			post = FactoryGirl.create(:published_post, title: "New Post")
+			old_slug = post.friendly_id
+
+			# Now change slug
+			post.title = "New Post Modified"
+			post.save
+
+			# Verify that old slug still works
+			get :show, id: old_slug
+			assert_response :redirect, "This should redirect to the current slug"
+			assert_equal assigns(:post), post
 		end
 
 		test "should get edit if logged in" do

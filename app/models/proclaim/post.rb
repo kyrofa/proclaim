@@ -20,8 +20,10 @@ module Proclaim
 		has_many :images, inverse_of: :post, dependent: :destroy
 		accepts_nested_attributes_for :images, allow_destroy: true
 
-		include AASM
+		extend FriendlyId
+		friendly_id :slug_candidates, use: :history
 
+		include AASM
 		aasm column: :state, no_direct_assignment: true do
 			state :draft, initial: true
 			state :published
@@ -41,12 +43,41 @@ module Proclaim
 		validates_presence_of :title, :body, :author
 		validate :verifyBodyHtml
 
+		after_validation :move_friendly_id_error_to_title
+
 		before_save :sanitizeBody
 		after_save :notifyBlogSubscribersIfPublished
+
+		# Only save the slug history if the post is published
+		def create_slug
+			# No real reason to keep a slug history unless it's been published
+			unless published?
+				slugs.destroy_all
+			end
+
+			super
+		end
 
 		attr_writer :excerpt_length
 		def excerpt_length
 			@excerpt_length || Proclaim.excerpt_length
+		end
+
+		# Try building a slug based on the following fields in
+		# increasing order of specificity.
+		def slug_candidates
+			[
+				:title,
+				[:title, :id]
+			]
+		end
+
+		def should_generate_new_friendly_id?
+			title_changed?
+		end
+
+		def move_friendly_id_error_to_title
+			errors.add :title, *errors.delete(:friendly_id) if errors[:friendly_id].present?
 		end
 
 		def body_plaintext
