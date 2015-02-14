@@ -122,6 +122,10 @@ module Proclaim
 			post = FactoryGirl.build(:post,
 			                         body: "This is outside.<p>This is inside.</p>")
 			assert_equal "This is outside.", post.excerpt
+
+			post = FactoryGirl.build(:post,
+			                         body: "<p>\r\n</p><p>foo</p>")
+			assert_equal "foo", post.excerpt
 		end
 
 		test "verify body sanitization" do

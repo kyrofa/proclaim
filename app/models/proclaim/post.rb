@@ -63,23 +63,6 @@ module Proclaim
 			@excerpt_length || Proclaim.excerpt_length
 		end
 
-		# Try building a slug based on the following fields in
-		# increasing order of specificity.
-		def slug_candidates
-			[
-				:title,
-				[:title, :id]
-			]
-		end
-
-		def should_generate_new_friendly_id?
-			title_changed?
-		end
-
-		def move_friendly_id_error_to_title
-			errors.add :title, *errors.delete(:friendly_id) if errors[:friendly_id].present?
-		end
-
 		def body_plaintext
 			HTMLEntities.new.decode(Rails::Html::FullSanitizer.new.sanitize(body.gsub(/\r\n?/, ' ')))
 		end
@@ -101,6 +84,23 @@ module Proclaim
 		end
 
 		private
+
+		def should_generate_new_friendly_id?
+			title_changed?
+		end
+
+		def move_friendly_id_error_to_title
+			errors.add :title, *errors.delete(:friendly_id) if errors[:friendly_id].present?
+		end
+
+		# Try building a slug based on the following fields in
+		# increasing order of specificity.
+		def slug_candidates
+			[
+				:title,
+				[:title, :id]
+			]
+		end
 
 		def verifyBodyHtml
 			if not errors.messages.include?(:body) and
@@ -138,7 +138,9 @@ module Proclaim
 
 		def first_block_element_text(nokogiri_node)
 			if nokogiri_node.text?
-				return block_element_text(nokogiri_node.parent)
+				text = block_element_text(nokogiri_node.parent).strip
+
+				return text unless text.empty?
 			end
 
 			nokogiri_node.children.each do |child|
