@@ -1,5 +1,9 @@
 # Proclaim
 
+[![Build Status](https://travis-ci.org/kyle-f/proclaim.svg?branch=master)](https://travis-ci.org/kyle-f/proclaim)
+[![Code Climate](https://codeclimate.com/github/kyle-f/proclaim/badges/gpa.svg)](https://codeclimate.com/github/kyle-f/proclaim)
+[![Test Coverage](https://codeclimate.com/github/kyle-f/proclaim/badges/coverage.svg)](https://codeclimate.com/github/kyle-f/proclaim/coverage)
+
 Most Rails blogging tools include everything you could ever want, including
 things you don't. Proclaim tries to provide the simplest (yet beautiful)
 implementation of a blog you could want-- posts, comments, and subscriptions.
