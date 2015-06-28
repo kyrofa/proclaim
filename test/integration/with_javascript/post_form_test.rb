@@ -33,10 +33,10 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		within('#new_post') do
 			element = find('h1.editable')
-			#element.click()
+			element.click()
 			element.set("Post Title") # Set the title text
 			element = find('div.editable')
-			#element.click() # Select the element
+			element.click() # Select the element
 			element.set("Paragraph 1\nParagraph 2") # Set the body text
 		end
 
@@ -147,7 +147,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		within('#new_post') do
 			element = find('h1.editable')
-			#element.click()
+			element.click()
 			element.set("\"quotes\"") # Set the title text
 			# Don't fill in body
 		end
@@ -168,10 +168,10 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		within('#new_post') do
 			element = find('h1.editable')
-			#element.click()
+			element.click()
 			element.set("\"quotes\"") # Set the title text
 			element = find('div.editable')
-			#element.click() # Select the element
+			element.click() # Select the element
 			element.set("Paragraph 1\nParagraph 2") # Set the body text
 		end
 
@@ -190,7 +190,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		within('#new_post') do
 			# Don't fill in title
 			element = find('div.editable')
-			#element.click() # Select the element
+			element.click() # Select the element
 			element.set("Paragraph 1\nParagraph 2") # Set the text
 		end
 
@@ -211,7 +211,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 
 		within('#new_post') do
 			element = find('h1.editable')
-			#element.click()
+			element.click()
 			element.set("Post Title") # Set the title text
 			# Don't fill in the body
 		end
