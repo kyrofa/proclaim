@@ -265,8 +265,8 @@ class CommentTest < ActionDispatch::IntegrationTest
 		@show_page.comment_delete_link(comment).click
 		page.accept_alert
 
-		assert page.has_no_text? comment.author
-		assert page.has_no_text? comment.body
+		assert page.has_no_text?(comment.author), "Comment author should be gone!"
+		assert page.has_no_text?(comment.body), "Comment body should be gone!"
 
 		assert(wait_until { Proclaim::Comment.count == current_count - 1 },
 		      "Root comment should have been deleted!")
