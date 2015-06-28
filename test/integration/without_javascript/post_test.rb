@@ -145,6 +145,39 @@ class PostTest < ActionDispatch::IntegrationTest
 		       "Post 3 draft should be shown before post 1 draft!"
 	end
 
+	test "index should not show comment count for drafts" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		comment = FactoryGirl.create(:comment)
+
+		visit proclaim.posts_path
+
+		assert page.has_no_text? "1 comment"
+	end
+
+	test "index should show comment count for published post" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		# Verify no comments
+		post = FactoryGirl.create(:published_post)
+		visit proclaim.posts_path
+		assert page.has_text?("No comments"),
+		       "Comment count should indicate no comments"
+
+		# Verify that single comment count shows up.
+		comment = FactoryGirl.create(:published_comment, post: post)
+		visit proclaim.posts_path
+		assert page.has_text?("1 comment"), "Comment count should be shown"
+
+		# Also verify that the comment count is properly pluralized.
+		comment = FactoryGirl.create(:published_comment, post: comment.post)
+		visit proclaim.posts_path
+		assert page.has_text?("2 comments"),
+		       "Comment count should be shown and pluralized"
+	end
+
 	test "show should include author name" do
 		post = FactoryGirl.create(:published_post)
 

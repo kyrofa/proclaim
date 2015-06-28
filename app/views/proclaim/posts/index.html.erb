@@ -33,7 +33,12 @@
 						<% end %>
 					</div>
 					<%= post.author.send(Proclaim.author_name_method) %><br />
-					<%= timeago_tag post.published_at, format: "%B %d, %Y" %>
+					<%= timeago_tag post.published_at, format: "%B %d, %Y" %><br />
+					<% if post.comments.empty? %>
+						No comments
+					<% else %>
+						<%= pluralize post.comments.count, "comment" %>
+					<% end %>
 				</div>
 			<% end %>
 			</td>
