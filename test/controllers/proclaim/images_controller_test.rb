@@ -45,6 +45,36 @@ module Proclaim
 			assert_response :unauthorized
 		end
 
+		test "should not create image without a post" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			image = FactoryGirl.build(:image, post: nil, image: nil)
+
+			assert_no_difference('Image.count') do
+				post :create, format: :json, image: {
+					image: Rack::Test::UploadedFile.new(File.join(Rails.root, '../', 'support', 'images', 'test.jpg'))
+				}
+			end
+
+			assert_response :unprocessable_entity
+		end
+
+		test "should not create image without actual image" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			image = FactoryGirl.build(:image, image: nil)
+
+			assert_no_difference('Image.count') do
+				post :create, format: :json, image: {
+					post_id: image.post_id
+				}
+			end
+
+			assert_response :unprocessable_entity
+		end
+
 		test "should cache image if logged in" do
 			user = FactoryGirl.create(:user)
 			sign_in user
@@ -93,7 +123,7 @@ module Proclaim
 			assert_response :unauthorized
 		end
 
-		test "should not destroy image if logged in but return ID" do
+		test "discard should not destroy image if logged in but return ID" do
 			user = FactoryGirl.create(:user)
 			sign_in user
 
@@ -110,11 +140,24 @@ module Proclaim
 			assert_equal image.id.to_s, json["id"]
 		end
 
+		test "should destroy image if logged in" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			image = FactoryGirl.create(:image)
+
+			assert_difference('Image.count', -1) do
+				delete :destroy, format: :json, id: image.id
+			end
+
+			assert_response :success
+		end
+
 		test "should not destroy image if not logged in" do
 			image = FactoryGirl.create(:image)
 
 			assert_no_difference('Image.count') do
-				post :discard, format: :json, file: image.image.url
+				delete :destroy, format: :json, id: image.id
 			end
 
 			assert_response :unauthorized

@@ -125,6 +125,44 @@ module Proclaim
 			assert assigns(:post).published?
 		end
 
+		test "should not create post without title" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			newPost = FactoryGirl.build(:post)
+
+			assert_no_difference('Post.count') do
+				post :create, post: {
+					author_id: newPost.author_id,
+					body: newPost.body
+					# Leave off title
+				}
+			end
+
+			assert assigns(:post).errors.any?,
+			       "Expected an error due to lack of post title"
+			assert_template :new, "Expected new view to be rendered again"
+		end
+
+		test "should not create post without body" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			newPost = FactoryGirl.build(:post)
+
+			assert_no_difference('Post.count') do
+				post :create, post: {
+					author_id: newPost.author_id,
+					title: newPost.title
+					# Leave off body
+				}
+			end
+
+			assert assigns(:post).errors.any?,
+			       "Expected an error due to lack of post body"
+			assert_template :new, "Expected new view to be rendered again"
+		end
+
 		test "should upload images when creating post" do
 			user = FactoryGirl.create(:user)
 			sign_in user
@@ -365,6 +403,38 @@ module Proclaim
 
 			assert_response :redirect
 			assert_match /not authorized/, flash[:error]
+		end
+
+		test "should not update post without title" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			newPost = FactoryGirl.create(:post)
+
+			patch :update, id: newPost, post: {
+				author_id: newPost.author_id,
+				title: "" # Remove title
+			}
+
+			assert assigns(:post).errors.any?,
+			       "Expected an error due to lack of post title"
+			assert_template :edit, "Expected edit view to be rendered again"
+		end
+
+		test "should not update post without body" do
+			user = FactoryGirl.create(:user)
+			sign_in user
+
+			newPost = FactoryGirl.create(:post)
+
+			patch :update, id: newPost, post: {
+				author_id: newPost.author_id,
+				body: "" # Remove body
+			}
+
+			assert assigns(:post).errors.any?,
+			       "Expected an error due to lack of post body"
+			assert_template :edit, "Expected edit view to be rendered again"
 		end
 
 		test "should destroy post if logged in" do

@@ -53,6 +53,12 @@ module Proclaim
 			assert_equal subscription2, Subscription.from_token(token2)
 		end
 
+		test "an invalid token should raise a NotFound" do
+			assert_raises ActiveRecord::RecordNotFound do
+				Subscription.from_token("123456")
+			end
+		end
+
 		test "should require valid post or none at all" do
 			# Post 12345 doesn't exist
 			subscription = FactoryGirl.build(:subscription, post_id: 12345)
