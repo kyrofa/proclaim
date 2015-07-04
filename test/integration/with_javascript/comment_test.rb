@@ -240,6 +240,44 @@ class CommentTest < ActionDispatch::IntegrationTest
 		       "The old child comment body should be gone!"
 	end
 
+	test "edit should show error without author" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		comment = FactoryGirl.create(:published_comment)
+
+		visit proclaim.post_path(comment.post)
+
+		@show_page.comment_edit_link(comment).click
+
+		within("#edit_comment_#{comment.id}") do
+			fill_in 'Author', with: "" # An empty author should result in an error
+		end
+
+		@show_page.edit_comment_submit_button(comment).click
+
+		assert page.has_css?('div.error')
+	end
+
+	test "edit should show error without body" do
+		user = FactoryGirl.create(:user)
+		sign_in user
+
+		comment = FactoryGirl.create(:published_comment)
+
+		visit proclaim.post_path(comment.post)
+
+		@show_page.comment_edit_link(comment).click
+
+		within("#edit_comment_#{comment.id}") do
+			fill_in 'Body', with: "" # An empty body should result in an error
+		end
+
+		@show_page.edit_comment_submit_button(comment).click
+
+		assert page.has_css?('div.error')
+	end
+
 	test "should not have option to delete if not logged in" do
 		comment = FactoryGirl.create(:published_comment)
 

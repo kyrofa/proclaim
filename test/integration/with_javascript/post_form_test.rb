@@ -181,7 +181,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		assert page.has_no_text?("&quot;quotes&quot;"), "Show page should not be showing HTML entities in title!"
 	end
 
-	test "should show error without title" do
+	test "new should show error without title" do
 		user = FactoryGirl.create(:user)
 		sign_in user
 
@@ -203,7 +203,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 		end
 	end
 
-	test "should show error without body" do
+	test "new should show error without body" do
 		user = FactoryGirl.create(:user)
 		sign_in user
 
