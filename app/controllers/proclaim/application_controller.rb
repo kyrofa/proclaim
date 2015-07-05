@@ -41,4 +41,38 @@ class Proclaim::ApplicationController < ApplicationController
 	def cache_name_from_url(url)
 		url.match(/[^\/]*?\/[^\/]*\z/)
 	end
+
+	def handleJsonRequest(object, options = {})
+		operation = options[:operation] || true
+		successJson = options[:success_json] || true
+		failureJson = options[:failure_json] || lambda {object.errors.full_messages}
+		unauthorizedStatus = options[:unauthorized_status] || :unauthorized
+
+		begin
+			authorize object
+
+			yield if block_given?
+			return if performed? # Don't continue if the block rendered
+
+			respond_to do |format|
+				if (operation == true) or (operation.respond_to?(:call) and operation.call)
+					if successJson.respond_to? :call
+						successJson = successJson.call
+					end
+
+					format.json { render json: successJson }
+				else
+					if failureJson.respond_to? :call
+						failureJson = failureJson.call
+					end
+
+					format.json { render json: failureJson, status: :unprocessable_entity }
+				end
+			end
+		rescue Pundit::NotAuthorizedError
+			respond_to do |format|
+				format.json { render json: true, status: unauthorizedStatus }
+			end
+		end
+	end
 end

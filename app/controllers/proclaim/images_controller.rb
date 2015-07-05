@@ -7,40 +7,18 @@ module Proclaim
 		def create
 			@image = Image.new(post_id: image_params[:post_id])
 
-			begin
-				authorize @image
-
+			handleJsonRequest(@image,
+			                  operation: lambda {@image.save},
+			                  success_json: lambda {@image.image.url}) do
 				@image.image = image_params[:image]
-
-				respond_to do |format|
-					if @image.save
-						format.json { render json: @image.image.url }
-					else
-						format.json { render json: @image.errors.full_messages, status: :unprocessable_entity }
-					end
-				end
-			rescue Pundit::NotAuthorizedError
-				respond_to do |format|
-					format.json { render json: true, status: :unauthorized }
-				end
 			end
 		end
 
 		def cache
 			@image = Image.new
 
-			begin
-				authorize @image
-
+			handleJsonRequest(@image, success_json: lambda {@image.image.url}) do
 				@image.image = file_params[:file]
-
-				respond_to do |format|
-					format.json { render json: @image.image.url }
-				end
-			rescue Pundit::NotAuthorizedError
-				respond_to do |format|
-					format.json { render json: true, status: :unauthorized }
-				end
 			end
 		end
 
@@ -59,19 +37,9 @@ module Proclaim
 				@image = Image.find(image_id)
 			end
 
-			begin
-				authorize @image
-
+			handleJsonRequest(@image, success_json: {id: image_id}) do
 				if @image.new_record?
 					@image.image.remove!
-				end
-
-				respond_to do |format|
-					format.json { render json: {id: image_id}, status: :ok }
-				end
-			rescue Pundit::NotAuthorizedError
-				respond_to do |format|
-					format.json { render json: true, status: :unauthorized }
 				end
 			end
 		end
@@ -79,17 +47,8 @@ module Proclaim
 		def destroy
 			@image = Image.find(params[:id])
 
-			begin
-				authorize @image
-
-				respond_to do |format|
-					@image.destroy
-					format.json { render json: true, status: :ok }
-				end
-			rescue Pundit::NotAuthorizedError
-				respond_to do |format|
-					format.json { render json: true, status: :unauthorized }
-				end
+			handleJsonRequest(@image) do
+				@image.destroy
 			end
 		end
 
