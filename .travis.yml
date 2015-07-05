@@ -1,19 +1,29 @@
 language: ruby
+
 branches:
   only:
     - master
     - develop
+
 script: bundle exec rake test
+
 rvm:
-- 1.9.3
-- 2.1.5
+  - 1.9.3
+  - 2.1.5
+
 before_script:
-- bundle exec rake db:migrate RAILS_ENV=test
+  - bundle exec rake db:migrate RAILS_ENV=test
+
+notifications:
+  email:
+    on_success: always
+
 addons:
   sauce_connect: true
   code_climate:
     repo_token:
       secure: IUL4myAsn0wg5vp5duw2yrdepgozkHSRR0fmQ709/VLas1tKuIfHKvvmVlLYtpB+cUyunY4ujCjDNxfhwflkjtWUvFWIVGiMwC5amReslR18eiPX75MNfD3msIVaU9hPPzbelxfIDc7xdsYkjBNNm5OmweJkbxrnHQgWOM5MEmM=
+
 env:
   global:
     - secure: Dr7jLhkgYEeHUMQN9m9nsM02yskYZxervGHZAQbBSMvTQ3PUOJoHct7NeHhM8OC+2dR+cLwOFMmxoBiw3pBUCylrzK9oKP+6S5IeoRtyG+YRQNYe4CunAPxVpgon02xaYQTq1SIoZi8WB+1+wN8DRl/Qq/4czRoM44nnrN+dCYE=

@@ -48,6 +48,12 @@ module Proclaim
 			assert_equal subscription, assigns(:subscription)
 		end
 
+		test "show should return not found is token is invalid" do
+			assert_raises ActiveRecord::RecordNotFound do
+				get :show, token: 12345
+			end
+		end
+
 		test "should get new if logged in" do
 			user = FactoryGirl.create(:user)
 			sign_in user

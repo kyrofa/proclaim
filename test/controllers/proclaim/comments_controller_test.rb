@@ -88,7 +88,7 @@ module Proclaim
 			assert_update_comment newComment
 		end
 
-		test "should not root update comment if not logged in" do
+		test "should not update root comment if not logged in" do
 			newComment = FactoryGirl.create(:comment)
 			refute_update_comment newComment
 		end

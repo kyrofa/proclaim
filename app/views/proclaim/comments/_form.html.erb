@@ -27,8 +27,6 @@
 	<%= f.label :body %><br />
 	<%= f.text_area :body, rows: 7, cols: 50 %><br />
 
-
-
 	<% if comment.new_record? %>
 		<%= label namespace_space+"antispam", "answer", "Spam bots can't do math. What is #{random_number_1} + #{random_number_2}?" %><br />
 		<%= text_field "antispam", "answer", id: namespace_space+"antispam_answer" %><br />

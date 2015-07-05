@@ -9,84 +9,66 @@ module Proclaim
 		def create
 			@comment = Comment.new(comment_params)
 
-			begin
-				authorize @comment
+			subscription = nil
+			if subscription_params and subscription_params[:subscribe]
+				subscription = Subscription.new(name: @comment.author,
+				                                email: subscription_params[:email],
+				                                post: @comment.post)
+			end
 
-				if antispam_params[:answer] == antispam_params[:solution]
-					subscription = nil
-					params = subscription_params
-					if params and params[:subscribe]
-						subscription = Subscription.new(name: @comment.author,
-						                                email: params[:email],
-						                                post: @comment.post)
-					end
-
-					respond_to do |format|
-						begin
-							Comment.transaction do
-								@comment.save!
-
-								if subscription
-									subscription.save!
-								end
-
-								format.json { render_comment_json(@comment) }
-							end
-						rescue ActiveRecord::RecordInvalid
-							errorMessages = Array.new
-							errorMessages += @comment.errors.full_messages
+			errors = Array.new
+			options = Hash.new
+			options[:success_json] = lambda {comment_json(@comment)}
+			options[:failure_json] = lambda {errors}
+			options[:operation] = lambda do
+				respond_to do |format|
+					begin
+						# Wrap saving the comment in a transaction, so if the
+						# subscription fails to save, the comment doesn't save either
+						# (and vice-versa).
+						Comment.transaction do
+							@comment.save!
 
 							if subscription
-								errorMessages += subscription.errors.full_messages
+								subscription.save!
 							end
 
-							format.json { render json: errorMessages, status: :unprocessable_entity }
+							return true
 						end
+					rescue ActiveRecord::RecordInvalid
+						errors += @comment.errors.full_messages
+
+						if subscription
+							errors += subscription.errors.full_messages
+						end
+
+						return false
 					end
-				else
+				end
+			end
+
+			# Don't leak that the post actually exists. Turn the "unauthorized"
+			# into a "not found"
+			options[:unauthorized_status] = :not_found
+
+			handleJsonRequest(@comment, options) do
+				if antispam_params[:answer] != antispam_params[:solution]
 					respond_to do |format|
 						format.json { render json: ["Antispam question wasn't answered correctly"], status: :unprocessable_entity }
 					end
-				end
-			rescue Pundit::NotAuthorizedError
-				respond_to do |format|
-					# Don't leak that the post actually exists. Turn the
-					# "unauthorized" into a "not found"
-					format.json { render json: true, status: :not_found }
 				end
 			end
 		end
 
 		def update
-			begin
-				authorize @comment
-
-				respond_to do |format|
-					if @comment.update(comment_params)
-						format.json { render_comment_json(@comment) }
-					else
-						format.json { render json: @comment.errors.full_messages, status: :unprocessable_entity }
-					end
-				end
-			rescue Pundit::NotAuthorizedError
-				respond_to do |format|
-					format.json { render json: true, status: :unauthorized }
-				end
-			end
+			handleJsonRequest(@comment,
+			                  operation: lambda {@comment.update(comment_params)},
+			                  success_json: lambda {comment_json(@comment)})
 		end
 
 		def destroy
-			begin
-				authorize @comment
-
-				respond_to do |format|
-					@comment.destroy
-					format.json { render json: true, status: :ok }
-				end
-			rescue Pundit::NotAuthorizedError
-				respond_to do |format|
-					format.json { render json: true, status: :unauthorized }
-				end
+			handleJsonRequest(@comment) do
+				@comment.destroy
 			end
 		end
 
@@ -96,10 +78,10 @@ module Proclaim
 			@comment = Comment.find(params[:id])
 		end
 
-		def render_comment_json(comment)
-			render json: {
-				id: comment.id,
-				html: comment_to_html(comment)
+		def comment_json(comment)
+			return {
+					id: comment.id,
+					html: comment_to_html(comment)
 			}
 		end
 
