@@ -1,0 +1,17 @@
+engines:
+  rubocop:
+    enabled: true
+  eslint:
+    enabled: true
+  coffeelint:
+    enabled: true
+  csslint:
+    enabled: true
+  bundler-audit:
+    enabled: true
+ratings:
+  paths:
+    - Gemfile.lock
+    - "app/**"
+exclude_paths:
+  - "test/*"
