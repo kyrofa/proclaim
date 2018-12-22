@@ -20,32 +20,32 @@ module Proclaim
 		end
 
 		test "ensure factory is good" do
-			image = FactoryGirl.build(:image)
+			image = FactoryBot.build(:image)
 
 			assert image.save, "Factory needs to be updated to save successfully"
 		end
 
 		test "ensure post is required" do
-			image = FactoryGirl.build(:image, post_id: nil)
+			image = FactoryBot.build(:image, post_id: nil)
 
 			refute image.save, "Image should require a post_id!"
 		end
 
 		test "ensure post validity is verified" do
 			# Post with 12345 shouldn't exist
-			image = FactoryGirl.build(:image, post_id: 12345)
+			image = FactoryBot.build(:image, post_id: 12345)
 
 			refute image.save, "Image should require a valid post!"
 		end
 
 		test "ensure image is required" do
-			image = FactoryGirl.build(:image, image: nil)
+			image = FactoryBot.build(:image, image: nil)
 
 			refute image.save, "Image should require an image to be uploaded!"
 		end
 
 		test "ensure image is cached, saved, and removed correctly" do
-			image = FactoryGirl.build(:image)
+			image = FactoryBot.build(:image)
 
 			cache_file_path = File.join(Rails.public_path, image.image.cache_dir, image.image.cache_name)
 			cache_path = File.dirname(cache_file_path)

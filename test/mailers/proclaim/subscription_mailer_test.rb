@@ -14,7 +14,7 @@ module Proclaim
 		end
 
 		test "welcome email" do
-			subscription = FactoryGirl.create(:subscription)
+			subscription = FactoryBot.create(:subscription)
 
 			mail = SubscriptionMailer.welcome_email(subscription)
 			assert_match "Welcome", mail.subject
@@ -32,8 +32,8 @@ module Proclaim
 		end
 
 		test "new comment notification email" do
-			subscription = FactoryGirl.create(:post_subscription)
-			comment = FactoryGirl.create(:comment)
+			subscription = FactoryBot.create(:post_subscription)
+			comment = FactoryBot.create(:comment)
 
 			mail = SubscriptionMailer.new_comment_notification_email(subscription, comment)
 			assert_equal "New Comment On \"#{comment.post.title}\"", mail.subject
@@ -47,8 +47,8 @@ module Proclaim
 		end
 
 		test "new post notification email" do
-			subscription = FactoryGirl.create(:subscription)
-			post = FactoryGirl.create(:published_post)
+			subscription = FactoryBot.create(:subscription)
+			post = FactoryBot.create(:published_post)
 
 			mail = SubscriptionMailer.new_post_notification_email(subscription, post)
 			assert_equal "New Post: #{post.title}", mail.subject
@@ -62,9 +62,9 @@ module Proclaim
 		end
 
 		test "images in new post notification email should have absolute URLs" do
-			subscription = FactoryGirl.create(:subscription)
+			subscription = FactoryBot.create(:subscription)
 
-			image = FactoryGirl.create(:image)
+			image = FactoryBot.create(:image)
 			image.post.body = @edit_page.medium_inserted_image_html(image)
 			image.post.publish
 			image.post.save

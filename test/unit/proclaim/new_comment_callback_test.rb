@@ -44,7 +44,7 @@ module Proclaim
 		end
 
 		test "ensure callback is called when created" do
-			comment = FactoryGirl.build(:comment)
+			comment = FactoryBot.build(:comment)
 			refute @callback_called
 
 			comment.save
@@ -52,7 +52,7 @@ module Proclaim
 		end
 
 		test "ensure callback is not called when updated" do
-			comment = FactoryGirl.create(:comment)
+			comment = FactoryBot.create(:comment)
 			@callback_called = false
 
 			comment.save

@@ -8,8 +8,8 @@ class ImagePolicyTest < ActiveSupport::TestCase
 	end
 
 	test "image scope" do
-		user = FactoryGirl.create(:user)
-		image = FactoryGirl.create(:image)
+		user = FactoryBot.create(:user)
+		image = FactoryBot.create(:image)
 
 		# Verify that a user can view the image
 		images = Pundit.policy_scope(user, Proclaim::Image)
@@ -21,8 +21,8 @@ class ImagePolicyTest < ActiveSupport::TestCase
 	end
 
 	test "image caching" do
-		user = FactoryGirl.create(:user)
-		image = FactoryGirl.build(:image)
+		user = FactoryBot.create(:user)
+		image = FactoryBot.build(:image)
 
 		# Verify that a user can cache an image
 		policy = Proclaim::ImagePolicy.new(user, image)
@@ -34,8 +34,8 @@ class ImagePolicyTest < ActiveSupport::TestCase
 	end
 
 	test "image creation" do
-		user = FactoryGirl.create(:user)
-		image = FactoryGirl.build(:image)
+		user = FactoryBot.create(:user)
+		image = FactoryBot.build(:image)
 
 		# Verify that a user can create an image
 		policy = Proclaim::ImagePolicy.new(user, image)
@@ -47,9 +47,9 @@ class ImagePolicyTest < ActiveSupport::TestCase
 	end
 
 	test "image discard" do
-		user = FactoryGirl.create(:user)
-		cached_image = FactoryGirl.build(:image)
-		saved_image = FactoryGirl.create(:image)
+		user = FactoryBot.create(:user)
+		cached_image = FactoryBot.build(:image)
+		saved_image = FactoryBot.create(:image)
 
 		# Verify that a user can discard a cached image
 		policy = Proclaim::ImagePolicy.new(user, cached_image)
@@ -69,8 +69,8 @@ class ImagePolicyTest < ActiveSupport::TestCase
 	end
 
 	test "image destroy" do
-		user = FactoryGirl.create(:user)
-		image = FactoryGirl.create(:image)
+		user = FactoryBot.create(:user)
+		image = FactoryBot.create(:image)
 
 		# Verify that a user can destroy an image
 		policy = Proclaim::ImagePolicy.new(user, image)

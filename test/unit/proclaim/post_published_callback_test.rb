@@ -44,7 +44,7 @@ module Proclaim
 		end
 
 		test "ensure callback is called when published" do
-			post = FactoryGirl.build(:post)
+			post = FactoryBot.build(:post)
 			refute @callback_called
 
 			post.publish
@@ -55,7 +55,7 @@ module Proclaim
 		end
 
 		test "ensure callback is not called when created" do
-			post = FactoryGirl.build(:post)
+			post = FactoryBot.build(:post)
 			refute @callback_called
 
 			post.save
@@ -64,7 +64,7 @@ module Proclaim
 		end
 
 		test "ensure callback is not called when updated" do
-			post = FactoryGirl.create(:post)
+			post = FactoryBot.create(:post)
 			@callback_called = false
 
 			post.save

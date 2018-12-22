@@ -35,28 +35,28 @@ Rake::TestTask.new(:test) do |t|
 end
 
 namespace :test do
-  Rails::TestTask.new(:generators) do |t|
+  Rake::TestTask.new(:generators) do |t|
     t.pattern = "test/lib/generators/**/*_test.rb"
   end
 
-  Rails::TestTask.new(:units) do |t|
+  Rake::TestTask.new(:units) do |t|
     t.pattern = 'test/{models,helpers,unit,policies}/**/*_test.rb'
   end
 
-  Rails::TestTask.new(:functionals) do |t|
+  Rake::TestTask.new(:functionals) do |t|
     t.pattern = 'test/{controllers,mailers,functional}/**/*_test.rb'
   end
 
-  Rails::TestTask.new(:integration) do |t|
+  Rake::TestTask.new(:integration) do |t|
     t.pattern = 'test/integration/**/*_test.rb'
   end
 
   namespace :integration do
-    Rails::TestTask.new(:js) do |t|
+    Rake::TestTask.new(:js) do |t|
       t.pattern = 'test/integration/with_javascript/**/*_test.rb'
     end
 
-    Rails::TestTask.new(:no_js) do |t|
+    Rake::TestTask.new(:no_js) do |t|
       t.pattern = 'test/integration/without_javascript/**/*_test.rb'
     end
   end

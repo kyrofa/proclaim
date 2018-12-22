@@ -59,7 +59,7 @@ module Proclaim
 
 		def delete_cache_directory
 			@cache_id = @cache_id_was
-			delete_cache_id
+			cache_storage.delete_dir!(cache_path(nil))
 		end
 
 		def delete_store_directory

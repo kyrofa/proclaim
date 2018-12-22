@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class PostShowTest < ActionDispatch::IntegrationTest
-	self.use_transactional_fixtures = false
+	self.use_transactional_tests = false
 
 	setup do
 		ApplicationController.any_instance.stubs(:current_user).returns(nil)
@@ -21,10 +21,10 @@ class PostShowTest < ActionDispatch::IntegrationTest
 	end
 
 	test "show should include edit/delete buttons if logged in" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		visit proclaim.post_path(post)
 
@@ -35,7 +35,7 @@ class PostShowTest < ActionDispatch::IntegrationTest
 	end
 
 	test "show should not include edit/delete buttons if not logged in" do
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		visit proclaim.post_path(post)
 

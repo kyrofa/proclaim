@@ -16,24 +16,24 @@ require 'test_helper'
 module Proclaim
 	class CommentTest < ActiveSupport::TestCase
 		test "ensure factory is good" do
-			comment = FactoryGirl.build(:comment)
+			comment = FactoryBot.build(:comment)
 
 			assert comment.save, "Factory needs to be updated to save successfully"
 		end
 
 		test "ensure body is required" do
-			comment = FactoryGirl.build(:comment, body: "")
+			comment = FactoryBot.build(:comment, body: "")
 
 			refute comment.save, "Comment should require a body!"
 		end
 
 		test "ensure post is required" do
-			comment = FactoryGirl.build(:comment, post_id: nil)
+			comment = FactoryBot.build(:comment, post_id: nil)
 
 			refute comment.save, "Comment should require a post_id!"
 
 			# Post with 12345 shouldn't exist
-			comment = FactoryGirl.build(:comment, post_id: 12345)
+			comment = FactoryBot.build(:comment, post_id: 12345)
 
 			refute comment.save, "Comment should require a valid post!"
 		end

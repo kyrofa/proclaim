@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 	factory :post, class: Proclaim::Post do
 		sequence(:title) {|n| "post#{n} title"}
 		sequence(:body) {|n| "post#{n} body"}

@@ -9,11 +9,11 @@ class ManageSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should be able to see subscribers index if logged in" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		blog_subscription = FactoryGirl.create(:subscription)
-		post_subscription = FactoryGirl.create(:published_post_subscription)
+		blog_subscription = FactoryBot.create(:subscription)
+		post_subscription = FactoryBot.create(:published_post_subscription)
 
 		visit proclaim.subscriptions_path
 

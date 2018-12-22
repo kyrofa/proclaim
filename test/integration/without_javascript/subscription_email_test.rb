@@ -9,8 +9,8 @@ class SubscriptionEmailTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should email welcome to post subscriber upon subscription" do
-		post = FactoryGirl.create(:published_post)
-		subscription = FactoryGirl.create(:subscription, post: post)
+		post = FactoryBot.create(:published_post)
+		subscription = FactoryBot.create(:subscription, post: post)
 
 		# Make sure subscriber was sent a welcome email
 		assert_equal [subscription.email], ActionMailer::Base.deliveries.last.to
@@ -18,13 +18,13 @@ class SubscriptionEmailTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should email notification to post subscriber when new comment is made" do
-		post = FactoryGirl.create(:published_post)
-		subscription = FactoryGirl.create(:subscription, post: post)
+		post = FactoryBot.create(:published_post)
+		subscription = FactoryBot.create(:subscription, post: post)
 
 		# Clear out emails-- new subscription probably sent a welcome email
 		ActionMailer::Base.deliveries.clear
 
-		comment = FactoryGirl.create(:comment, post: post)
+		comment = FactoryBot.create(:comment, post: post)
 
 		# Make sure subscriber was notified of new comment
 		assert_equal [subscription.email], ActionMailer::Base.deliveries.last.to
@@ -32,9 +32,9 @@ class SubscriptionEmailTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not email post subscriber when old comment is edited" do
-		post = FactoryGirl.create(:published_post)
-		subscription = FactoryGirl.create(:subscription, post: post)
-		comment = FactoryGirl.create(:comment, post: post)
+		post = FactoryBot.create(:published_post)
+		subscription = FactoryBot.create(:subscription, post: post)
+		comment = FactoryBot.create(:comment, post: post)
 
 		# Clear out emails that were just sent
 		ActionMailer::Base.deliveries.clear
@@ -48,12 +48,12 @@ class SubscriptionEmailTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should email notification to blog subscriber when post is published" do
-		subscription = FactoryGirl.create(:subscription)
+		subscription = FactoryBot.create(:subscription)
 
 		# Clear out emails-- new subscription probably sent a welcome email
 		ActionMailer::Base.deliveries.clear
 
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		# Make sure subscriber was notified of new post
 		assert_equal [subscription.email], ActionMailer::Base.deliveries.last.to
@@ -61,8 +61,8 @@ class SubscriptionEmailTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not email notification to blog subscriber when post is updated" do
-		subscription = FactoryGirl.create(:subscription)
-		post = FactoryGirl.create(:published_post)
+		subscription = FactoryBot.create(:subscription)
+		post = FactoryBot.create(:published_post)
 
 		# Clear out all emails
 		ActionMailer::Base.deliveries.clear
@@ -75,12 +75,12 @@ class SubscriptionEmailTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not email notification to blog subscriber if post is not published" do
-		subscription = FactoryGirl.create(:subscription)
+		subscription = FactoryBot.create(:subscription)
 
 		# Clear out emails-- new subscription probably sent a welcome email
 		ActionMailer::Base.deliveries.clear
 
-		post = FactoryGirl.create(:post)
+		post = FactoryBot.create(:post)
 
 		# Make sure no email was sent after update
 		assert_empty ActionMailer::Base.deliveries

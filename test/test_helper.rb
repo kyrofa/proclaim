@@ -1,23 +1,24 @@
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
+require "simplecov"
+SimpleCov.start
 
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require "rails/test_help"
+require "application_system_test_case"
 require 'selenium-webdriver'
-require "factory_girl_rails"
+require "factory_bot_rails"
 require "faker"
 require "mocha/mini_test"
 require 'capybara/rails'
 require 'database_cleaner'
-require 'test_after_commit'
 require 'coffee_script'
 require 'sass'
 
 Rails.backtrace_cleaner.remove_silencers!
-Capybara.default_wait_time = 5 # 5 seconds instead of 2, since we use fades.
+Capybara.default_max_wait_time = 5 # 5 seconds instead of 2, since we use fades.
+#Capybara.server = :webrick
 
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
@@ -26,6 +27,10 @@ class ActionDispatch::IntegrationTest
 	# Make the Capybara DSL available in all integration tests
 	include Capybara::DSL
 end
+
+class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+	driven_by :selenium, using: :headless_firefox
+  end
 
 if ENV['TRAVIS']
 	capabilities = Selenium::WebDriver::Remote::Capabilities.send ENV["BROWSER"]
@@ -49,7 +54,7 @@ def sign_in(user)
 	ApplicationController.any_instance.stubs(:current_user).returns(user)
 	ApplicationController.any_instance.stubs(:authenticate_user).returns(true)
 
-	if @controller
+	if defined? @controller and @controller
 		@controller.stubs(:current_user).returns(user)
 		@controller.stubs(:authenticate_user).returns(true)
 	end

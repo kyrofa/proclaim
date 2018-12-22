@@ -10,11 +10,11 @@ module Proclaim
 		end
 
 		test "should get index if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			subscription1 = FactoryGirl.create(:subscription)
-			subscription2 = FactoryGirl.create(:subscription)
+			subscription1 = FactoryBot.create(:subscription)
+			subscription2 = FactoryBot.create(:subscription)
 
 			get :index
 			assert_response :success
@@ -30,10 +30,10 @@ module Proclaim
 		end
 
 		test "should get show if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			subscription = FactoryGirl.create(:subscription)
+			subscription = FactoryBot.create(:subscription)
 
 			get :show, token: subscription.token
 			assert_response :success
@@ -41,7 +41,7 @@ module Proclaim
 		end
 
 		test "should get show if not logged in" do
-			subscription = FactoryGirl.create(:subscription)
+			subscription = FactoryBot.create(:subscription)
 
 			get :show, token: subscription.token
 			assert_response :success
@@ -55,7 +55,7 @@ module Proclaim
 		end
 
 		test "should get new if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
 			get :new
@@ -70,13 +70,13 @@ module Proclaim
 		end
 
 		test "should create subscription if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newSubscription = FactoryGirl.build(:subscription)
+			newSubscription = FactoryBot.build(:subscription)
 
 			assert_difference('Subscription.count') do
-				post :create,
+				post :create, params: {
 					subscription: {
 						name: newSubscription.name,
 						email: newSubscription.email
@@ -85,16 +85,17 @@ module Proclaim
 						solution: 5,
 						answer: 5
 					}
+				}
 			end
 
 			assert_redirected_to subscription_path(assigns(:subscription).token)
 		end
 
 		test "should create subscription if not logged in" do
-			newSubscription = FactoryGirl.build(:subscription)
+			newSubscription = FactoryBot.build(:subscription)
 
 			assert_difference('Subscription.count') do
-				post :create,
+				post :create, params: {
 					subscription: {
 						name: newSubscription.name,
 						email: newSubscription.email
@@ -103,16 +104,17 @@ module Proclaim
 						solution: 3,
 						answer: 3
 					}
+				}
 			end
 
 			assert_redirected_to subscription_path(assigns(:subscription).token)
 		end
 
 		test "should not create subscription if spammy" do
-			newSubscription = FactoryGirl.build(:subscription)
+			newSubscription = FactoryBot.build(:subscription)
 
 			assert_no_difference('Subscription.count') do
-				post :create,
+				post :create, params: {
 					subscription: {
 						name: newSubscription.name,
 						email: newSubscription.email
@@ -121,14 +123,15 @@ module Proclaim
 						solution: 5,
 						answer: 3
 					}
+				}
 			end
 		end
 
 		test "should delete subscription if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			subscription = FactoryGirl.create(:subscription)
+			subscription = FactoryBot.create(:subscription)
 
 			assert_difference('Subscription.count', -1) do
 				delete :destroy, token: subscription.token
@@ -140,7 +143,7 @@ module Proclaim
 		end
 
 		test "should delete subscription if not logged in" do
-			subscription = FactoryGirl.create(:subscription)
+			subscription = FactoryBot.create(:subscription)
 
 			assert_difference('Subscription.count', -1) do
 				delete :destroy, token: subscription.token

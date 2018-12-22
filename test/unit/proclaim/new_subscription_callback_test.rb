@@ -44,7 +44,7 @@ module Proclaim
 		end
 
 		test "ensure callback is called when created" do
-			subscription = FactoryGirl.build(:subscription)
+			subscription = FactoryBot.build(:subscription)
 			refute @callback_called
 
 			subscription.save
@@ -52,7 +52,7 @@ module Proclaim
 		end
 
 		test "ensure callback is not called when updated" do
-			subscription = FactoryGirl.create(:subscription)
+			subscription = FactoryBot.create(:subscription)
 			@callback_called = false
 
 			subscription.save

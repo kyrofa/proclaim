@@ -7,7 +7,7 @@ class UnsubscribeTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should be able to unsubscribe from blog" do
-		subscription = FactoryGirl.create(:subscription)
+		subscription = FactoryBot.create(:subscription)
 
 		visit proclaim.subscription_path(subscription.token)
 
@@ -19,7 +19,7 @@ class UnsubscribeTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should be able to unsubscribe from post" do
-		subscription = FactoryGirl.create(:published_post_subscription)
+		subscription = FactoryBot.create(:published_post_subscription)
 
 		visit proclaim.subscription_path(subscription.token)
 

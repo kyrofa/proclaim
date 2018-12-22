@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class CommentTest < ActionDispatch::IntegrationTest
-	self.use_transactional_fixtures = false
+	self.use_transactional_tests = false
 
 	setup do
 		ApplicationController.any_instance.stubs(:current_user).returns(nil)
@@ -21,7 +21,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "leave root comment" do
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		visit proclaim.post_path(post)
 
@@ -40,7 +40,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "leave two replies" do
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 		post = comment.post
 
 		visit proclaim.post_path(post)
@@ -75,7 +75,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "root comment should fail if spammy" do
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		visit proclaim.post_path(post)
 
@@ -92,7 +92,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "reply should fail if spammy" do
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 		post = comment.post
 
 		visit proclaim.post_path(post)
@@ -110,8 +110,8 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "reply forms should be exclusive" do
-		comment1 = FactoryGirl.create(:published_comment)
-		comment2 = FactoryGirl.create(:published_comment, post: comment1.post)
+		comment1 = FactoryBot.create(:published_comment)
+		comment2 = FactoryBot.create(:published_comment, post: comment1.post)
 
 		visit proclaim.post_path(comment1.post)
 
@@ -128,7 +128,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not have option to edit if not logged in" do
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 
 		visit proclaim.post_path(comment.post)
 
@@ -137,10 +137,10 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "edit root comment" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 
 		visit proclaim.post_path(comment.post)
 
@@ -164,11 +164,11 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "edit parent comment" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		parent = FactoryGirl.create(:published_comment)
-		child = FactoryGirl.create(:published_comment,
+		parent = FactoryBot.create(:published_comment)
+		child = FactoryBot.create(:published_comment,
 		                           post: parent.post,
 		                           parent: parent)
 
@@ -204,11 +204,11 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "edit child comment" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		parent = FactoryGirl.create(:published_comment)
-		child = FactoryGirl.create(:published_comment,
+		parent = FactoryBot.create(:published_comment)
+		child = FactoryBot.create(:published_comment,
 		                           post: parent.post,
 		                           parent: parent)
 
@@ -241,10 +241,10 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "edit should show error without author" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 
 		visit proclaim.post_path(comment.post)
 
@@ -260,10 +260,10 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "edit should show error without body" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 
 		visit proclaim.post_path(comment.post)
 
@@ -279,7 +279,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not have option to delete if not logged in" do
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 
 		visit proclaim.post_path(comment.post)
 
@@ -288,10 +288,10 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "delete root comment" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 
 		visit proclaim.post_path(comment.post)
 
@@ -311,11 +311,11 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "delete parent comment" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		parent = FactoryGirl.create(:published_comment)
-		child = FactoryGirl.create(:published_comment,
+		parent = FactoryBot.create(:published_comment)
+		child = FactoryBot.create(:published_comment,
 		                           post: parent.post,
 		                           parent: parent)
 
@@ -341,11 +341,11 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "delete child comment" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		parent = FactoryGirl.create(:published_comment)
-		child = FactoryGirl.create(:published_comment,
+		parent = FactoryBot.create(:published_comment)
+		child = FactoryBot.create(:published_comment,
 		                           post: parent.post,
 		                           parent: parent)
 
@@ -369,7 +369,7 @@ class CommentTest < ActionDispatch::IntegrationTest
 	end
 
 	test "cancel button should remove errors" do
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		visit proclaim.post_path(post)
 

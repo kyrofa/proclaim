@@ -60,7 +60,11 @@ module Proclaim
 
 		attr_writer :excerpt_length
 		def excerpt_length
-			@excerpt_length || Proclaim.excerpt_length
+			if defined? @excerpt_length and @excerpt_length
+				return @excerpt_length
+			else
+				return Proclaim.excerpt_length
+			end
 		end
 
 		def body_plaintext

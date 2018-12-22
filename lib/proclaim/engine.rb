@@ -11,7 +11,7 @@ require 'carrierwave'
 require 'aasm'
 require 'rails-timeago'
 require 'pundit'
-require 'premailer'
+#require 'premailer'
 
 module Proclaim
 	class Engine < ::Rails::Engine
@@ -49,7 +49,7 @@ module Proclaim
 		end
 
 		config.generators do |g|
-			g.fixture_replacement :factory_girl, :dir => 'test/factories'
+			g.fixture_replacement :factory_bot, :dir => 'test/factories'
 		end
 
 		initializer :ensure_secret_key_presence do |app|

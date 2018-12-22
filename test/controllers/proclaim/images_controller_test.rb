@@ -10,16 +10,16 @@ module Proclaim
 		end
 
 		teardown do
-			image = FactoryGirl.build(:image, image: nil)
+			image = FactoryBot.build(:image, image: nil)
 			FileUtils.rm_rf(File.join(Rails.public_path, image.image.cache_dir))
 			FileUtils.rm_rf(File.join(Rails.public_path, image.image.store_dir))
 		end
 
 		test "should create image if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			image = FactoryGirl.build(:image, image: nil)
+			image = FactoryBot.build(:image, image: nil)
 
 			assert_difference('Image.count') do
 				post :create, format: :json, image: {
@@ -33,7 +33,7 @@ module Proclaim
 		end
 
 		test "should not create image if not logged in" do
-			image = FactoryGirl.build(:image, image: nil)
+			image = FactoryBot.build(:image, image: nil)
 
 			assert_no_difference('Image.count') do
 				post :create, format: :json, image: {
@@ -46,10 +46,10 @@ module Proclaim
 		end
 
 		test "should not create image without a post" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			image = FactoryGirl.build(:image, post: nil, image: nil)
+			image = FactoryBot.build(:image, post: nil, image: nil)
 
 			assert_no_difference('Image.count') do
 				post :create, format: :json, image: {
@@ -61,10 +61,10 @@ module Proclaim
 		end
 
 		test "should not create image without actual image" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			image = FactoryGirl.build(:image, image: nil)
+			image = FactoryBot.build(:image, image: nil)
 
 			assert_no_difference('Image.count') do
 				post :create, format: :json, image: {
@@ -76,10 +76,10 @@ module Proclaim
 		end
 
 		test "should cache image if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			image = FactoryGirl.build(:image, image: nil)
+			image = FactoryBot.build(:image, image: nil)
 
 			# This is only caching! No new image should be inserted into the database
 			assert_no_difference('Image.count', "Caching shouldn't create new images!") do
@@ -99,10 +99,10 @@ module Proclaim
 		end
 
 		test "should discard image if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			image = FactoryGirl.build(:image)
+			image = FactoryBot.build(:image)
 
 			# This is only discarding from the cache! No images should be removed
 			# from the database.
@@ -114,7 +114,7 @@ module Proclaim
 		end
 
 		test "should not discard image if not logged in" do
-			image = FactoryGirl.build(:image)
+			image = FactoryBot.build(:image)
 
 			assert_no_difference('Image.count') do
 				post :discard, format: :json, file: image.image.url
@@ -124,10 +124,10 @@ module Proclaim
 		end
 
 		test "discard should not destroy image if logged in but return ID" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			image = FactoryGirl.create(:image)
+			image = FactoryBot.create(:image)
 
 			assert_no_difference('Image.count', -1) do
 				post :discard, format: :json, file: image.image.url
@@ -141,10 +141,10 @@ module Proclaim
 		end
 
 		test "should destroy image if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			image = FactoryGirl.create(:image)
+			image = FactoryBot.create(:image)
 
 			assert_difference('Image.count', -1) do
 				delete :destroy, format: :json, id: image.id
@@ -154,7 +154,7 @@ module Proclaim
 		end
 
 		test "should not destroy image if not logged in" do
-			image = FactoryGirl.create(:image)
+			image = FactoryBot.create(:image)
 
 			assert_no_difference('Image.count') do
 				delete :destroy, format: :json, id: image.id

@@ -1,6 +1,6 @@
-require 'test_helper'
+require "test_helper"
 
-class PostTest < ActionDispatch::IntegrationTest
+class PostsTest < ApplicationSystemTestCase
 	setup do
 		ApplicationController.any_instance.stubs(:current_user).returns(nil)
 		ApplicationController.any_instance.stubs(:authenticate_user).returns(false)

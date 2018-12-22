@@ -2,9 +2,9 @@ require 'test_helper'
 
 class PostPolicyTest < ActiveSupport::TestCase
 	test "post scope" do
-		user = FactoryGirl.create(:user)
-		post1 = FactoryGirl.create(:post)
-		post2 = FactoryGirl.create(:published_post)
+		user = FactoryBot.create(:user)
+		post1 = FactoryBot.create(:post)
+		post2 = FactoryBot.create(:published_post)
 
 		# Verify that a user can see all posts
 		posts = Pundit.policy_scope(user, Proclaim::Post)
@@ -18,7 +18,7 @@ class PostPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "post index" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 
 		# Verify that a user can visit the index
 		policy = Proclaim::PostPolicy.new(user, Proclaim::Post)
@@ -30,8 +30,8 @@ class PostPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "post create" do
-		user = FactoryGirl.create(:user)
-		post = FactoryGirl.create(:post)
+		user = FactoryBot.create(:user)
+		post = FactoryBot.create(:post)
 
 		# Verify that a user can create posts
 		policy = Proclaim::PostPolicy.new(user, post)
@@ -43,9 +43,9 @@ class PostPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "post show" do
-		user = FactoryGirl.create(:user)
-		post1 = FactoryGirl.create(:post)
-		post2 = FactoryGirl.create(:published_post)
+		user = FactoryBot.create(:user)
+		post1 = FactoryBot.create(:post)
+		post2 = FactoryBot.create(:published_post)
 
 		# Verify that a user can see both posts
 		policy = Proclaim::PostPolicy.new(user, post1)
@@ -61,9 +61,9 @@ class PostPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "post update" do
-		user = FactoryGirl.create(:user)
-		post1 = FactoryGirl.create(:post)
-		post2 = FactoryGirl.create(:published_post)
+		user = FactoryBot.create(:user)
+		post1 = FactoryBot.create(:post)
+		post2 = FactoryBot.create(:published_post)
 
 		# Verify that a user can update any post
 		policy = Proclaim::PostPolicy.new(user, post1)
@@ -79,9 +79,9 @@ class PostPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "post destroy" do
-		user = FactoryGirl.create(:user)
-		post1 = FactoryGirl.create(:post)
-		post2 = FactoryGirl.create(:published_post)
+		user = FactoryBot.create(:user)
+		post1 = FactoryBot.create(:post)
+		post2 = FactoryBot.create(:published_post)
 
 		# Verify that a user can destroy any post
 		policy = Proclaim::PostPolicy.new(user, post1)

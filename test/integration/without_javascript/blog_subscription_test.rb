@@ -9,7 +9,7 @@ class BlogSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should be able to create new blog subscription while logged in" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
 		visit proclaim.new_subscription_path
@@ -52,7 +52,7 @@ class BlogSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not be able to create new blog subscription if spammy" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
 		visit proclaim.new_subscription_path

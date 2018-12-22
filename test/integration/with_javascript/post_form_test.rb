@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PostFormTest < ActionDispatch::IntegrationTest
 	include WaitForAjax
-	self.use_transactional_fixtures = false
+	self.use_transactional_tests = false
 
 	setup do
 		ApplicationController.any_instance.stubs(:current_user).returns(nil)
@@ -26,7 +26,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should create post" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
 		visit proclaim.new_post_path
@@ -51,11 +51,11 @@ class PostFormTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should delete cached image" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		image = FactoryGirl.build(:image, post: nil)
-		post = FactoryGirl.create(:post, body: @edit_page.medium_inserted_image_html(image))
+		image = FactoryBot.build(:image, post: nil)
+		post = FactoryBot.create(:post, body: @edit_page.medium_inserted_image_html(image))
 
 		cache_file_path = File.join(Rails.public_path, image.image.cache_dir, image.image.cache_name)
 		cache_path = File.dirname(cache_file_path)
@@ -76,10 +76,10 @@ class PostFormTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should delete saved image" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		image = FactoryGirl.create(:image)
+		image = FactoryBot.create(:image)
 		image.post.body = "<p>test</p>" + @edit_page.medium_inserted_image_html(image)
 		image.post.save
 
@@ -109,10 +109,10 @@ class PostFormTest < ActionDispatch::IntegrationTest
 	end
 
 	test "delete saved image but not save should still show image" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		image = FactoryGirl.create(:image)
+		image = FactoryBot.create(:image)
 		image.post.body = @edit_page.medium_inserted_image_html(image)
 		image.post.save
 
@@ -140,7 +140,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 	end
 
 	test "form should not replace non-alphanumeric text in title with HTML entities" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
 		visit proclaim.new_post_path
@@ -161,7 +161,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 	end
 
 	test "show should not replace non-alphanumeric text in title with HTML entities" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
 		visit proclaim.new_post_path
@@ -182,7 +182,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 	end
 
 	test "new should show error without title" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
 		visit proclaim.new_post_path
@@ -204,7 +204,7 @@ class PostFormTest < ActionDispatch::IntegrationTest
 	end
 
 	test "new should show error without body" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
 		visit proclaim.new_post_path

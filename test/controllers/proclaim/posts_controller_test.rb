@@ -16,11 +16,11 @@ module Proclaim
 		end
 
 		test "should get index if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			post1 = FactoryGirl.create(:post)
-			post2 = FactoryGirl.create(:published_post)
+			post1 = FactoryBot.create(:post)
+			post2 = FactoryBot.create(:published_post)
 
 			get :index
 			assert_response :success
@@ -30,8 +30,8 @@ module Proclaim
 		end
 
 		test "should get index even if not logged in" do
-			post1 = FactoryGirl.create(:post)
-			post2 = FactoryGirl.create(:published_post)
+			post1 = FactoryBot.create(:post)
+			post2 = FactoryBot.create(:published_post)
 
 			get :index
 			assert_response :success
@@ -41,8 +41,8 @@ module Proclaim
 		end
 
 		test "posts should be ordered by publication date" do
-			post1 = FactoryGirl.create(:published_post)
-			post2 = FactoryGirl.create(:published_post)
+			post1 = FactoryBot.create(:published_post)
+			post2 = FactoryBot.create(:published_post)
 
 			get :index
 			assert_response :success
@@ -53,12 +53,12 @@ module Proclaim
 		end
 
 		test "drafts should be ordered by updated date" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			post1 = FactoryGirl.create(:post)
-			post2 = FactoryGirl.create(:post)
-			post3 = FactoryGirl.create(:post)
+			post1 = FactoryBot.create(:post)
+			post2 = FactoryBot.create(:post)
+			post3 = FactoryBot.create(:post)
 
 			# Update post1 so its updated_at is newest
 			post2.body = "Updated Body"
@@ -74,7 +74,7 @@ module Proclaim
 		end
 
 		test "should get new if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
 			get :new
@@ -88,10 +88,10 @@ module Proclaim
 		end
 
 		test "should create post if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.build(:post)
+			newPost = FactoryBot.build(:post)
 
 			assert_difference('Post.count') do
 				post :create, post: {
@@ -107,10 +107,10 @@ module Proclaim
 		end
 
 		test "should create published post if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.build(:post)
+			newPost = FactoryBot.build(:post)
 
 			assert_difference('Post.count') do
 				post :create, post: {
@@ -126,10 +126,10 @@ module Proclaim
 		end
 
 		test "should not create post without title" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.build(:post)
+			newPost = FactoryBot.build(:post)
 
 			assert_no_difference('Post.count') do
 				post :create, post: {
@@ -145,10 +145,10 @@ module Proclaim
 		end
 
 		test "should not create post without body" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.build(:post)
+			newPost = FactoryBot.build(:post)
 
 			assert_no_difference('Post.count') do
 				post :create, post: {
@@ -164,11 +164,11 @@ module Proclaim
 		end
 
 		test "should upload images when creating post" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.build(:post)
-			image = FactoryGirl.build(:image, post: newPost)
+			newPost = FactoryBot.build(:post)
+			image = FactoryBot.build(:image, post: newPost)
 
 			newPost.body = "<img src=\"#{image.image.url}\"></img>"
 
@@ -197,7 +197,7 @@ module Proclaim
 		end
 
 		test "should not create post if not logged in" do
-			newPost = FactoryGirl.build(:post)
+			newPost = FactoryBot.build(:post)
 
 			assert_no_difference('Post.count') do
 				post :create, post: {
@@ -212,11 +212,11 @@ module Proclaim
 		end
 
 		test "should show draft post if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
 			# Should show draft post
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			get :show, id: newPost
 			assert_response :success
@@ -224,11 +224,11 @@ module Proclaim
 		end
 
 		test "should show published post if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
 			# Should show published post
-			newPost = FactoryGirl.create(:published_post)
+			newPost = FactoryBot.create(:published_post)
 
 			get :show, id: newPost
 			assert_response :success
@@ -237,7 +237,7 @@ module Proclaim
 
 		test "should not show draft post if not logged in" do
 			# Should not show draft post
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			# Controller should hide the "permission denied" in a "not-found"
 			assert_raises ActiveRecord::RecordNotFound do
@@ -247,7 +247,7 @@ module Proclaim
 
 		test "should show published post if not logged in" do
 			# Should show published post
-			newPost = FactoryGirl.create(:published_post)
+			newPost = FactoryBot.create(:published_post)
 
 			get :show, id: newPost
 			assert_response :success
@@ -255,7 +255,7 @@ module Proclaim
 		end
 
 		test "should show post via id" do
-			post = FactoryGirl.create(:published_post, title: "New Post")
+			post = FactoryBot.create(:published_post, title: "New Post")
 
 			# Test with ID
 			get :show, id: post.id
@@ -265,7 +265,7 @@ module Proclaim
 		end
 
 		test "should show post via slug" do
-			post = FactoryGirl.create(:published_post, title: "New Post")
+			post = FactoryBot.create(:published_post, title: "New Post")
 
 			# Test with slug
 			get :show, id: post.friendly_id
@@ -274,10 +274,10 @@ module Proclaim
 		end
 
 		test "should not show draft post via old slugs" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			post = FactoryGirl.create(:post, title: "New Post")
+			post = FactoryBot.create(:post, title: "New Post")
 			old_slug = post.friendly_id
 
 			# Now change slug
@@ -292,7 +292,7 @@ module Proclaim
 		end
 
 		test "should show published post via old slugs" do
-			post = FactoryGirl.create(:published_post, title: "New Post")
+			post = FactoryBot.create(:published_post, title: "New Post")
 			old_slug = post.friendly_id
 
 			# Now change slug
@@ -306,10 +306,10 @@ module Proclaim
 		end
 
 		test "should get edit if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			get :edit, id: newPost
 			assert_response :success
@@ -317,7 +317,7 @@ module Proclaim
 		end
 
 		test "should not get edit if not logged in" do
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			get :edit, id: newPost
 			assert_response :redirect
@@ -325,10 +325,10 @@ module Proclaim
 		end
 
 		test "should update post if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			patch :update, id: newPost, post: {
 				author_id: newPost.author_id,
@@ -342,10 +342,10 @@ module Proclaim
 		end
 
 		test "should publish post if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			patch :update, id: newPost, post: {
 				author_id: newPost.author_id,
@@ -359,11 +359,11 @@ module Proclaim
 		end
 
 		test "should upload images when updating a post" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.create(:post)
-			image = FactoryGirl.build(:image, post: newPost)
+			newPost = FactoryBot.create(:post)
+			image = FactoryBot.build(:image, post: newPost)
 
 			newPost.body = "<img src=\"#{image.image.url}\">"
 
@@ -393,7 +393,7 @@ module Proclaim
 		end
 
 		test "should not update post if not logged in" do
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			patch :update, id: newPost, post: {
 				author_id: newPost.author_id,
@@ -406,10 +406,10 @@ module Proclaim
 		end
 
 		test "should not update post without title" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			patch :update, id: newPost, post: {
 				author_id: newPost.author_id,
@@ -422,10 +422,10 @@ module Proclaim
 		end
 
 		test "should not update post without body" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			patch :update, id: newPost, post: {
 				author_id: newPost.author_id,
@@ -438,10 +438,10 @@ module Proclaim
 		end
 
 		test "should destroy post if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			assert_difference('Post.count', -1) do
 				delete :destroy, id: newPost
@@ -452,7 +452,7 @@ module Proclaim
 		end
 
 		test "should not destroy post if not logged in" do
-			newPost = FactoryGirl.create(:post)
+			newPost = FactoryBot.create(:post)
 
 			assert_no_difference('Post.count') do
 				delete :destroy, id: newPost

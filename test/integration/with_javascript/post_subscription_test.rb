@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	include WaitForAjax
-	self.use_transactional_fixtures = false
+	self.use_transactional_tests = false
 
 	setup do
 		ApplicationController.any_instance.stubs(:current_user).returns(nil)
@@ -24,10 +24,10 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should be able to create new root comment with subscription while logged in" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		visit proclaim.post_path(post)
 
@@ -61,7 +61,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should be able to create new root comment with subscription while not logged in" do
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		visit proclaim.post_path(post)
 
@@ -88,10 +88,10 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should be able to create new reply with subscription while logged in" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 		sign_in user
 
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 
 		visit proclaim.post_path(comment.post)
 
@@ -118,7 +118,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should be able to create new reply with subscription while not logged in" do
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 
 		visit proclaim.post_path(comment.post)
 
@@ -146,7 +146,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not send new comment notification email containing own comment" do
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		visit proclaim.post_path(post)
 
@@ -170,7 +170,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not create new root comment with subscription if spammy" do
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 
 		visit proclaim.post_path(comment.post)
 
@@ -197,7 +197,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "should not create new reply with subscription if spammy" do
-		comment = FactoryGirl.create(:published_comment)
+		comment = FactoryBot.create(:published_comment)
 
 		visit proclaim.post_path(comment.post)
 
@@ -225,7 +225,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "catch lack of email address" do
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 		visit proclaim.post_path(post)
 
 		# Create a new comment and say "notify me," but don't provide email
@@ -251,7 +251,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "catch bad email address" do
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		visit proclaim.post_path(post)
 
@@ -279,7 +279,7 @@ class PostSubscriptionTest < ActionDispatch::IntegrationTest
 	end
 
 	test "cancel button should remove email field" do
-		post = FactoryGirl.create(:published_post)
+		post = FactoryBot.create(:published_post)
 
 		visit proclaim.post_path(post)
 

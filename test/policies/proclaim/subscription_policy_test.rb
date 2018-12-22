@@ -2,9 +2,9 @@ require 'test_helper'
 
 class SubscriptionPolicyTest < ActiveSupport::TestCase
 	test "subscription scope" do
-		user = FactoryGirl.create(:user)
-		subscription1 = FactoryGirl.create(:subscription)
-		subscription2 = FactoryGirl.create(:subscription)
+		user = FactoryBot.create(:user)
+		subscription1 = FactoryBot.create(:subscription)
+		subscription2 = FactoryBot.create(:subscription)
 
 		# Verify that a user can view both subscriptions
 		subscriptions = Pundit.policy_scope(user, Proclaim::Subscription)
@@ -17,7 +17,7 @@ class SubscriptionPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "subscription index" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 
 		# Verify that a user can visit the index
 		policy = Proclaim::SubscriptionPolicy.new(user, Proclaim::Subscription)
@@ -29,8 +29,8 @@ class SubscriptionPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "subscription show" do
-		user = FactoryGirl.create(:user)
-		subscription = FactoryGirl.create(:subscription)
+		user = FactoryBot.create(:user)
+		subscription = FactoryBot.create(:subscription)
 
 		# Verify that a user can view a subscription
 		policy = Proclaim::SubscriptionPolicy.new(user, subscription)
@@ -42,42 +42,42 @@ class SubscriptionPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "subscription creation" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 
 		# Verify that a user can create a subscription to the blog
-		subscription = FactoryGirl.build(:subscription)
+		subscription = FactoryBot.build(:subscription)
 		policy = Proclaim::SubscriptionPolicy.new(user, subscription)
 		assert policy.create?, "A user should be able to create subscriptions to the blog"
 
 		# Verify that a user can create a subscription to an unpublished post
-		subscription = FactoryGirl.build(:post_subscription)
+		subscription = FactoryBot.build(:post_subscription)
 		policy = Proclaim::SubscriptionPolicy.new(user, subscription)
 		assert policy.create?, "A user should be able to create subscriptions to unpublished posts"
 
 		# Verify that a user can create a subscription to a published post
-		subscription = FactoryGirl.build(:published_post_subscription)
+		subscription = FactoryBot.build(:published_post_subscription)
 		policy = Proclaim::SubscriptionPolicy.new(user, subscription)
 		assert policy.create?, "A user should be able to create subscriptions to published posts"
 
 		# Verify that a guest can create a subscription to the blog
-		subscription = FactoryGirl.build(:subscription)
+		subscription = FactoryBot.build(:subscription)
 		policy = Proclaim::SubscriptionPolicy.new(nil, subscription)
 		assert policy.create?, "A guest should be able to create subscriptions to the blog"
 
 		# Verify that a guest cannot create a subscription to an unpublished post
-		subscription = FactoryGirl.build(:post_subscription)
+		subscription = FactoryBot.build(:post_subscription)
 		policy = Proclaim::SubscriptionPolicy.new(nil, subscription)
 		refute policy.create?, "A guest should not be able to create subscriptions to unpublished posts"
 
 		# Verify that a guest can create a subscription to a published post
-		subscription = FactoryGirl.build(:published_post_subscription)
+		subscription = FactoryBot.build(:published_post_subscription)
 		policy = Proclaim::SubscriptionPolicy.new(nil, subscription)
 		assert policy.create?, "A guest should be able to create subscriptions to published posts"
 	end
 
 	test "subscription update" do
-		user = FactoryGirl.create(:user)
-		subscription = FactoryGirl.create(:subscription)
+		user = FactoryBot.create(:user)
+		subscription = FactoryBot.create(:subscription)
 
 		# Verify that a even a user can't update a subscription
 		policy = Proclaim::SubscriptionPolicy.new(user, subscription)
@@ -89,8 +89,8 @@ class SubscriptionPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "subscription destroy" do
-		user = FactoryGirl.create(:user)
-		subscription = FactoryGirl.create(:subscription)
+		user = FactoryBot.create(:user)
+		subscription = FactoryBot.create(:subscription)
 
 		# Verify that a user can destroy a subscription
 		policy = Proclaim::SubscriptionPolicy.new(user, subscription)

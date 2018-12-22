@@ -10,32 +10,32 @@ module Proclaim
 		end
 
 		test "should create root comment if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
 			# Users should be able to make comments on unpublished posts
-			newComment = FactoryGirl.build(:comment)
+			newComment = FactoryBot.build(:comment)
 			assert_create_comment newComment
 
 			# Users should also be able to make comments on published posts
-			newComment = FactoryGirl.build(:published_comment)
+			newComment = FactoryBot.build(:published_comment)
 			assert_create_comment newComment
 		end
 
 		test "should create reply if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
 			# Users should be able to make replies to comments on unpublished posts
-			parent = FactoryGirl.create(:comment)
-			reply = FactoryGirl.build(:comment,
+			parent = FactoryBot.create(:comment)
+			reply = FactoryBot.build(:comment,
 			                          post: parent.post,
 			                          parent: parent)
 			assert_create_comment reply, 1, 1, parent
 
 			# Users should be able to make replies to comments on published posts
-			parent = FactoryGirl.create(:published_comment)
-			reply = FactoryGirl.build(:published_comment,
+			parent = FactoryBot.create(:published_comment)
+			reply = FactoryBot.build(:published_comment,
 			                          post: parent.post,
 			                          parent: parent)
 			assert_create_comment reply, 1, 1, parent
@@ -43,61 +43,61 @@ module Proclaim
 
 		test "should create root comment if not logged in" do
 			# Guests should not be able to make comments on unpublished comments
-			newComment = FactoryGirl.build(:comment)
+			newComment = FactoryBot.build(:comment)
 			refute_create_comment newComment
 
 			# Guests should be able to make comments on published comments
-			newComment = FactoryGirl.build(:published_comment)
+			newComment = FactoryBot.build(:published_comment)
 			assert_create_comment newComment
 		end
 
 		test "should create reply if not logged in" do
 			# Guests should not be able to make replies to comments on unpublished posts
-			parent = FactoryGirl.create(:comment)
-			reply = FactoryGirl.build(:comment,
+			parent = FactoryBot.create(:comment)
+			reply = FactoryBot.build(:comment,
 			                          post: parent.post,
 			                          parent: parent)
 			refute_create_comment reply, 1, 1, parent
 
 			# Guests should be able to make replies to comments on published posts
-			parent = FactoryGirl.create(:published_comment)
-			reply = FactoryGirl.build(:published_comment,
+			parent = FactoryBot.create(:published_comment)
+			reply = FactoryBot.build(:published_comment,
 			                          post: parent.post,
 			                          parent: parent)
 			assert_create_comment reply, 1, 1, parent
 		end
 
 		test "should not create root comment if spammy" do
-			newComment = FactoryGirl.build(:published_comment)
+			newComment = FactoryBot.build(:published_comment)
 			refute_create_comment newComment, 1, 2
 		end
 
 		test "should not create reply if spammy" do
-			parent = FactoryGirl.create(:published_comment)
-			reply = FactoryGirl.build(:published_comment,
+			parent = FactoryBot.create(:published_comment)
+			reply = FactoryBot.build(:published_comment,
 			                          post: parent.post,
 			                          parent: parent)
 			refute_create_comment reply, 3, 4, parent
 		end
 
 		test "should update root comment if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newComment = FactoryGirl.create(:comment)
+			newComment = FactoryBot.create(:comment)
 			assert_update_comment newComment
 		end
 
 		test "should not update root comment if not logged in" do
-			newComment = FactoryGirl.create(:comment)
+			newComment = FactoryBot.create(:comment)
 			refute_update_comment newComment
 		end
 
 		test "should destroy root comment if logged in" do
-			user = FactoryGirl.create(:user)
+			user = FactoryBot.create(:user)
 			sign_in user
 
-			newComment = FactoryGirl.create(:comment)
+			newComment = FactoryBot.create(:comment)
 
 			assert_difference('Comment.count', -1) do
 				delete :destroy, format: :json, id: newComment
@@ -105,7 +105,7 @@ module Proclaim
 		end
 
 		test "should not destroy root comment if not logged in" do
-			newComment = FactoryGirl.create(:comment)
+			newComment = FactoryBot.create(:comment)
 
 			assert_no_difference('Comment.count') do
 				delete :destroy, format: :json, id: newComment
@@ -120,11 +120,11 @@ module Proclaim
 		                          antispam_answer = 1, parent = nil,
 		                          subscription = nil)
 			subscription_params = nil
-		   if subscription
-		   	subscription_params = {
-		   		subscribe: true,
-		   		email: subscription.email
-		   	}
+			if subscription
+				subscription_params = {
+					subscribe: true,
+					email: subscription.email
+				}
 			end
 
 			antispam_params = nil
@@ -168,11 +168,11 @@ module Proclaim
 		                          antispam_answer = 1, parent = nil,
 		                          subscription = nil)
 			subscription_params = nil
-		   if subscription
-		   	subscription_params = {
-		   		subscribe: true,
-		   		email: subscription.email
-		   	}
+			if subscription
+				subscription_params = {
+					subscribe: true,
+					email: subscription.email
+				}
 			end
 
 			antispam_params = nil
@@ -204,10 +204,13 @@ module Proclaim
 		end
 
 		def assert_update_comment(comment)
-			patch :update, format: :json, id: comment, comment: {
-				author: comment.author,
-				body: comment.body,
-				post_id: comment.post_id
+			patch :update, format: :json, params: {
+				id: comment,
+				comment: {
+					author: comment.author,
+					body: comment.body,
+					post_id: comment.post_id
+				}
 			}
 
 			json = JSON.parse(@response.body)
@@ -216,10 +219,13 @@ module Proclaim
 		end
 
 		def refute_update_comment(comment)
-			patch :update, format: :json, id: comment, comment: {
-				author: comment.author,
-				body: comment.body,
-				post_id: comment.post_id
+			patch :update, format: :json, params: {
+				id: comment,
+				comment: {
+					author: comment.author,
+					body: comment.body,
+					post_id: comment.post_id
+				}
 			}
 
 			assert_response :unauthorized
