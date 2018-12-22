@@ -1,4 +1,4 @@
-class CreateProclaimComments < ActiveRecord::Migration
+class CreateProclaimComments < ActiveRecord::Migration[5.2]
 	def change
 		create_table :proclaim_comments do |t|
 			t.belongs_to :post, index: true

@@ -1,7 +1,7 @@
-require_dependency "proclaim/application_controller"
+#require_dependency "proclaim/application_controller"
 
 module Proclaim
-	class PostsController < ApplicationController
+	class PostsController < Proclaim::ApplicationController
 		before_action :authenticate_author, except: [:index, :show]
 		after_action :verify_authorized
 		after_action :verify_policy_scoped, only: :index
@@ -15,19 +15,13 @@ module Proclaim
 
 		# GET /posts/1
 		def show
-			begin
-				authorize @post
+			authorize @post
 
-				# If an old id or a numeric id was used to find the record, then
-				# the request path will not match the post_path, and we should do
-				# a 301 redirect that uses the current friendly id.
-				if request.path != post_path(@post)
-					return redirect_to @post, status: :moved_permanently
-				end
-			rescue Pundit::NotAuthorizedError
-				# Don't leak that this resource actually exists. Turn the
-				# "permission denied" into a "not found"
-				raise ActiveRecord::RecordNotFound
+			# If an old id or a numeric id was used to find the record, then
+			# the request path will not match the post_path, and we should do
+			# a 301 redirect that uses the current friendly id.
+			if request.path != post_path(@post)
+				return redirect_to @post, status: :moved_permanently
 			end
 		end
 
@@ -47,22 +41,13 @@ module Proclaim
 			@post = Post.new(post_params)
 			@post.author = current_author
 
+			if params[:publish] == "true"
+				@post.publish
+			end
+
 			authorize @post
 
-			# Save here before potentially publishing, so we can save images
 			if @post.save
-
-				if params[:publish] == "true"
-					@post.publish
-					authorize @post # Re-authorize now that it's to be published
-				end
-
-				# Save and rewrite each image in Carrierwave's cache
-				@post.body = saved_and_rewrite_cached_images(@post.body)
-
-				# Save again, in case the body changed or it was published
-				@post.save
-
 				redirect_to @post, notice: 'Post was successfully created.'
 			else
 				render :new
@@ -80,12 +65,7 @@ module Proclaim
 
 			authorize @post
 
-			if @post.valid?
-				# Save and rewrite each image in Carrierwave's cache
-				@post.body = saved_and_rewrite_cached_images(@post.body)
-
-				@post.save
-
+			if @post.save
 				redirect_to @post, notice: 'Post was successfully updated.'
 			else
 				render :edit
@@ -102,6 +82,16 @@ module Proclaim
 
 		private
 
+		def user_not_authorized(exception)
+			if exception.policy.is_a? PostPolicy and exception.query == "show?"
+				# Don't leak that this resource actually exists. Turn the
+				# "permission denied" into a "not found"
+				raise ActiveRecord::RecordNotFound
+			else
+				super()
+			end
+		end
+
 		# Use callbacks to share common setup or constraints between actions.
 		def set_post
 			@post = Post.friendly.find(params[:id])
@@ -114,29 +104,7 @@ module Proclaim
 				params[:post][:title] = HTMLEntities.new.decode(Rails::Html::FullSanitizer.new.sanitize(params[:post][:title]))
 			end
 
-			params.require(:post).permit(:title,
-			                             :body,
-			                             images_attributes: [:id, :image, :_destroy])
-		end
-
-		def saved_and_rewrite_cached_images(body)
-			document = Nokogiri::HTML.fragment(body)
-			cache_path = ImageUploader.cache_dir
-			document.css("img").each do |image_tag|
-				url = image_tag.attributes["src"].value
-				if url.include? cache_path
-					cache_name = cache_name_from_url(url)
-					if cache_name
-						image = @post.images.build
-						image.image.retrieve_from_cache!(cache_name)
-						image.save
-
-						image_tag.attributes["src"].value = image.image.url
-					end
-				end
-			end
-
-			document.inner_html
+			params.require(:post).permit(:title, :body, :quill_body)
 		end
 	end
 end

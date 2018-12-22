@@ -1,5 +1,23 @@
-class EditPage
-	def medium_inserted_image_html(image)
-		"<div class=\"mediumInsert\"><div class=\"mediumInsert-placeholder\"><figure class=\"mediumInsert-images\"><img src=\"#{image.image.url}\"></figure></div></div>"
+require 'capybara/rails'
+
+module Proclaim
+	class EditPage
+		include Capybara::DSL
+
+		def set_title(title)
+			within('form') do
+				element = find('h1.editable')
+				element.click()
+				element.set(title)
+			end
+		end
+
+		def set_body(body)
+			within('form') do
+				element = find('div.ql-editor')
+				element.click()
+				element.set(body)
+			end
+		end
 	end
 end

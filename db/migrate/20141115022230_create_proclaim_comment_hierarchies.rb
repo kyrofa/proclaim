@@ -1,4 +1,4 @@
-class CreateProclaimCommentHierarchies < ActiveRecord::Migration
+class CreateProclaimCommentHierarchies < ActiveRecord::Migration[5.2]
 	def change
 		create_table :proclaim_comment_hierarchies, :id => false do |t|
 			# ID of the parent/grandparent/great-grandparent/etc. comments

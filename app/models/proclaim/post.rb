@@ -2,14 +2,16 @@
 #
 # Table name: proclaim_posts
 #
-#  id               :integer          not null, primary key
-#  author_id        :integer
-#  title            :string           default(""), not null
-#  body             :text             default(""), not null
-#  published        :boolean          default("f"), not null
-#  publication_date :datetime
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
+#  id           :integer          not null, primary key
+#  author_id    :integer
+#  title        :string           default(""), not null
+#  body         :text             default(""), not null
+#  quill_body   :text             default(""), not null
+#  state        :string           default("draft"), not null
+#  slug         :string
+#  published_at :datetime
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
 #
 
 module Proclaim
@@ -17,8 +19,6 @@ module Proclaim
 		belongs_to :author, class_name: Proclaim.author_class
 		has_many :comments, inverse_of: :post, dependent: :destroy
 		has_many :subscriptions, inverse_of: :post, dependent: :destroy
-		has_many :images, inverse_of: :post, dependent: :destroy
-		accepts_nested_attributes_for :images, allow_destroy: true
 
 		extend FriendlyId
 		friendly_id :slug_candidates, use: :history
@@ -40,12 +40,11 @@ module Proclaim
 		validates_presence_of :published_at, if: :published?
 		validates :published_at, absence: true, unless: :published?
 
-		validates_presence_of :title, :body, :author
+		validates_presence_of :title, :body, :quill_body, :author
 		validate :verifyBodyHtml
 
 		after_validation :move_friendly_id_error_to_title
 
-		before_save :sanitizeBody
 		after_save :notifyBlogSubscribersIfPublished
 
 		# Only save the slug history if the post is published
@@ -60,7 +59,7 @@ module Proclaim
 
 		attr_writer :excerpt_length
 		def excerpt_length
-			@excerpt_length || Proclaim.excerpt_length
+			@excerpt_length ||= Proclaim.excerpt_length
 		end
 
 		def body_plaintext
@@ -107,17 +106,6 @@ module Proclaim
 			   body_plaintext.strip.empty? and
 			   Nokogiri::HTML.fragment(body).css("img").empty?
 				errors.add :body, :empty
-			end
-		end
-
-		def sanitizeBody
-			unless Proclaim.editor_whitelist_tags.blank? and
-			       Proclaim.editor_whitelist_attributes.blank?
-				sanitizer = Rails::Html::WhiteListSanitizer.new
-				self.body = sanitizer.sanitize(
-				                   body,
-				                   tags: Proclaim.editor_whitelist_tags,
-				                   attributes: Proclaim.editor_whitelist_attributes)
 			end
 		end
 
@@ -168,7 +156,7 @@ module Proclaim
 
 		def notifyBlogSubscribersIfPublished
 			# If we just published this post, notify the subscribers
-			if published? and state_changed?
+			if published? and saved_change_to_state?
 				Proclaim.notify_post_published(self)
 
 				Subscription.blog_subscriptions.each do | subscription |

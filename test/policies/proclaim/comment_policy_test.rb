@@ -2,9 +2,9 @@ require 'test_helper'
 
 class CommentPolicyTest < ActiveSupport::TestCase
 	test "comment scope" do
-		user = FactoryGirl.create(:user)
-		comment1 = FactoryGirl.create(:comment)
-		comment2 = FactoryGirl.create(:comment)
+		user = FactoryBot.create(:user)
+		comment1 = FactoryBot.create(:comment)
+		comment2 = FactoryBot.create(:comment)
 
 		# Verify that a user can view both comments
 		comments = Pundit.policy_scope(user, Proclaim::Comment)
@@ -18,9 +18,9 @@ class CommentPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "comment creation" do
-		user = FactoryGirl.create(:user)
-		publishedComment = FactoryGirl.build(:published_comment)
-		unpublishedComment = FactoryGirl.build(:comment)
+		user = FactoryBot.create(:user)
+		publishedComment = FactoryBot.build(:published_comment)
+		unpublishedComment = FactoryBot.build(:comment)
 
 		# Verify that a user can create a comment on a published post
 		policy = Proclaim::CommentPolicy.new(user, publishedComment)
@@ -44,8 +44,8 @@ class CommentPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "comment update" do
-		user = FactoryGirl.create(:user)
-		comment = FactoryGirl.create(:comment)
+		user = FactoryBot.create(:user)
+		comment = FactoryBot.create(:comment)
 
 		# Verify that a user can update a comment
 		policy = Proclaim::CommentPolicy.new(user, comment)
@@ -57,8 +57,8 @@ class CommentPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "comment destroy" do
-		user = FactoryGirl.create(:user)
-		comment = FactoryGirl.create(:comment)
+		user = FactoryBot.create(:user)
+		comment = FactoryBot.create(:comment)
 
 		# Verify that a user can destroy a comment
 		policy = Proclaim::CommentPolicy.new(user, comment)
