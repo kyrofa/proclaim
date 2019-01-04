@@ -1,8 +1,6 @@
-require 'test_helper'
+require "test_helper"
 
-class CommentTest < ActionDispatch::IntegrationTest
-	self.use_transactional_tests = false
-
+class CommentsTest < ApplicationSystemTestCase
 	setup do
 		ApplicationController.any_instance.stubs(:current_user).returns(nil)
 		ApplicationController.any_instance.stubs(:authenticate_user).returns(false)

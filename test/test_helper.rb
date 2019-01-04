@@ -17,7 +17,7 @@ require 'coffee_script'
 require 'sass'
 
 Rails.backtrace_cleaner.remove_silencers!
-Capybara.default_max_wait_time = 5 # 5 seconds instead of 2, since we use fades.
+Capybara.default_max_wait_time = 10 # 5 seconds instead of 2, since we use fades.
 #Capybara.server = :webrick
 
 # Load support files

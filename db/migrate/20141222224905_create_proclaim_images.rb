@@ -1,4 +1,4 @@
-class CreateProclaimImages < ActiveRecord::Migration
+class CreateProclaimImages < ActiveRecord::Migration[5.2]
 	def change
 		create_table :proclaim_images do |t|
 			t.belongs_to :post, index: true

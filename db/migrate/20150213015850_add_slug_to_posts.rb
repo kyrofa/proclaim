@@ -1,4 +1,4 @@
-class AddSlugToPosts < ActiveRecord::Migration
+class AddSlugToPosts < ActiveRecord::Migration[5.2]
 	def change
 		change_table :proclaim_posts do |t|
 			t.string :slug

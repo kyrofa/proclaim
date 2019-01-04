@@ -1,4 +1,4 @@
-class CreateProclaimPosts < ActiveRecord::Migration
+class CreateProclaimPosts < ActiveRecord::Migration[5.2]
 	def change
 		create_table :proclaim_posts do |t|
 			t.belongs_to :author, index: true
