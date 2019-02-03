@@ -1,3 +1,3 @@
 module Proclaim
-  VERSION = "0.5.6"
+  VERSION = '0.1.0'
 end
