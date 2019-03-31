@@ -1,6 +1,6 @@
 require 'rails'
 require 'coffee-rails'
-require 'sass-rails'
+require 'sassc-rails'
 require 'jquery-rails'
 require 'htmlentities'
 require 'friendly_id'
