@@ -39,9 +39,11 @@ Proclaim.setup do |config|
 	# Email address to use in the "from" field of all emails
 	#config.mailer_sender = '"My Blog" <blog@example.com>'
 
-	# Secret key to use for subscription tokens. Changing this will invalidate
-	# any tokens already generated.
-	#config.secret_key = nil
+	# The secret key used by Proclaim for subscription tokens. Changing this will
+	# invalidate any tokens already generated, making it impossible to unsubscribe from
+	# old links. Proclaim will use the `secret_key_base` as its `secret_key` by default.
+	# You can change it below and use your own secret key.
+	# config.secret_key = '<%= SecureRandom.hex(64) %>'
 
 	# Register a callback to be called when a post is published
 	#config.after_post_published do |post|
