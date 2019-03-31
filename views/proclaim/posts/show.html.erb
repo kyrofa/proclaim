@@ -1,0 +1,61 @@
+<% proclaim_title @post.title %>
+
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		new CommentsHandler('div.discussion',
+		                    'div.comment',
+		                    'form.comment_form',
+		                    'form.main_comment_form',
+		                    'button.cancel_comment',
+		                    'a.reply',
+		                    'a.edit',
+		                    'a.delete',
+		                    'input.subscription_subscribe',
+		                    'div.subscription_email')
+	});
+</script>
+
+<div style = "float: right;">
+	<% if policy(@post).edit? %>
+		<%= link_to 'Edit', edit_post_path(@post) %>
+	<% end %>
+
+	<% if policy(@post).destroy? %>
+		<% if policy(@post).edit? %>
+			|
+		<% end %>
+		<%= link_to 'Delete', @post, method: :delete, data: { confirm: 'Are you sure?' } %>
+	<% end %>
+</div>
+
+<div class = "post">
+	<h1 class = "post_title"><%= content_for :proclaim_title %></h1>
+
+	<div class = "post_body show">
+		<%= @post.body.html_safe %>
+	</div>
+
+	<div class = "post_information">
+		<% if @post.published? %>
+			Written <%= timeago_tag @post.published_at, format: "%B %d, %Y" %> by
+		<% else %>
+			Draft last updated <%= timeago_tag @post.updated_at, format: "%B %d, %Y" %> by
+		<% end %>
+		<%= @post.author.send(Proclaim.author_name_method) %>
+	</div>
+
+	<h2>Comments</h2>
+
+	<div id="comments">
+		<%= comments_tree_for @post.comments.hash_tree %>
+	</div>
+
+	<% commentTemplate = @post.comments.build %>
+	<%= render partial: "proclaim/comments/form",
+		        locals: {
+		           comment: commentTemplate,
+		           target: "#comments",
+		           main: true
+		        } %>
+</div>

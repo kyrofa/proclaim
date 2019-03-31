@@ -1,0 +1,27 @@
+<table class = "post">
+	<tr>
+		<td class = "post_title"><h1>
+			Hello, <%= @subscription.name %>!
+		</h1></td>
+	</tr>
+
+	<tr>
+		<td class = "post_body">
+			<% if @subscription.post %>
+				<p>
+					You signed up to be notified of any new comments on
+					<%= link_to "this post", @subscription.post %>.
+				</p>
+			<% else %>
+				<p>
+					You signed up to receive a notification each time a new post is
+					made at
+					<%= link_to root_url.gsub(/\A.*:\/\//, '').gsub(/\A(.*?)\/*\z/, '\1'),
+					            posts_url %>.
+				</p>
+
+				<p>Thanks for subscribing!</p>
+			<% end %>
+		</td>
+	</tr>
+</div>
