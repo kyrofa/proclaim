@@ -1,17 +1,17 @@
-# require 'rails'
-# require 'coffee-rails'
-# require 'sass-rails'
-# require 'jquery-rails'
-# require 'htmlentities'
-# require 'friendly_id'
-# require 'closure_tree'
-# require 'font-awesome-rails'
-# require 'medium-editor-rails'
-# require 'carrierwave'
-# require 'aasm'
-# require 'rails-timeago'
-# require 'pundit'
-# require 'premailer'
+require 'rails'
+require 'coffee-rails'
+require 'sass-rails'
+require 'jquery-rails'
+require 'htmlentities'
+require 'friendly_id'
+require 'closure_tree'
+require 'font-awesome-rails'
+require 'medium-editor-rails'
+require 'carrierwave'
+require 'aasm'
+require 'rails-timeago'
+require 'pundit'
+require 'premailer'
 
 module Proclaim
 	class Engine < ::Rails::Engine
@@ -53,10 +53,14 @@ module Proclaim
 		end
 
 		initializer :ensure_secret_key_presence do |app|
-			if app.respond_to?(:secrets)
+			if app.respond_to?(:credentials) && key_exists?(app.credentials)
+				Proclaim.secret_key ||= app.credentials.secret_key_base
+			elsif app.respond_to?(:secrets) && key_exists?(app.secrets)
 				Proclaim.secret_key ||= app.secrets.secret_key_base
-			elsif app.config.respond_to?(:secret_key_base)
+			elsif app.config.respond_to?(:secret_key_base) && key_exists?(app.config)
 				Proclaim.secret_key ||= app.config.secret_key_base
+			elsif app.respond_to?(:secret_key_base) && key_exists?(app)
+				Proclaim.secret_key ||= app.secret_key_base
 			end
 
 			if Proclaim.secret_key.nil?
@@ -68,6 +72,12 @@ Proclaim.secret_key was not set. Please add the following to your Proclaim initi
 Please ensure you restarted your application after installing Proclaim or setting the key.
 ERROR
 			end
+		end
+
+		private
+
+		def key_exists?(object)
+		object.secret_key_base.present?
 		end
 	end
 end
