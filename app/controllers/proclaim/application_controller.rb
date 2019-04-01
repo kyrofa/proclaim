@@ -18,7 +18,7 @@ module Proclaim
 				send(Proclaim.authentication_method)
 			rescue NoMethodError
 				raise "Proclaim doesn't know how to authenticate users! Please" \
-					" ensure that `Proclaim.authentication_path` is valid."
+					" ensure that `Proclaim.authentication_method` is valid."
 			end
 		end
 

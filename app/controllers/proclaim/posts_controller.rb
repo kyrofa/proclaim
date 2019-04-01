@@ -1,7 +1,7 @@
 #require_dependency "proclaim/application_controller"
 
 module Proclaim
-	class PostsController < ApplicationController
+	class PostsController < Proclaim::ApplicationController
 		before_action :authenticate_author, except: [:index, :show]
 		after_action :verify_authorized
 		after_action :verify_policy_scoped, only: :index

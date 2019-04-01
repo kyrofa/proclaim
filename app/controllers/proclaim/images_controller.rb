@@ -1,7 +1,7 @@
 #require_dependency "proclaim/application_controller"
 
 module Proclaim
-	class ImagesController < ApplicationController
+	class ImagesController < Proclaim::ApplicationController
 		after_action :verify_authorized
 
 		def create
