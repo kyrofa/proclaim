@@ -1,0 +1,26 @@
+<% proclaim_title "Subscription for #{@subscription.name}" %>
+
+<h1><%= content_for :proclaim_title %></h1>
+
+<p>
+	<% if @subscription.post %>
+		Will be notified of new comments on
+		<%= link_to @subscription.post.title, @subscription.post %>
+	<% else %>
+		Will be notified of new blog posts.
+	<% end %>
+</p>
+<p>
+	<% if policy(@subscription).destroy? %>
+		<%= button_to 'Unsubscribe',
+		            subscription_path(@subscription.token),
+		            method: :delete,
+		            data: {
+		            	confirm: "Are you sure you'd like to unsubscribe from "\
+		            	         "this notification item? Note that if you've "\
+		            	         "subscribed elsewhere (e.g. other posts), "\
+		            	         "you'll still receive notifications for them "\
+		            	         "unless you unsubscribe from them as well."
+		           	} %>
+	<% end %>
+</p>

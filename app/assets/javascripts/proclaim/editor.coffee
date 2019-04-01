@@ -15,21 +15,21 @@ class Editor
 
 				@titleEditor = new MediumEditor(@titleEditableItem)
 
-				@bodyEditableItem.mediumInsert({
-					editor: @bodyEditor,
-					addons: {
-						images: {
-							imagesUploadScript: imageUploadPath,
-							imagesDeleteScript: imageDeletePath,
-							deleteFile: (file, that) =>
-								$.post that.options.imagesDeleteScript, {file: file}, (data, status, jqxhr) =>
-									if data.id
-										@form.append('<input type="hidden" name="post[images_attributes][' + data.id + '][id]" value="' + data.id + '" />')
-										@form.append('<input type="hidden" name="post[images_attributes][' + data.id + '][_destroy]" value="true" />')
-								, "json"
-						}
-					}
-				})
+				# @bodyEditableItem.mediumInsert({
+				# 	editor: @bodyEditor,
+				# 	addons: {
+				# 		images: {
+				# 			imagesUploadScript: imageUploadPath,
+				# 			imagesDeleteScript: imageDeletePath,
+				# 			deleteFile: (file, that) =>
+				# 				$.post that.options.imagesDeleteScript, {file: file}, (data, status, jqxhr) =>
+				# 					if data.id
+				# 						@form.append('<input type="hidden" name="post[images_attributes][' + data.id + '][id]" value="' + data.id + '" />')
+				# 						@form.append('<input type="hidden" name="post[images_attributes][' + data.id + '][_destroy]" value="true" />')
+				# 				, "json"
+				# 		}
+				# 	}
+				# })
 
 				@cleanBindings()
 				@addBindings()

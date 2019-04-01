@@ -1,3 +1,114 @@
-// Place all the styles related to the Posts controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+
+h1.post_title
+{
+	text-align: center;
+	padding-bottom: 10px;
+	font-weight: bold;
+	border-bottom: solid 1px #ddd;
+}
+
+div.post_information
+{
+	border-top: solid 1px #ddd;
+	border-bottom: solid 1px #ddd;
+	padding: 10px;
+	clear: both;
+}
+
+div.post_excerpt_information
+{
+	font-size: 13px;
+	color: rgba(0, 0, 0, 0.3);
+	margin-top: 10px;
+}
+
+td#draft_posts
+{
+	width: 40%;
+	vertical-align: top;
+
+	h2
+	{
+		margin-top: 0;
+	}
+
+	h3
+	{
+		margin-bottom: 0;
+	}
+
+	div#draft_list
+	{
+		border: solid rgba(0, 0, 0, 0.3) 1px;
+		padding: 10px;
+		margin-left: 20px;
+	}
+
+	div.post_excerpt_information
+	{
+		margin-top: 0;
+	}
+}
+
+input.datetime_picker
+{
+	cursor: pointer;
+}
+
+.editable
+{
+	&:focus
+	{
+		outline: none;
+	}
+}
+
+.mediumInsert
+{
+	margin: -1em 0 0 0;
+}
+
+div.post_body
+{
+	width: calc(100% - 80px);
+	margin: 0 auto;
+}
+
+div.post_body.show .mediumInsert
+{
+	margin-left: 0px !important;
+
+	.mediumInsert-images img
+	{
+		margin: 1em 0 0 0;
+	}
+}
+
+figure.mediumInsert-images
+{
+	text-align: center;
+}
+
+.medium-editor-insert-plugin p
+{
+	margin: 0px 0px 10px;
+	box-sizing: border-box;
+}
+
+div.post_body.editable:after
+{
+	top: 0;
+}
+
+h1.post_title.editable
+{
+	&:after
+	{
+		position: relative;
+		text-align: center;
+	}
+}

@@ -51,12 +51,12 @@ class CommentsHandler
 		$(document).off "change", @subscribeCheckboxClass
 
 	# Disable the form until the new comment has been processed
-	handleCommentStarted: (event, xhr, settings) =>
+	handleCommentStarted: (event) =>
 		form = $(event.target)
 		form.find(":input").prop("disabled", true);
 		form.before('<div class = "loading" style = "width: 100px;"></div>')
 
-	handleCommentFinished: (event, xhr, status) =>
+	handleCommentFinished: (event) =>
 		form = $(event.target)
 		target = $(form.data("target"))
 		form.find(":input").prop("disabled", false);
@@ -65,19 +65,22 @@ class CommentsHandler
 		if status == "success"
 			@removeForm form
 
-	handleCommentSuccess: (event, data, status, xhr) =>
-		if data.html.length == 0
+	handleCommentSuccess: (event) =>
+		# As of rails-ujs, need to pull response out of detail instead of event handler
+		# args
+		html = event.detail[0].html
+		if html.length == 0
 			console.error("Invalid comment HTML!")
 			return
 
 		form = $(event.target)
 
 		if form.hasClass("edit_comment")
-			form.closest(@discussionClass).replaceWith(data.html)
+			form.closest(@discussionClass).replaceWith(html)
 		else
 			target = $(form.data("target"))
 			if target.length == 1
-				target.append(data.html)
+				target.append(html)
 			else
 				console.error("Invalid comment target!")
 				return
@@ -85,7 +88,10 @@ class CommentsHandler
 			# Hide form, but don't remove so events can still be emitted
 			@removeForm form, true
 
-	handleCommentFailure: (event, xhr, status, error) =>
+	handleCommentFailure: (event) =>
+		# As of rails-ujs, need to pull xhr out of detail instead of event handler args
+		xhr = event.detail[2]
+
 		$(event.target).siblings("div.error").remove()
 		errorMessage = "<div class='error'>"
 		errorMessage += "<strong>The following errors have prevented this comment from being saved:</strong>"
@@ -96,7 +102,7 @@ class CommentsHandler
 		errorMessage += "</div>"
 		$(event.target).before(errorMessage)
 
-	handleDeleteCommentSuccess: (event, data, status, xhr) =>
+	handleDeleteCommentSuccess: (event) =>
 		commentContainer = $(event.target).closest(@discussionClass)
 		if commentContainer.length == 1
 			commentContainer.fadeOut ->
@@ -104,7 +110,7 @@ class CommentsHandler
 		else
 			console.error("No comment container for removal!")
 
-	handleDeleteCommentFailure: (event, xhr, status, error) =>
+	handleDeleteCommentFailure: (event) =>
 		console.error("Unable to delete comment!")
 
 	showNewCommentForm: (event) =>

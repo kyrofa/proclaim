@@ -13,6 +13,5 @@
 //= require rails-ujs
 //= require activestorage
 //= require medium-editor
-//= require medium-editor-insert-plugin.all
 //= require rails-timeago
 //= require_tree .
