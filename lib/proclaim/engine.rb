@@ -77,7 +77,7 @@ ERROR
 		private
 
 		def key_exists?(object)
-		object.secret_key_base.present?
+			object.secret_key_base.present?
 		end
 	end
 end

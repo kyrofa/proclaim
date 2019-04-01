@@ -12,7 +12,7 @@
 module Proclaim
 	class Subscription < ActiveRecord::Base
 		scope :blog_subscriptions, -> { where(post_id: nil) }
-		belongs_to :post, inverse_of: :subscriptions
+		belongs_to :post, inverse_of: :subscriptions, optional: true
 
 		after_create :deliver_welcome_email
 		after_create { Proclaim.notify_new_subscription(self) }

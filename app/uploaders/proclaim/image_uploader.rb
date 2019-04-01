@@ -1,7 +1,5 @@
 module Proclaim
 	class ImageUploader < CarrierWave::Uploader::Base
-		before :remove, :backup_cache_id
-		after :remove, :delete_cache_directory
 		after :remove, :delete_store_directory
 
 		# Include RMagick or MiniMagick support:
@@ -51,17 +49,6 @@ module Proclaim
 		# end
 
 		private
-
-		private
-
-		def backup_cache_id
-			@cache_id_was = cache_id
-		end
-
-		def delete_cache_directory
-			@cache_id = @cache_id_was
-			delete_cache_id
-		end
 
 		def delete_store_directory
 			store_path = store_dir
