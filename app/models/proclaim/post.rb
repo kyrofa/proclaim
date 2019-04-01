@@ -168,7 +168,7 @@ module Proclaim
 
 		def notifyBlogSubscribersIfPublished
 			# If we just published this post, notify the subscribers
-			if published? and state_changed?
+			if published? and saved_change_to_state?
 				Proclaim.notify_post_published(self)
 
 				Subscription.blog_subscriptions.each do | subscription |
