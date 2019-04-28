@@ -5,6 +5,8 @@ module Proclaim
 		after_action :verify_authorized
 
 		def create
+			puts params
+			puts "another: #{image_params}"
 			@image = Image.new(post_id: image_params[:post_id])
 
 			handleJsonRequest(@image,
@@ -57,7 +59,7 @@ module Proclaim
 		# Only allow a trusted parameter "white list" through.
 		def image_params
 			params.require(:image).permit(:post_id,
-			                              :image)
+			                              image: [:original_filename, :tempfile, :content_type])
 		end
 
 		def file_params

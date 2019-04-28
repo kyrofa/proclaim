@@ -9,6 +9,7 @@ module Proclaim
 		private
 
 		def user_not_authorized
+			puts "RESCUING"
 			flash[:error] = "You are not authorized to perform this action."
 			redirect_to(request.referrer || root_path)
 		end
@@ -65,6 +66,7 @@ module Proclaim
 
 						format.json { render json: successJson }
 					else
+						puts object.errors.inspect
 						if failureJson.respond_to? :call
 							failureJson = failureJson.call
 						end
