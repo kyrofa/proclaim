@@ -15,19 +15,13 @@ module Proclaim
 
 		# GET /posts/1
 		def show
-			begin
-				authorize @post
+			authorize @post
 
-				# If an old id or a numeric id was used to find the record, then
-				# the request path will not match the post_path, and we should do
-				# a 301 redirect that uses the current friendly id.
-				if request.path != post_path(@post)
-					return redirect_to @post, status: :moved_permanently
-				end
-			rescue Pundit::NotAuthorizedError
-				# Don't leak that this resource actually exists. Turn the
-				# "permission denied" into a "not found"
-				raise ActiveRecord::RecordNotFound
+			# If an old id or a numeric id was used to find the record, then
+			# the request path will not match the post_path, and we should do
+			# a 301 redirect that uses the current friendly id.
+			if request.path != post_path(@post)
+				return redirect_to @post, status: :moved_permanently
 			end
 		end
 
@@ -101,6 +95,16 @@ module Proclaim
 		end
 
 		private
+
+		def user_not_authorized(exception)
+			if exception.policy.is_a? PostPolicy and exception.query == "show?"
+				# Don't leak that this resource actually exists. Turn the
+				# "permission denied" into a "not found"
+				raise ActiveRecord::RecordNotFound
+			else
+				super()
+			end
+		end
 
 		# Use callbacks to share common setup or constraints between actions.
 		def set_post

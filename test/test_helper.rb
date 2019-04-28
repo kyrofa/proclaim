@@ -24,10 +24,10 @@ def sign_in(user)
 	ApplicationController.any_instance.stubs(:current_user).returns(user)
 	ApplicationController.any_instance.stubs(:authenticate_user).returns(!user.nil?)
 
-	if @controller
-		@controller.stubs(:current_user).returns(user)
-		@controller.stubs(:authenticate_user).returns(true)
-	end
+	# if @controller
+	# 	@controller.stubs(:current_user).returns(user)
+	# 	@controller.stubs(:authenticate_user).returns(true)
+	# end
 end
 
 def test_image_file_path

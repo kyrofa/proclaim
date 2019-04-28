@@ -83,7 +83,7 @@ module Proclaim
 		test "should not get new if not logged in" do
 			get new_post_url
 			assert_response :redirect
-			assert_match /not authorized/, flash[:error]
+			assert_match(/not authorized/, flash[:error])
 		end
 
 		test "should create post if logged in" do
@@ -103,7 +103,7 @@ module Proclaim
 			end
 
 			assert_redirected_to post_path(Post.last)
-			assert_match /successfully created/, flash[:notice]
+			assert_match(/successfully created/, flash[:notice])
 			refute Post.last.published?
 		end
 
@@ -124,7 +124,7 @@ module Proclaim
 			end
 
 			assert_redirected_to post_path(Post.last)
-			assert_match /successfully created/, flash[:notice]
+			assert_match(/successfully created/, flash[:notice])
 			assert Post.last.published?
 		end
 
@@ -177,7 +177,7 @@ module Proclaim
 			end
 
 			assert_response :redirect
-			assert_match /not authorized/, flash[:error]
+			assert_match(/not authorized/, flash[:error])
 		end
 
 		test "should show draft post if logged in" do

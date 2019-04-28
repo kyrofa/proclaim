@@ -124,6 +124,7 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (2.1.0)
+    libv8 (7.3.492.27.1)
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -141,6 +142,8 @@ GEM
     mimemagic (0.3.3)
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
+    mini_racer (0.2.5)
+      libv8 (>= 6.9.411)
     minitest (5.11.3)
     mocha (1.8.0)
       metaclass (~> 0.0.1)
@@ -238,6 +241,7 @@ DEPENDENCIES
   capybara
   factory_bot_rails
   faker
+  mini_racer
   mocha
   proclaim!
   puma
