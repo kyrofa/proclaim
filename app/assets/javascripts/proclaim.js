@@ -12,6 +12,7 @@
 //
 //= require rails-ujs
 //= require activestorage
-//= require medium-editor
+//= require dante-vendors
+//= require Dante2
 //= require rails-timeago
 //= require_tree .

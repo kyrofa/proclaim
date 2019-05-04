@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
 	spec.add_dependency "premailer"
 	spec.add_dependency "closure_tree"
 	spec.add_dependency "font-awesome-rails"
-	spec.add_dependency "medium-editor-rails"
+	spec.add_dependency "dante2-editor"
 	spec.add_dependency "carrierwave"
 	spec.add_dependency "aasm"
 	spec.add_dependency "rails-timeago"

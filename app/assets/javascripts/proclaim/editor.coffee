@@ -8,12 +8,22 @@ class Editor
 			imageDeletePath = @bodyEditableItem.data("image-delete-path")
 
 			if (imageUploadPath.length > 0) and (imageDeletePath.length > 0)
-				@bodyEditor = new MediumEditor(@bodyEditableItem, {
-					buttonLabels: 'fontawesome',
-					buttons: @toolbarButtons
-				})
+				# @bodyEditor = new MediumEditor(@bodyEditableItem, {
+				# 	buttonLabels: 'fontawesome',
+				# 	buttons: @toolbarButtons
+				# })
 
-				@titleEditor = new MediumEditor(@titleEditableItem)
+				# @titleEditor = new Dante({
+				# 	el: @titleEditableItem.selector
+				# })
+				# @titleEditor.render()
+
+				@bodyEditor = new Dante({
+					el: "foo"
+				})
+				@bodyEditor.render()
+
+				#@titleEditor = new MediumEditor(@titleEditableItem)
 
 				# @bodyEditableItem.mediumInsert({
 				# 	editor: @bodyEditor,

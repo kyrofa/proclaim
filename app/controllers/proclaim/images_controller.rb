@@ -58,8 +58,7 @@ module Proclaim
 
 		# Only allow a trusted parameter "white list" through.
 		def image_params
-			params.require(:image).permit(:post_id,
-			                              image: [:original_filename, :tempfile, :content_type])
+			params.require(:image).permit(:post_id, :image)
 		end
 
 		def file_params
