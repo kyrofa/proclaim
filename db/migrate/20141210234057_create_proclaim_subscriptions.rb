@@ -1,7 +1,8 @@
-class CreateProclaimSubscriptions < ActiveRecord::Migration
+class CreateProclaimSubscriptions < ActiveRecord::Migration[5.2]
 	def change
 		create_table :proclaim_subscriptions do |t|
 			t.belongs_to :post, index: true
+			t.string :name, null: false, default: ""
 			t.string :email
 
 			t.timestamps null: false

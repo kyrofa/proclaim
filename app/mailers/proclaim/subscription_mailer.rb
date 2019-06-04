@@ -1,10 +1,8 @@
 module Proclaim
-	class SubscriptionMailer < ActionMailer::Base
-		default from: Proclaim.mailer_sender || default_params[:from] || "from@example.com"
+	class SubscriptionMailer < ApplicationMailer
+		before_action :set_subscription
 
-		def welcome_email(subscription)
-			@subscription = subscription
-
+		def welcome_email
 			message = Premailer.new(render_to_string, with_html_string: true, base_url: root_url)
 			base_url = root_url.gsub(/\A.*:\/\//, '').gsub(/\A(.*?)\/*\z/, '\1')
 
@@ -14,30 +12,34 @@ module Proclaim
 			end
 		end
 
-		def new_comment_notification_email(subscription, comment)
-			@subscription = subscription
-			@comment = comment
+		def new_comment_notification_email
+			@comment = Comment.find(params[:comment_id])
 
 			message = Premailer.new(render_to_string, with_html_string: true, base_url: root_url)
 
 			mail to: @subscription.email,
-			     subject: "New Comment On \"#{@comment.post.title}\"" do |format|
-				format.html { message.to_inline_css }
-				format.text { message.to_plain_text }
+				subject: "New Comment On \"#{@comment.post.title}\"" do |format|
+					format.html { message.to_inline_css }
+					format.text { message.to_plain_text }
 			end
 		end
 
-		def new_post_notification_email(subscription, post)
-			@subscription = subscription
-			@post = post
+		def new_post_notification_email
+			@post = Post.find(params[:post_id])
 
 			message = Premailer.new(render_to_string, with_html_string: true, base_url: root_url)
 
 			mail to: @subscription.email,
-			     subject: "New Post: #{@post.title}" do |format|
-				format.html { message.to_inline_css }
-				format.text { message.to_plain_text }
+				subject: "New Post: #{@post.title}" do |format|
+					format.html { message.to_inline_css }
+					format.text { message.to_plain_text }
 			end
+		end
+
+		private
+
+		def set_subscription
+			@subscription = Subscription.find(params[:subscription_id])
 		end
 	end
 end

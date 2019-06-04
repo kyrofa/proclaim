@@ -38,7 +38,7 @@
 
 	<div class = "subscription_email" style = "display: none;">
 		<%= label namespace_space+"subscription", "email"%><br />
-		<%= text_field "subscription", "email", id: namespace_space+"subscription_email" %>
+		<%= email_field "subscription", "email", id: namespace_space+"subscription_email" %>
 	</div>
 
 	<%= f.hidden_field :post_id %>

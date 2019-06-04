@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ApplicationPolicyTest < ActiveSupport::TestCase
 	test "application index" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 
 		# Verify that a user cannot visit the index by default
 		policy = ApplicationPolicy.new(user, nil)
@@ -14,7 +14,7 @@ class ApplicationPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "application show" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 
 		# Verify that a user cannot view an object by default
 		policy = ApplicationPolicy.new(user, nil)
@@ -26,7 +26,7 @@ class ApplicationPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "application create" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 
 		# Verify that a user cannot create an object by default
 		policy = ApplicationPolicy.new(user, nil)
@@ -38,7 +38,7 @@ class ApplicationPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "application new" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 
 		# Verify that a user cannot visit the new action by default
 		policy = ApplicationPolicy.new(user, nil)
@@ -50,7 +50,7 @@ class ApplicationPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "application update" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 
 		# Verify that a user cannot update an object by default
 		policy = ApplicationPolicy.new(user, nil)
@@ -62,7 +62,7 @@ class ApplicationPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "application edit" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 
 		# Verify that a user cannot visit the edit action by default
 		policy = ApplicationPolicy.new(user, nil)
@@ -74,7 +74,7 @@ class ApplicationPolicyTest < ActiveSupport::TestCase
 	end
 
 	test "application destroy" do
-		user = FactoryGirl.create(:user)
+		user = FactoryBot.create(:user)
 
 		# Verify that a user cannot destroy an object by default
 		policy = ApplicationPolicy.new(user, nil)

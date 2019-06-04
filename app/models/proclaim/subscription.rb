@@ -7,12 +7,13 @@
 #  email      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  name       :string           default(""), not null
 #
 
 module Proclaim
 	class Subscription < ActiveRecord::Base
 		scope :blog_subscriptions, -> { where(post_id: nil) }
-		belongs_to :post, inverse_of: :subscriptions
+		belongs_to :post, inverse_of: :subscriptions, optional: true
 
 		after_create :deliver_welcome_email
 		after_create { Proclaim.notify_new_subscription(self) }
@@ -29,15 +30,15 @@ module Proclaim
 		validates_presence_of :post, if: :post_id
 
 		def deliver_welcome_email
-			SubscriptionMailer.welcome_email(self).deliver_later
+			SubscriptionMailer.with(subscription_id: id).welcome_email.deliver_later
 		end
 
 		def deliver_new_post_notification_email(post)
-			SubscriptionMailer.new_post_notification_email(self, post).deliver_later
+			SubscriptionMailer.with(subscription_id: id, post_id: post.id).new_post_notification_email.deliver_later
 		end
 
 		def deliver_new_comment_notification_email(comment)
-			SubscriptionMailer.new_comment_notification_email(self, comment).deliver_later
+			SubscriptionMailer.with(subscription_id: id, comment_id: comment.id).new_comment_notification_email.deliver_later
 		end
 
 		def token

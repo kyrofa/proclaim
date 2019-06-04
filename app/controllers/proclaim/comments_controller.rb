@@ -1,7 +1,7 @@
-require_dependency "proclaim/application_controller"
+#require_dependency "proclaim/application_controller"
 
 module Proclaim
-	class CommentsController < ApplicationController
+	class CommentsController < Proclaim::ApplicationController
 		before_action :authenticate_author, only: [:destroy]
 		after_action :verify_authorized
 		before_action :set_comment, only: [:update, :destroy]

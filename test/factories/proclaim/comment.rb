@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 	factory :comment, class: Proclaim::Comment do
 		sequence(:author) {|n| "comment#{n} author"}
 		sequence(:body) {|n| "comment#{n} body"}

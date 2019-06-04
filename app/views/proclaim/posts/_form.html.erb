@@ -1,20 +1,34 @@
 <script type="text/javascript">
 	$(document).ready(function()
 	{
+		<%
+			quill_body = @post.quill_body.html_safe
+			if quill_body.empty?
+				quill_body = '{}'
+			end
+		%>
 		<% if @post.new_record? %>
 			new Editor($(document).find("form.new_post"),
 		              $(document).find("input#post_title"),
-		              $(document).find("form.new_post h1.editable"),
+					  $(document).find("form.new_post h1.editable"),
+					  '<%= @post.title.html_safe.strip %>',
 		              $(document).find("input#post_body"),
-		              $(document).find("form.new_post div.editable"),
-		              <%= Proclaim.editor_toolbar_buttons.to_json.html_safe %>);
+		              $(document).find("input#post_quill_body"),
+					  $(document).find("form.new_post div.editable"),
+					  $(document).find("div#scrolling-container"),
+					  <%= quill_body %>,
+		              <%= Proclaim.editor_toolbar.to_json.html_safe %>);
 		<% else %>
 			new Editor($(document).find("form.edit_post"),
 		              $(document).find("input#post_title"),
-		              $(document).find("form.edit_post h1.editable"),
+					  $(document).find("form.edit_post h1.editable"),
+					  '<%= @post.title.html_safe.strip %>',
 		              $(document).find("input#post_body"),
-		              $(document).find("form.edit_post div.editable"),
-		              <%= Proclaim.editor_toolbar_buttons.to_json.html_safe %>);
+					  $(document).find("input#post_quill_body"),
+					  $(document).find("form.edit_post div.editable"),
+					  $(document).find("div#scrolling-container"),
+					  <%= quill_body %>,
+		              <%= Proclaim.editor_toolbar.to_json.html_safe %>);
 		<% end %>
 	});
 </script>
@@ -36,24 +50,20 @@
 		<%=
 			fake_form_field @post, :title do
 				content_tag :h1, @post.title, class: "post_title editable",
-				            data: {
-				            	placeholder: "Post Title",
-				            	disable_return: "true",
-				            	disable_toolbar: "true",
-				            }
+				            contenteditable: true, placeholder: "Post Title"
 			end
 		%>
 
-		<%=
-			fake_form_field @post, :body do
-				content_tag :div, @post.body.html_safe, class: "post_body editable",
-				            data: {
-				            	placeholder: "Post Body",
-				            	image_upload_path: cache_image_path,
-				            	image_delete_path: discard_image_path,
-				            }
-			end
-		%>
+		<div id="scrolling-container">
+			<%=
+				fake_form_field @post, :body do
+					content_tag :div, '', class: "post_body editable",
+								data: {
+									placeholder: "Post Body",
+								}
+				end
+			%>
+		</div>
 
 		<div class = "post_information" style = "margin-bottom: 30px;">
 			<% if @post.published? %>
@@ -68,6 +78,7 @@
 
 		<%= f.hidden_field :title %>
 		<%= f.hidden_field :body %>
+		<%= f.hidden_field :quill_body %>
 
 		<% if @post.published? and not @post.new_record? %>
 			This post has already been published

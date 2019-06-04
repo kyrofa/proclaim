@@ -8,8 +8,7 @@ branches:
 script: bundle exec rake test
 
 rvm:
-  - 1.9.3
-  - 2.1.5
+  - 2.6.2
 
 before_script:
   - bundle exec rake db:migrate RAILS_ENV=test
@@ -30,21 +29,21 @@ env:
     - secure: LFQ8H7e5hBgIKbnZkbW6wRkc6pJ/88H71dXmfTisgA80nrhj+TMkIfMDXvrn/pSQ38LPfkBKltCc+IYV2c2sRumrlhup29g7tLYU/KYVyw/roU8qOoAQu4NjutWzuD01IWS9bO+RScP1P5QLNYDlxUYk5OC4iDZQeo5Jk+RQB3M=
   matrix:
     # Linux tests
-    - PLATFORM="Linux" BROWSER="firefox"
-    - PLATFORM="Linux" BROWSER="chrome"
+    - PLATFORM="Linux" BROWSER="firefox" BROWSER_VERSION="latest"
+    - PLATFORM="Linux" BROWSER="chrome" BROWSER_VERSION="latest"
 
     # Mac OS X tests
-    #- PLATFORM="OS X 10.10" BROWSER="safari"
-    - PLATFORM="OS X 10.10" BROWSER="firefox"
-    - PLATFORM="OS X 10.10" BROWSER="chrome"
+    - PLATFORM="macOS 10.13" BROWSER="firefox" BROWSER_VERSION="64" # 65 can't reach site
+    - PLATFORM="macOS 10.13" BROWSER="chrome" BROWSER_VERSION="70" # 71 can't reach site
+    # - PLATFORM="macOS 10.13" BROWSER="safari" # safari never reaches site
+    - PLATFORM="macOS 10.14" BROWSER="firefox" BROWSER_VERSION="64" # 65 can't reach site
+    - PLATFORM="macOS 10.14" BROWSER="chrome" BROWSER_VERSION="70" # 71 can't reach site
+    # - PLATFORM="macOS 10.14" BROWSER="safari" # safari never reaches site
 
     # Windows tests
-    #- PLATFORM="Windows 7" BROWSER="internet_explorer"
-    - PLATFORM="Windows 7" BROWSER="firefox"
-    - PLATFORM="Windows 7" BROWSER="chrome"
-    #- PLATFORM="Windows 8.1" BROWSER="internet_explorer"
-    - PLATFORM="Windows 8.1" BROWSER="firefox"
-    - PLATFORM="Windows 8.1" BROWSER="chrome"
+    - PLATFORM="Windows 10" BROWSER="firefox" BROWSER_VERSION="64" # 65 can't reach site
+    - PLATFORM="Windows 10" BROWSER="chrome" BROWSER_VERSION="70" # 71 can't reach site
+    # - PLATFORM="Windows 10" BROWSER="edge" # edge never reaches site
 
     # Android tests
     #- PLATFORM="Linux" BROWSER="android" DEVICE_NAME="Android Emulator" DEVICE_ORIENTATION="portrait"

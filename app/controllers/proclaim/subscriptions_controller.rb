@@ -1,7 +1,7 @@
-require_dependency "proclaim/application_controller"
+#require_dependency "proclaim/application_controller"
 
 module Proclaim
-	class SubscriptionsController < ApplicationController
+	class SubscriptionsController < Proclaim::ApplicationController
 		after_action :verify_authorized
 		after_action :verify_policy_scoped, only: :index
 		before_action :set_subscription, only: [:show, :edit, :update, :destroy]

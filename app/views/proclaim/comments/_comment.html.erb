@@ -15,16 +15,16 @@
 	%>
 
 	<%= link_to "Reply", "#", class: "reply",
-	            data: {
-	            	form: "#{render(partial: "proclaim/comments/form", locals: {comment: replyComment, target: target})}",
-	            	target: target
-	            } %>
+		data: {
+			form: "#{render(partial: "proclaim/comments/form", locals: {comment: replyComment, target: target})}",
+			target: target
+		} %>
 
 	<% if policy(comment).destroy? %>
 		<%= link_to "Edit", "#", class: "edit",
-	            data: {
-	            	form: "#{render(partial: "proclaim/comments/form", locals: {comment: comment})}"
-	            } %>
+			data: {
+				form: "#{render(partial: "proclaim/comments/form", locals: {comment: comment})}"
+			} %>
 	<% end %>
 
 	<% if policy(comment).destroy? %>
