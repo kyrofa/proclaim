@@ -13,6 +13,18 @@
 		                    'a.delete',
 		                    'input.subscription_subscribe',
 							'div.subscription_email');
+
+		<%
+			quill_body = @post.quill_body.html_safe
+			if quill_body.empty?
+				quill_body = '{}'
+			end
+		%>
+		new Quill('div.post_body', {
+			scrollingContainer: 'div#scrolling-container',
+			theme: 'bubble',
+			readOnly: true,
+		}).setContents(<%= quill_body %>)
 	});
 </script>
 
@@ -32,8 +44,9 @@
 <div class = "post">
 	<h1 class = "post_title"><%= content_for :proclaim_title %></h1>
 
-	<div class = "post_body show">
-		<%= @post.body.html_safe %>
+	<div id="scrolling-container">
+		<div class = "post_body show">
+		</div>
 	</div>
 
 	<div class = "post_information">

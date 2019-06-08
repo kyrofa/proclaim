@@ -114,7 +114,7 @@ div.scrolling-container {
 		img
 		{
 			float: left;
-			width: 30%;
+			max-width: 30%;
 			margin-right: 15px;
 		}
 	}
@@ -124,7 +124,7 @@ div.scrolling-container {
 		img
 		{
 			float: right;
-			width: 30%;
+			max-width: 30%;
 			margin-left: 15px;
 		}
 	}
@@ -134,7 +134,7 @@ div.scrolling-container {
 		img
 		{
 			float: inherit;
-			width: 100%;
+			max-width: 100%;
 		}
 	}
 
@@ -143,7 +143,7 @@ div.scrolling-container {
 		img
 		{
 			float: inherit;
-			width: 100%;
+			max-width: 100%;
 		}
 	}
 }

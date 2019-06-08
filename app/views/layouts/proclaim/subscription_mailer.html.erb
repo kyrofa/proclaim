@@ -43,55 +43,35 @@
 				padding: 0;
 			}
 
-			.mediumInsert
-			{
-				margin: 0px;
-			}
-
-			.mediumInsert.small
+			p img
 			{
 				float: left;
 				max-width: 35%;
-				min-height: 18px;
+				margin-right: 15px;
 			}
 
-			.mediumInsert img
+			p.ql-align-right
 			{
-				margin: 0px;
-				vertical-align: top;
+				text-align: right;
+			}
+
+			p.ql-align-right img
+			{
+				float: right;
+				max-width: 35%;
+				margin-left: 15px;
+			}
+
+			p.ql-align-center img
+			{
+				float: inherit;
 				max-width: 100%;
-				border: 0px none;
 			}
 
-			.mediumInsert.small img
+			p.ql-align-justify img
 			{
+				float: inherit;
 				max-width: 100%;
-			}
-
-			figure.mediumInsert-images
-			{
-				width: 100%;
-				margin: 0px;
-				text-align: center;
-				display: inline-block;
-			}
-
-			figure.mediumInsert-images.small
-			{
-				padding-bottom: 18px;
-				padding-right: 30px;
-			}
-
-			figure.mediumInsert-images:first-child
-			{
-				margin-right: 0px;
-				width: 100%;
-			}
-
-			.medium-editor-insert-plugin p
-			{
-				margin: 0px 0px 10px;
-				box-sizing: border-box;
 			}
 
 			td.post_body
@@ -159,8 +139,7 @@
 					<% url = root_url.gsub(/\A.*:\/\//, '').gsub(/\A(.*?)\/*\z/, '\1') %>
 
 					<% if @subscription.post %>
-						You're receiving this email because you requested to be notified if a new comment was made on <%= link_to "this post", @subscription.post %>
-						at <%= link_to url, posts_url %>.
+						You're receiving this email because you requested to be notified if a new comment was made on <%= link_to "this post", @subscription.post %> at <%= link_to url, posts_url %>.
 					<% else  %>
 						You're receiving this email because you requested to be notified if a new post was made at <%= link_to url, posts_url %>.
 					<% end %>
