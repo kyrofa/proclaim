@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 	spec.license     = "GPL-3.0"
 
 	spec.files = Dir["{app,config,db,lib,vendor}/**/*", "LICENSE", "Rakefile", "README.md"]
+        spec.required_ruby_version = '>= 2.6.0'
 
 	spec.add_dependency "rails", "~> 5.2.2"
 	spec.add_dependency "coffee-rails", "~> 4.2.2"
