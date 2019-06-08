@@ -3,12 +3,12 @@ FactoryBot.define do
 		sequence(:name) {|n| "name#{n}"}
 		sequence(:email) {|n| "email#{n}@example.com"}
 
-		factory :post_subscription do
-			post
+		factory :post_comment_subscription do
+			comment
 		end
 
-		factory :published_post_subscription do
-			association :post, factory: :published_post
+		factory :published_post_comment_subscription do
+			association :comment, factory: :published_comment
 		end
 	end
 end

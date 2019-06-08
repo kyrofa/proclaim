@@ -7,7 +7,7 @@ module Proclaim
 		before_action :set_subscription, only: [:show, :edit, :update, :destroy]
 
 		def index
-			@subscriptions = policy_scope(Subscription).order(:post_id, :name)
+			@subscriptions = policy_scope(Subscription).order(:comment_id, :name)
 			authorize Subscription
 		end
 

@@ -58,13 +58,13 @@ ActiveRecord::Schema.define(version: 2019_04_01_011252) do
   end
 
   create_table "proclaim_subscriptions", force: :cascade do |t|
-    t.integer "post_id"
+    t.integer "comment_id"
     t.string "name", default: "", null: false
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["post_id", "email"], name: "index_proclaim_subscriptions_on_post_id_and_email", unique: true
-    t.index ["post_id"], name: "index_proclaim_subscriptions_on_post_id"
+    t.index ["comment_id", "email"], name: "index_proclaim_subscriptions_on_comment_id_and_email", unique: true
+    t.index ["comment_id"], name: "index_proclaim_subscriptions_on_comment_id"
   end
 
   create_table "users", force: :cascade do |t|

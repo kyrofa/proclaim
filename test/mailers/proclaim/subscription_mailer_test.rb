@@ -23,7 +23,7 @@ module Proclaim
 		end
 
 		test "new comment notification email" do
-			subscription = FactoryBot.create(:post_subscription)
+			subscription = FactoryBot.create(:post_comment_subscription)
 			comment = FactoryBot.create(:comment)
 
 			mail = SubscriptionMailer.with(subscription_id: subscription.id, comment_id: comment.id).new_comment_notification_email

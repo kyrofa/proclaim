@@ -75,38 +75,12 @@ input.datetime_picker
 	}
 }
 
-.mediumInsert
-{
-	margin: -1em 0 0 0;
-}
-
 div.post_body
 {
 	width: calc(100% - 80px);
 	margin: 0 auto;
 	height: auto;
 	min-height: 100%;
-}
-
-div.post_body.show .mediumInsert
-{
-	margin-left: 0px !important;
-
-	.mediumInsert-images img
-	{
-		margin: 1em 0 0 0;
-	}
-}
-
-figure.mediumInsert-images
-{
-	text-align: center;
-}
-
-.medium-editor-insert-plugin p
-{
-	margin: 0px 0px 10px;
-	box-sizing: border-box;
 }
 
 div.post_body.editable:after

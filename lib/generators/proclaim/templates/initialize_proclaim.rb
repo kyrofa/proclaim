@@ -22,11 +22,18 @@ Proclaim.setup do |config|
 
 	# Buttons to display on post editor toolbar
 	# config.editor_toolbar = [
-	# 	['bold', 'italic', 'underline', 'strike'],
-	# 	['code', 'code-block'],
-	# 	[{ 'list': 'ordered'}, { 'list': 'bullet' }],
-	# 	['link', 'image', 'video', 'formula'],
-	# 	[{ 'align': [] }]
+	# 	['bold', 'italic', 'underline', 'strike', 'code'],
+	# 	[{ 'header': 1 }, { 'header': 2 }],
+	# 	['code-block'],
+	# 	[{ 'align': []}],
+	# 	[{ 'list': 'ordered'}, { 'list': 'bullet'}],
+	# 	['link', 'image', 'video', 'formula']
+	# ]
+
+	# Formats to allow in the editor (can be a superset of the toolbar)
+	# config.editor_formats = [
+	# 	'align', 'blockquote', 'bold', 'code', 'code-block', 'formula', 'header',
+	# 	'image', 'italic', 'link', 'list', 'strike', 'underline', 'video'
 	# ]
 
 	# Email address to use in the "from" field of all emails

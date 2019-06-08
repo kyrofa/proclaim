@@ -196,9 +196,7 @@ module Proclaim
 			sign_in user
 
 			parent = FactoryBot.create(:published_comment)
-			child = FactoryBot.create(:published_comment,
-			post: parent.post,
-			parent: parent)
+			child = FactoryBot.create(:published_comment, post: parent.post, parent: parent)
 
 			visit proclaim.post_path(parent.post)
 

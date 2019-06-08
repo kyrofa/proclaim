@@ -34,12 +34,14 @@
 	<% end %>
 
 	<%= label namespace_space+"subscription", "subscribe", "Notify me of other comments on this post" %><br />
-	<%= check_box "subscription", "subscribe", {id: namespace_space+"subscription_subscribe", class: "subscription_subscribe"}, "true", nil %><br />
+	<%= check_box_tag "subscribe", "subscribe", false, {id: namespace_space+"subscription_subscribe", class: "subscription_subscribe"} %><br />
 
-	<div class = "subscription_email" style = "display: none;">
-		<%= label namespace_space+"subscription", "email"%><br />
-		<%= email_field "subscription", "email", id: namespace_space+"subscription_email" %>
-	</div>
+	<%= f.fields_for :subscription, Proclaim::Subscription.new do |f| %>
+		<div class = "subscription_email" style = "display: none;">
+			<%= f.label :email, "Email" %><br />
+			<%= f.email_field :email %>
+		</div>
+	<% end %>
 
 	<%= f.hidden_field :post_id %>
 	<%= f.hidden_field :parent_id %>

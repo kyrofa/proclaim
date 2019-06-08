@@ -9,41 +9,16 @@ module Proclaim
 		def create
 			@comment = Comment.new(comment_params)
 
-			subscription = nil
-			if subscription_params and subscription_params[:subscribe]
-				subscription = Subscription.new(name: @comment.author,
-				                                email: subscription_params[:email],
-				                                post: @comment.post)
-			end
-
 			errors = Array.new
 			options = Hash.new
 			options[:success_json] = lambda {comment_json(@comment)}
 			options[:failure_json] = lambda {errors}
 			options[:operation] = lambda do
-				respond_to do |format|
-					begin
-						# Wrap saving the comment in a transaction, so if the
-						# subscription fails to save, the comment doesn't save either
-						# (and vice-versa).
-						Comment.transaction do
-							@comment.save!
-
-							if subscription
-								subscription.save!
-							end
-
-							return true
-						end
-					rescue ActiveRecord::RecordInvalid
-						errors += @comment.errors.full_messages
-
-						if subscription
-							errors += subscription.errors.full_messages
-						end
-
-						return false
-					end
+				if @comment.save
+					return true
+				else
+					errors += @comment.errors.full_messages
+					return false
 				end
 			end
 
@@ -91,17 +66,13 @@ module Proclaim
 
 		# Only allow a trusted parameter "white list" through.
 		def comment_params
-			params.require(:comment).permit(:body,
-			                                :author,
-			                                :post_id,
-			                                :parent_id)
-		end
-
-		def subscription_params
-			if params[:subscription]
-				params.require(:subscription).permit(:subscribe,
-			                                        :email)
+			p = params.require(:comment).permit(
+				:body, :author, :post_id, :parent_id,
+				subscription_attributes: [:email])
+			if params[:subscribe] && p.include?('subscription_attributes')
+				p[:subscription_attributes].merge!({name: p[:author]})
 			end
+			p
 		end
 
 		def antispam_params

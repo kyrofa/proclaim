@@ -1,7 +1,7 @@
 class Editor
 	constructor: (@form, @titleFormField, @titleEditableItem, @titleContents,
 		          @bodyFormField, @quillBodyFormField, @bodyEditableItem,
-		          @bodyScrollingContainer, @bodyContents, @toolbar) ->
+		          @bodyScrollingContainer, @bodyContents, @toolbar, @formats) ->
 		if (@form.length == 1) and (@titleFormField.length == 1) and
 		   (@titleEditableItem.length == 1) and (@bodyFormField.length == 1) and
 		   (@bodyEditableItem.length == 1) and (@bodyScrollingContainer.length == 1)
@@ -9,7 +9,7 @@ class Editor
 				placeholder: @bodyEditableItem.data("placeholder"),
 				scrollingContainer: @bodyScrollingContainer.get(0),
 				theme: 'bubble',
-				formats: ['bold', 'italic', 'underline', 'strike', 'align', 'list', 'code', 'code-block', 'link', 'image', 'video', 'formula'],
+				formats: @formats,
 				modules: {
 					toolbar: @toolbar,
 				}

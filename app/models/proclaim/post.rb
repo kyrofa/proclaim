@@ -18,7 +18,7 @@ module Proclaim
 	class Post < ActiveRecord::Base
 		belongs_to :author, class_name: Proclaim.author_class
 		has_many :comments, inverse_of: :post, dependent: :destroy
-		has_many :subscriptions, inverse_of: :post, dependent: :destroy
+		has_many :subscriptions, through: :comments
 
 		extend FriendlyId
 		friendly_id :slug_candidates, use: :history
@@ -45,7 +45,8 @@ module Proclaim
 
 		after_validation :move_friendly_id_error_to_title
 
-		after_save :notifyBlogSubscribersIfPublished
+		# Using after_commit since we use deliver_later and re-load them from the database
+		after_commit :notifyBlogSubscribersIfPublished, on: [:create, :update]
 
 		# Only save the slug history if the post is published
 		def create_slug
@@ -78,7 +79,10 @@ module Proclaim
 
 		def notifyPostSubscribers(newComment)
 			subscriptions.each do | subscription |
-				subscription.deliver_new_comment_notification_email(newComment)
+				# Don't notify the commenter of own comment
+				if subscription.comment_id != newComment.id
+					subscription.deliver_new_comment_notification_email(newComment)
+				end
 			end
 		end
 

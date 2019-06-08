@@ -50,12 +50,12 @@ class SubscriptionPolicyTest < ActiveSupport::TestCase
 		assert policy.create?, "A user should be able to create subscriptions to the blog"
 
 		# Verify that a user can create a subscription to an unpublished post
-		subscription = FactoryBot.build(:post_subscription)
+		subscription = FactoryBot.build(:post_comment_subscription)
 		policy = Proclaim::SubscriptionPolicy.new(user, subscription)
 		assert policy.create?, "A user should be able to create subscriptions to unpublished posts"
 
 		# Verify that a user can create a subscription to a published post
-		subscription = FactoryBot.build(:published_post_subscription)
+		subscription = FactoryBot.build(:published_post_comment_subscription)
 		policy = Proclaim::SubscriptionPolicy.new(user, subscription)
 		assert policy.create?, "A user should be able to create subscriptions to published posts"
 
@@ -65,12 +65,12 @@ class SubscriptionPolicyTest < ActiveSupport::TestCase
 		assert policy.create?, "A guest should be able to create subscriptions to the blog"
 
 		# Verify that a guest cannot create a subscription to an unpublished post
-		subscription = FactoryBot.build(:post_subscription)
+		subscription = FactoryBot.build(:post_comment_subscription)
 		policy = Proclaim::SubscriptionPolicy.new(nil, subscription)
 		refute policy.create?, "A guest should not be able to create subscriptions to unpublished posts"
 
 		# Verify that a guest can create a subscription to a published post
-		subscription = FactoryBot.build(:published_post_subscription)
+		subscription = FactoryBot.build(:published_post_comment_subscription)
 		policy = Proclaim::SubscriptionPolicy.new(nil, subscription)
 		assert policy.create?, "A guest should be able to create subscriptions to published posts"
 	end

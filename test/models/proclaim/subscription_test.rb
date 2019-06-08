@@ -3,11 +3,11 @@
 # Table name: proclaim_subscriptions
 #
 #  id         :integer          not null, primary key
-#  post_id    :integer
+#  comment_id :integer
+#  name       :string           default(""), not null
 #  email      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  name       :string           default(""), not null
 #
 
 require 'test_helper'
@@ -16,18 +16,24 @@ module Proclaim
 	class SubscriptionTest < ActiveSupport::TestCase
 		include ActionMailer::TestHelper
 
-		test "subscriptions should be unique" do
-			FactoryBot.create(:subscription, email: "foo@bar.com")
-			subscription = FactoryBot.build(:subscription, email: "foo@bar.com")
-			refute subscription.save,
-			       "Blog subscriptions should have unique emails!"
+		test "blog subscriptions should be unique" do
+			subscription = FactoryBot.create(:subscription, email: "foo@bar.com")
+			subscription = FactoryBot.build(:subscription, email: subscription.email)
+			refute subscription.save, "Blog subscriptions should have unique emails!"
+		end
 
-			subscription = FactoryBot.create(:post_subscription, email: "foo@bar.com")
-			subscription = FactoryBot.build(:post_subscription,
-			                                 post: subscription.post,
-			                                 email: subscription.email)
-			refute subscription.save,
-			       "Post subscriptions should have unique emails!"
+		test "post comment subscriptions should be unique" do
+			subscription = FactoryBot.create(:post_comment_subscription, email: "foo@bar.com")
+			comment = FactoryBot.create(:comment, post: subscription.post)
+			subscription = FactoryBot.build(:post_comment_subscription, comment: comment, email: subscription.email)
+			refute subscription.save, "Post comment subscriptions should have unique emails!"
+		end
+
+		test "blog subscription and post comment subscription emails need not be unique" do
+			subscription1 = FactoryBot.create(:subscription, email: "foo@bar.com")
+			comment = FactoryBot.create(:comment)
+			subscription2 = FactoryBot.build(:post_comment_subscription, comment: comment, email: subscription1.email)
+			assert subscription2.save, "The same email should be able to subscribe to the blog as well as post comments"
 		end
 
 		test "should require a name" do
@@ -37,12 +43,10 @@ module Proclaim
 
 		test "should not save without valid email address" do
 			subscription = FactoryBot.build(:subscription, email: nil)
-			refute subscription.save,
-			       "Subscription should require an email address!"
+			refute subscription.save, "Subscription should require an email address!"
 
 			subscription = FactoryBot.build(:subscription, email: "blah")
-			refute subscription.save,
-			       "Subscription should require a valid email address!"
+			refute subscription.save, "Subscription should require a valid email address!"
 		end
 
 		test "token should be able to identify subscriptions" do
@@ -62,24 +66,22 @@ module Proclaim
 			end
 		end
 
-		test "should require valid post or none at all" do
-			# Post 12345 doesn't exist
-			subscription = FactoryBot.build(:subscription, post_id: 12345)
-			refute subscription.save,
-			       "Subscription should require a valid post!"
+		test "should require valid comment or none at all" do
+			# Comment 12345 doesn't exist
+			subscription = FactoryBot.build(:subscription, comment_id: 12345)
+			refute subscription.save, "Subscription should require a valid comment!"
 
 			subscription = FactoryBot.build(:subscription,
-			                                 post: FactoryBot.create(:published_post))
+			                                 comment: FactoryBot.create(:published_comment))
 			assert subscription.save
 
-			subscription = FactoryBot.build(:subscription, post: nil)
-			assert subscription.save,
-			       "Subscription shouldn't require a post!"
+			subscription = FactoryBot.build(:subscription, comment: nil)
+			assert subscription.save, "Subscription shouldn't require a comment!"
 		end
 
 		test "should deliver welcome email upon creation" do
-			post = FactoryBot.create(:published_post)
-			subscription = FactoryBot.build(:subscription, post: post)
+			comment = FactoryBot.create(:published_comment)
+			subscription = FactoryBot.build(:subscription, comment: comment)
 			assert_enqueued_email_with SubscriptionMailer, :welcome_email, args: {subscription_id: (Subscription.maximum(:id).try(:next) || 0) + 1} do
 				subscription.save
 			end

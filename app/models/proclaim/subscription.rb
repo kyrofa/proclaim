@@ -3,31 +3,37 @@
 # Table name: proclaim_subscriptions
 #
 #  id         :integer          not null, primary key
-#  post_id    :integer
+#  comment_id :integer
+#  name       :string           default(""), not null
 #  email      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  name       :string           default(""), not null
 #
 
 module Proclaim
 	class Subscription < ActiveRecord::Base
-		scope :blog_subscriptions, -> { where(post_id: nil) }
-		belongs_to :post, inverse_of: :subscriptions, optional: true
+		scope :blog_subscriptions, -> { where(comment_id: nil) }
+		belongs_to :comment, inverse_of: :subscription, optional: true
 
-		after_create :deliver_welcome_email
+		# Get the comment's post as our own
+		delegate :post, to: :comment, allow_nil: true
+
+		# Using after_commit since we use deliver_later and re-load them from the database
+		after_create_commit :deliver_welcome_email
 		after_create { Proclaim.notify_new_subscription(self) }
 
 		# RFC-compliant email addresses are way nasty to match with regex, so why
 		# try? We'll be sending them an email anyway-- if they don't get it, they
 		# can re-subscribe. We'll just do an easy validation match here.
-		validates :email, uniqueness: { scope: :post_id, case_sensitive: false }, format: { with: /@/ }
+		validates :email, format: { with: /@/ }
 
 		validates_presence_of :name
 
-		# Subscriptions aren't required to belong to a post, but if we're given
-		# one it had better be valid
-		validates_presence_of :post, if: :post_id
+		# Subscriptions aren't required to belong to a comment, but if we're
+		# given one it had better be valid
+		validates_presence_of :comment, if: :comment_id
+
+		validate :email_is_unique
 
 		def deliver_welcome_email
 			SubscriptionMailer.with(subscription_id: id).welcome_email.deliver_later
@@ -60,6 +66,21 @@ module Proclaim
 
 		def self.create_token(subscription)
 			verifier.generate(subscription.id)
+		end
+
+		private
+
+		def email_is_unique
+			other_subscriptions = Subscription.where(email: email)
+			unless other_subscriptions.empty?
+				other_subscriptions.each do | other_subscription |
+					if comment.nil? && other_subscription.comment.nil?
+						errors.add(:email, "is already subscribed")
+					elsif comment.post == other_subscription.post
+						errors.add(:email, "is already subscribed to comments on this post")
+					end
+				end
+			end
 		end
 	end
 end

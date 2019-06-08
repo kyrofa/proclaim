@@ -370,7 +370,7 @@ module Proclaim
 				fill_in 'Author', with: "Comment Author"
 				fill_in 'Body', with: "Comment Body"
 				fill_in 'What is', with: show_page.antispam_solution
-				check 'Notify me of other comments on this post'
+				check 'Notify me'
 				fill_in 'Email', with: "example@example.com"
 			end
 

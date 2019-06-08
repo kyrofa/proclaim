@@ -18,11 +18,18 @@ module Proclaim
 
 	mattr_accessor :editor_toolbar
 	@@editor_toolbar = [
-		['bold', 'italic', 'underline', 'strike'],
-		['code', 'code-block'],
-		[{ 'list': 'ordered'}, { 'list': 'bullet' }],
-		['link', 'image', 'video', 'formula'],
-		[{ 'align': [] }]
+		['bold', 'italic', 'underline', 'strike', 'code'],
+		[{ 'header': 1 }, { 'header': 2 }],
+		['code-block'],
+		[{ 'align': []}],
+		[{ 'list': 'ordered'}, { 'list': 'bullet'}],
+		['link', 'image', 'video', 'formula']
+	]
+
+	mattr_accessor :editor_formats
+	@@editor_formats = [
+		'align', 'blockquote', 'bold', 'code', 'code-block', 'formula', 'header',
+		'image', 'italic', 'link', 'list', 'strike', 'underline', 'video'
 	]
 
 	mattr_accessor :mailer_sender

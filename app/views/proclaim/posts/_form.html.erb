@@ -17,7 +17,8 @@
 					  $(document).find("form.new_post div.editable"),
 					  $(document).find("div#scrolling-container"),
 					  <%= quill_body %>,
-		              <%= Proclaim.editor_toolbar.to_json.html_safe %>);
+		              <%= Proclaim.editor_toolbar.to_json.html_safe %>,
+		              <%= Proclaim.editor_formats.to_json.html_safe %>);
 		<% else %>
 			new Editor($(document).find("form.edit_post"),
 		              $(document).find("input#post_title"),
@@ -28,7 +29,8 @@
 					  $(document).find("form.edit_post div.editable"),
 					  $(document).find("div#scrolling-container"),
 					  <%= quill_body %>,
-		              <%= Proclaim.editor_toolbar.to_json.html_safe %>);
+		              <%= Proclaim.editor_toolbar.to_json.html_safe %>,
+		              <%= Proclaim.editor_formats.to_json.html_safe %>);
 		<% end %>
 	});
 </script>

@@ -20,7 +20,7 @@ module Proclaim
 		end
 
 		test "should be able to unsubscribe from post" do
-			subscription = FactoryBot.create(:published_post_subscription)
+			subscription = FactoryBot.create(:published_post_comment_subscription)
 
 			visit proclaim.subscription_path(subscription.token)
 

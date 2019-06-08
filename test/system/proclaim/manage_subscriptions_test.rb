@@ -7,7 +7,7 @@ module Proclaim
 			sign_in user
 
 			blog_subscription = FactoryBot.create(:subscription)
-			post_subscription = FactoryBot.create(:published_post_subscription)
+			post_subscription = FactoryBot.create(:published_post_comment_subscription)
 
 			visit proclaim.subscriptions_path
 

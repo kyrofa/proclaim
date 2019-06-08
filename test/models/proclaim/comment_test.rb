@@ -42,16 +42,20 @@ module Proclaim
 
 		test "should deliver new comment email upon creation" do
 			post = FactoryBot.create(:published_post)
-			subscription = FactoryBot.create(:subscription, post: post)
-			assert_enqueued_email_with SubscriptionMailer, :new_comment_notification_email, args: {subscription_id: subscription.id, comment_id: (Comment.maximum(:id).try(:next) || 0) + 1} do
+			comment = FactoryBot.create(:comment, post: post)
+			subscription = FactoryBot.create(:subscription, comment: comment)
+
+			post.reload # Refresh post to pull in new associations
+
+			assert_enqueued_email_with SubscriptionMailer, :new_comment_notification_email, args: {subscription_id: subscription.id, comment_id: Comment.maximum(:id).next} do
 				FactoryBot.create(:comment, post: post)
 			end
 		end
 
 		test "should not deliver new comment email upon edit" do
-			post = FactoryBot.create(:published_post)
-			subscription = FactoryBot.create(:subscription, post: post)
-			comment = FactoryBot.create(:comment, post: post)
+			comment = FactoryBot.create(:published_comment)
+			subscription = FactoryBot.create(:subscription, comment: comment)
+			comment = FactoryBot.create(:comment, post: comment.post)
 
 			comment.author = "Edit Author"
 			comment.body = "Edit Body"

@@ -42,8 +42,6 @@ module Proclaim
 			before = exps.map(&:call)
 			after = []
 
-			puts "HERE:::::::::::: #{Capybara.default_max_wait_time}"
-
 			retval = yield
 
 			# Keep evaluating expression until it's either true, or it times out
