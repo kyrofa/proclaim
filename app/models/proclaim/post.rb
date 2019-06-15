@@ -48,23 +48,9 @@ module Proclaim
 		# Using after_commit since we use deliver_later and re-load them from the database
 		after_commit :notifyBlogSubscribersIfPublished, on: [:create, :update]
 
-		# Only save the slug history if the post is published
-		def create_slug
-			# No real reason to keep a slug history unless it's been published
-			unless published?
-				slugs.destroy_all
-			end
-
-			super
-		end
-
 		attr_writer :excerpt_length
 		def excerpt_length
 			@excerpt_length ||= Proclaim.excerpt_length
-		end
-
-		def body_plaintext
-			HTMLEntities.new.decode(Rails::Html::FullSanitizer.new.sanitize(body.gsub(/\r\n?/, ' ')))
 		end
 
 		def excerpt
@@ -87,6 +73,20 @@ module Proclaim
 		end
 
 		private
+
+		# Only save the slug history if the post is published
+		def create_slug
+			# No real reason to keep a slug history unless it's been published
+			unless published?
+				slugs.destroy_all
+			end
+
+			super
+		end
+
+		def body_plaintext
+			HTMLEntities.new.decode(Rails::Html::FullSanitizer.new.sanitize(body.gsub(/\r\n?/, ' ')))
+		end
 
 		def should_generate_new_friendly_id?
 			title_changed? || super
