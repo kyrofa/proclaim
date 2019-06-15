@@ -72,6 +72,16 @@ module Proclaim
 			end
 		end
 
+		def feature_image
+			document = Nokogiri::HTML.fragment(body)
+			return nil if document.children.empty?
+
+			first_element_images = document.children.first.css("img")
+			return nil if first_element_images.empty?
+
+			return first_element_images.first.attr "src"
+		end
+
 		private
 
 		# Only save the slug history if the post is published
