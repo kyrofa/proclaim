@@ -10,6 +10,7 @@ require 'aasm'
 require 'rails-timeago'
 require 'pundit'
 require 'premailer'
+require 'punching_bag'
 
 module Proclaim
 	class Engine < ::Rails::Engine

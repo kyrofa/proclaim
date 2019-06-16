@@ -17,6 +17,11 @@ module Proclaim
 		def show
 			authorize @post
 
+			# Don't track traffic if it's a logged-in user
+			unless current_author
+				@post.punch(request)
+			end
+
 			# If an old id or a numeric id was used to find the record, then
 			# the request path will not match the post_path, and we should do
 			# a 301 redirect that uses the current friendly id.

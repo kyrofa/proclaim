@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_01_011252) do
+ActiveRecord::Schema.define(version: 2019_06_15_232009) do
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
@@ -65,6 +65,17 @@ ActiveRecord::Schema.define(version: 2019_04_01_011252) do
     t.datetime "updated_at", null: false
     t.index ["comment_id", "email"], name: "index_proclaim_subscriptions_on_comment_id_and_email", unique: true
     t.index ["comment_id"], name: "index_proclaim_subscriptions_on_comment_id"
+  end
+
+  create_table "punches", force: :cascade do |t|
+    t.integer "punchable_id", null: false
+    t.string "punchable_type", limit: 20, null: false
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.datetime "average_time", null: false
+    t.integer "hits", default: 1, null: false
+    t.index ["average_time"], name: "index_punches_on_average_time"
+    t.index ["punchable_type", "punchable_id"], name: "punchable_index"
   end
 
   create_table "users", force: :cascade do |t|

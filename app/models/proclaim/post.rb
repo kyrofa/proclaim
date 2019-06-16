@@ -48,6 +48,9 @@ module Proclaim
 		# Using after_commit since we use deliver_later and re-load them from the database
 		after_commit :notifyBlogSubscribersIfPublished, on: [:create, :update]
 
+		# Track views
+		acts_as_punchable
+
 		attr_writer :excerpt_length
 		def excerpt_length
 			@excerpt_length ||= Proclaim.excerpt_length

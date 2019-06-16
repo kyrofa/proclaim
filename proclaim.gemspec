@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
 	spec.add_dependency "aasm", "~> 5.0.1"
 	spec.add_dependency "rails-timeago", "~> 2.17.1"
 	spec.add_dependency "pundit", "~> 2.0.1"
+	spec.add_dependency "punching_bag", "~> 0.6.1"
 
 	spec.add_development_dependency "sqlite3", "~> 1.3.13"
 	spec.add_development_dependency "factory_bot_rails", "~> 5.0.0"
