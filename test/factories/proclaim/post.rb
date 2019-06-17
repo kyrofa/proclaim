@@ -1,6 +1,7 @@
 FactoryBot.define do
 	factory :post, class: Proclaim::Post do
 		sequence(:title) {|n| "post#{n} title"}
+		sequence(:subtitle) {|n| "post#{n} subtitle"}
 		sequence(:body) {|n| "post#{n} body"}
 		quill_body { "{\"ops\":[{\"insert\":\"#{body}\\n\"}]}" }
 		association :author, factory: :user

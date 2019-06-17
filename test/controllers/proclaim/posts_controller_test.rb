@@ -92,7 +92,8 @@ module Proclaim
 						author_id: newPost.author_id,
 						body: newPost.body,
 						quill_body: newPost.quill_body,
-						title: newPost.title
+						title: newPost.title,
+						subtitle: newPost.subtitle,
 					}
 				}
 			end
@@ -114,7 +115,8 @@ module Proclaim
 						author_id: newPost.author_id,
 						body: newPost.body,
 						quill_body: newPost.quill_body,
-						title: newPost.title
+						title: newPost.title,
+						subtitle: newPost.subtitle,
 					}, publish: "true"
 				}
 			end
@@ -133,7 +135,8 @@ module Proclaim
 						author_id: newPost.author_id,
 						body: newPost.body,
 						quill_body: newPost.quill_body,
-						title: newPost.title
+						title: newPost.title,
+						subtitle: newPost.subtitle,
 					}
 				}
 			end

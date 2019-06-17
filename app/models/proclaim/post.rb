@@ -40,7 +40,7 @@ module Proclaim
 		validates_presence_of :published_at, if: :published?
 		validates :published_at, absence: true, unless: :published?
 
-		validates_presence_of :title, :body, :quill_body, :author
+		validates_presence_of :title, :subtitle, :body, :quill_body, :author
 		validate :verifyBodyHtml
 
 		after_validation :move_friendly_id_error_to_title

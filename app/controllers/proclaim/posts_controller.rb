@@ -104,12 +104,16 @@ module Proclaim
 
 		# Only allow a trusted parameter "white list" through.
 		def post_params
-			# Ensure post title is sanitized of all HTML
+			# Ensure post title and subtitle are sanitized of all HTML
 			if params[:post].include? :title
 				params[:post][:title] = HTMLEntities.new.decode(Rails::Html::FullSanitizer.new.sanitize(params[:post][:title]))
 			end
 
-			params.require(:post).permit(:title, :body, :quill_body)
+			if params[:post].include? :subtitle
+				params[:post][:subtitle] = HTMLEntities.new.decode(Rails::Html::FullSanitizer.new.sanitize(params[:post][:subtitle]))
+			end
+
+			params.require(:post).permit(:title, :subtitle, :body, :quill_body)
 		end
 	end
 end

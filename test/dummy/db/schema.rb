@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_15_232009) do
+ActiveRecord::Schema.define(version: 2019_06_17_014907) do
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2019_06_15_232009) do
     t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "subtitle", default: "", null: false
     t.index ["author_id"], name: "index_proclaim_posts_on_author_id"
     t.index ["slug"], name: "index_proclaim_posts_on_slug", unique: true
     t.index ["state"], name: "index_proclaim_posts_on_state"

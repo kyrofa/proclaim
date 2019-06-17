@@ -188,6 +188,7 @@ module Proclaim
 
 			visit proclaim.post_path(post.id)
 			assert page.has_text? post.title
+			assert page.has_text? post.subtitle
 			assert_equal proclaim.post_path(post.friendly_id), current_path,
 						"Post show via ID should redirect to more friendly URL"
 		end
@@ -197,6 +198,7 @@ module Proclaim
 
 			visit proclaim.post_path(post.friendly_id)
 			assert page.has_text? post.title
+			assert page.has_text? post.subtitle
 		end
 
 		test "show should work via old slugs for published posts" do
@@ -209,6 +211,7 @@ module Proclaim
 
 			visit proclaim.post_path(old_slug)
 			assert page.has_text? post.title
+			assert page.has_text? post.subtitle
 			assert_equal proclaim.post_path(post.friendly_id), current_path,
 						"Post show via ID should redirect to more friendly URL"
 		end
@@ -221,12 +224,14 @@ module Proclaim
 
 			edit_page = EditPage.new
 			edit_page.set_title("Post Title")
+			edit_page.set_subtitle("Post Subtitle")
 			edit_page.set_body("Paragraph 1\nParagraph 2")
 
 			assert_difference('Proclaim::Post.count', 1,
 							  "A post should have been created") do
 				click_button "Create"
 				assert page.has_text?("Post Title"), "Post title should be shown"
+				assert page.has_text?("Post Subtitle"), "Post subtitle should be shown"
 				assert page.has_text?("Paragraph 1\nParagraph 2"),
 					   "Post body should be shown"
 			end
@@ -273,8 +278,28 @@ module Proclaim
 			visit proclaim.new_post_path
 
 			edit_page = EditPage.new
+			edit_page.set_subtitle("Post Subtitle")
 			edit_page.set_body("Paragraph 1\nParagraph 2")
 			# Don't fill in title
+
+			assert_no_difference('Proclaim::Post.count',
+								 "No post should have been created without a title") do
+				click_button "Create"
+				assert page.has_css?("div#error_explanation"),
+					   "Should show error complaining about lack of title"
+			end
+		end
+
+		test "new should show error without subtitle" do
+			user = FactoryBot.create(:user)
+			sign_in user
+
+			visit proclaim.new_post_path
+
+			edit_page = EditPage.new
+			edit_page.set_title("Post Title")
+			edit_page.set_body("Paragraph 1\nParagraph 2")
+			# Don't fill in subtitle
 
 			assert_no_difference('Proclaim::Post.count',
 								 "No post should have been created without a title") do
@@ -292,6 +317,7 @@ module Proclaim
 
 			edit_page = EditPage.new
 			edit_page.set_title("Post Title")
+			edit_page.set_subtitle("Post Subtitle")
 			# Don't fill in body
 
 			assert_no_difference('Proclaim::Post.count') do

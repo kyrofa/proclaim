@@ -10,8 +10,11 @@
 		<% if @post.new_record? %>
 			new Editor($(document).find("form.new_post"),
 		              $(document).find("input#post_title"),
-					  $(document).find("form.new_post h1.editable"),
+					  $(document).find("form.new_post h1.post_title.editable"),
 					  '<%= @post.title.html_safe.strip %>',
+		              $(document).find("input#post_subtitle"),
+					  $(document).find("form.new_post h2.post_subtitle.editable"),
+					  '<%= @post.subtitle.html_safe.strip %>',
 		              $(document).find("input#post_body"),
 		              $(document).find("input#post_quill_body"),
 					  $(document).find("form.new_post div.editable"),
@@ -22,8 +25,11 @@
 		<% else %>
 			new Editor($(document).find("form.edit_post"),
 		              $(document).find("input#post_title"),
-					  $(document).find("form.edit_post h1.editable"),
+					  $(document).find("form.edit_post h1.post_title.editable"),
 					  '<%= @post.title.html_safe.strip %>',
+		              $(document).find("input#post_subtitle"),
+					  $(document).find("form.edit_post h2.post_subtitle.editable"),
+					  '<%= @post.subtitle.html_safe.strip %>',
 		              $(document).find("input#post_body"),
 					  $(document).find("input#post_quill_body"),
 					  $(document).find("form.edit_post div.editable"),
@@ -49,12 +55,21 @@
 	<% end %>
 
 	<div class = "post">
-		<%=
-			fake_form_field @post, :title do
-				content_tag :h1, @post.title, class: "post_title editable",
-				            contenteditable: true, placeholder: "Post Title"
-			end
-		%>
+		<div class = "post_title">
+			<%=
+				fake_form_field @post, :title do
+					content_tag :h1, @post.title, class: "post_title editable",
+								contenteditable: true, placeholder: "Post Title"
+				end
+			%>
+
+			<%=
+				fake_form_field @post, :subtitle do
+					content_tag :h2, @post.subtitle, class: "post_subtitle editable",
+								contenteditable: true, placeholder: "Post Subtitle"
+				end
+			%>
+		</div>
 
 		<div id="scrolling-container">
 			<%=
@@ -79,6 +94,7 @@
 		</div>
 
 		<%= f.hidden_field :title %>
+		<%= f.hidden_field :subtitle %>
 		<%= f.hidden_field :body %>
 		<%= f.hidden_field :quill_body %>
 

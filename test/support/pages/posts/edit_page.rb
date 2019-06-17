@@ -6,7 +6,15 @@ module Proclaim
 
 		def set_title(title)
 			within('form') do
-				element = find('h1.editable')
+				element = find('h1.post_title.editable')
+				element.click()
+				element.set(title)
+			end
+		end
+
+		def set_subtitle(title)
+			within('form') do
+				element = find('h2.post_subtitle.editable')
 				element.click()
 				element.set(title)
 			end

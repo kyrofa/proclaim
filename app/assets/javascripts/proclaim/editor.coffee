@@ -1,9 +1,11 @@
 class Editor
 	constructor: (@form, @titleFormField, @titleEditableItem, @titleContents,
+		          @subtitleFormField, @subtitleEditableItem, @subtitleContents,
 		          @bodyFormField, @quillBodyFormField, @bodyEditableItem,
 		          @bodyScrollingContainer, @bodyContents, @toolbar, @formats) ->
 		if (@form.length == 1) and (@titleFormField.length == 1) and
-		   (@titleEditableItem.length == 1) and (@bodyFormField.length == 1) and
+		   (@titleEditableItem.length == 1) and (@subtitleFormField.length == 1) and
+		   (@subtitleEditableItem.length == 1)and (@bodyFormField.length == 1) and
 		   (@bodyEditableItem.length == 1) and (@bodyScrollingContainer.length == 1)
 			@bodyEditor = new Quill(@bodyEditableItem.get(0), {
 				placeholder: @bodyEditableItem.data("placeholder"),
@@ -25,14 +27,19 @@ class Editor
 		@form.on "submit", @updateFormFields
 		@titleEditableItem.on "paste", @stripFormatting
 		@titleEditableItem.on "keypress", @disallowNewlines
+		@subtitleEditableItem.on "paste", @stripFormatting
+		@subtitleEditableItem.on "keypress", @disallowNewlines
 
 	cleanBindings: ->
 		@form.off "submit"
 		@titleEditableItem.off "paste"
 		@titleEditableItem.off "keypress"
+		@subtitleEditableItem.off "paste"
+		@subtitleEditableItem.off "keypress"
 
 	updateFormFields: (event) =>
 		@titleFormField.val(@titleEditableItem.text())
+		@subtitleFormField.val(@subtitleEditableItem.text())
 		@quillBodyFormField.val(JSON.stringify(@bodyEditor.getContents()))
 		@bodyFormField.val(@bodyEditableItem.children('div.ql-editor').html())
 

@@ -32,6 +32,12 @@ module Proclaim
 			refute post.save, "Post should require a title!"
 		end
 
+		test "ensure subtitle is required" do
+			post = FactoryBot.build(:post, subtitle: "")
+
+			refute post.save, "Post should require a subtitle!"
+		end
+
 		test "ensure body is required" do
 			post = FactoryBot.build(:post, body: nil)
 			refute post.save, "Post should require a body!"
