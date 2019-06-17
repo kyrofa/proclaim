@@ -30,9 +30,16 @@ module Proclaim
 		end
 
 		test "blog subscription and post comment subscription emails need not be unique" do
-			subscription1 = FactoryBot.create(:subscription, email: "foo@bar.com")
+			# Need to test both orders here. First, blog subscription exists first.
+			subscription1 = FactoryBot.create(:subscription)
 			comment = FactoryBot.create(:comment)
 			subscription2 = FactoryBot.build(:post_comment_subscription, comment: comment, email: subscription1.email)
+			assert subscription2.save, "The same email should be able to subscribe to the blog as well as post comments"
+
+			# Now post comment subscription exists first
+			comment = FactoryBot.create(:comment)
+			subscription1 = FactoryBot.create(:post_comment_subscription, comment: comment)
+			subscription2 = FactoryBot.build(:subscription, email: subscription1.email)
 			assert subscription2.save, "The same email should be able to subscribe to the blog as well as post comments"
 		end
 

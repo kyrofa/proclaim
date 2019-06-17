@@ -76,7 +76,7 @@ module Proclaim
 				other_subscriptions.each do | other_subscription |
 					if comment.nil? && other_subscription.comment.nil?
 						errors.add(:email, "is already subscribed")
-					elsif comment.post == other_subscription.post
+					elsif comment.try(:post) == other_subscription.comment.try(:post)
 						errors.add(:email, "is already subscribed to comments on this post")
 					end
 				end
