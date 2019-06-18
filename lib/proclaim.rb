@@ -29,7 +29,7 @@ module Proclaim
 	mattr_accessor :editor_formats
 	@@editor_formats = [
 		'align', 'blockquote', 'bold', 'code', 'code-block', 'formula', 'header',
-		'image', 'italic', 'link', 'list', 'strike', 'underline', 'video'
+		'image', 'indent', 'italic', 'link', 'list', 'strike', 'underline', 'video'
 	]
 
 	mattr_accessor :mailer_sender

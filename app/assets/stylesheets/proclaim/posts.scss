@@ -124,8 +124,8 @@ div.post_body.editable:after
 	top: 0;
 }
 
-/* Specify our own scrolling container */
-div.scrolling-container {
+div.scrolling-container
+{
 	height: 100%;
 	min-height: 100%;
 	overflow-y: auto;
@@ -170,6 +170,27 @@ div.scrolling-container {
 		{
 			float: inherit;
 			max-width: 100%;
+		}
+	}
+
+	ul
+	{
+		li
+		{
+			&.ql-indent-1:before
+			{
+				content: '\25E6';
+			}
+
+			&.ql-indent-2:before
+			{
+				content: '\2B1D';
+			}
+
+			&.ql-indent-3:before
+			{
+				content: '\2B1E';
+			}
 		}
 	}
 }
