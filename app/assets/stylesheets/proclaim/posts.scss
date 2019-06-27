@@ -131,65 +131,68 @@ div.scrolling-container
 	overflow-y: auto;
 }
 
-.ql-editor
+.ql-bubble
 {
-	overflow-y: visible;
-
-	p
+	.ql-editor
 	{
-		img
-		{
-			float: left;
-			max-width: 30%;
-			margin-right: 15px;
-		}
-	}
+		overflow-y: visible;
 
-	p.ql-align-right
-	{
-		img
+		p
 		{
-			float: right;
-			max-width: 30%;
-			margin-left: 15px;
-		}
-	}
-
-	p.ql-align-center
-	{
-		img
-		{
-			float: inherit;
-			max-width: 100%;
-		}
-	}
-
-	p.ql-align-justify
-	{
-		img
-		{
-			float: inherit;
-			max-width: 100%;
-		}
-	}
-
-	ul
-	{
-		li
-		{
-			&.ql-indent-1:before
+			img
 			{
-				content: '\25E6';
+				float: left;
+				max-width: 30%;
+				margin-right: 15px;
 			}
 
-			&.ql-indent-2:before
+			&.ql-align-right
 			{
-				content: '\2B1D';
+				img
+				{
+					float: right;
+					max-width: 30%;
+					margin-left: 15px;
+				}
 			}
 
-			&.ql-indent-3:before
+			&.ql-align-center
 			{
-				content: '\2B1E';
+				img
+				{
+					float: inherit;
+					max-width: 100%;
+				}
+			}
+
+			&.ql-align-justify
+			{
+				img
+				{
+					float: inherit;
+					max-width: 100%;
+				}
+			}
+		}
+
+		ul
+		{
+			li
+			{
+				&.ql-indent-1:before
+				{
+					content: '\25E6';
+				}
+
+				&.ql-indent-2:before
+				{
+					content: '\2B1D';
+				}
+
+				&.ql-indent-3:before
+				{
+					content: '\2B1E';
+				}
 			}
 		}
 	}
