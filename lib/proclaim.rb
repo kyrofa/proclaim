@@ -20,7 +20,7 @@ module Proclaim
 	@@editor_toolbar = [
 		['bold', 'italic', 'underline', 'strike', 'code'],
 		[{ 'header': 1 }, { 'header': 2 }],
-		['code-block'],
+		['blockquote', 'code-block'],
 		[{ 'align': []}],
 		[{ 'list': 'ordered'}, { 'list': 'bullet'}],
 		['link', 'image', 'video', 'formula']
