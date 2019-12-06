@@ -151,7 +151,8 @@ GEM
       css_parser (>= 1.6.0)
       htmlentities (>= 4.0.0)
     public_suffix (3.0.3)
-    puma (3.12.0)
+    puma (4.3.1)
+      nio4r (~> 2.0)
     punching_bag (0.6.1)
       railties (>= 3.2)
       voight_kampff (~> 0.2)
@@ -243,7 +244,7 @@ DEPENDENCIES
   mini_racer (~> 0.2.5)
   mocha (~> 1.8.0)
   proclaim!
-  puma (~> 3.12.0)
+  puma (~> 4.3.1)
   selenium-webdriver (~> 3.141.0)
   simplecov (~> 0.16.1)
   sqlite3 (~> 1.3.13)
