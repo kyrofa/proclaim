@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
 	spec.add_dependency "jquery-rails", "~> 4.3.3"
 	spec.add_dependency "htmlentities", "~> 4.3.4"
 	spec.add_dependency "friendly_id", "~> 5.2.5"
-	spec.add_dependency "nokogiri", "~> 1.10.1"
+	spec.add_dependency "nokogiri", ">= 1.10.1", "< 1.13.0"
 	spec.add_dependency "premailer", "~> 1.11.1"
 	spec.add_dependency "closure_tree", "~> 7.0.0"
 	spec.add_dependency "font-awesome-rails", "~> 4.7.0.4"
