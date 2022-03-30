@@ -45,7 +45,7 @@ Gem::Specification.new do |spec|
 	spec.add_development_dependency "selenium-webdriver", "~> 3.141.0"
 	spec.add_development_dependency "faker", "~> 1.9.1"
 	spec.add_development_dependency "simplecov", "~> 0.16.1"
-	spec.add_development_dependency "puma", "~> 3.12.0"
+	spec.add_development_dependency "puma", "~> 5.6.4"
 	spec.add_development_dependency "mini_racer", "~> 0.2.5"
 	spec.add_development_dependency "geckodriver-helper", "~> 0.23.0"
 end
